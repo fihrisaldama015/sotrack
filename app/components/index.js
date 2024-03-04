@@ -1,3 +1,4 @@
-import LoadingComponent from './LoadingComponent'
+import LoadingComponent from "./LoadingComponent";
+import SidebarComponent from "./SidebarComponent";
 
-export{LoadingComponent}
+export { LoadingComponent, SidebarComponent };
