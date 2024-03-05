@@ -4,4 +4,6 @@ const POLDA_LOGO = "/assets/images/polda_logo.png";
 //Icon
 const BOTTOM_ARROW = "/assets/icon/Chevron.svg";
 const UNION = "/assets/icon/Union.svg";
-export { ADMA_LOGO, BOTTOM_ARROW, POLDA_LOGO, UNION };
+const DOWNLOAD = "/assets/icon/Download.svg";
+
+export { ADMA_LOGO, BOTTOM_ARROW, DOWNLOAD, POLDA_LOGO, UNION };

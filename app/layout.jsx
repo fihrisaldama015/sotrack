@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
           <body id="__next">
             <div className="flex bg-[#F9F9F9]">
               <SidebarComponent />
-              <div className="bg-[#F9F9F9] p-8 w-full">{children}</div>
+              <div className="bg-[#F9F9F9] py-6 px-8 w-full">{children}</div>
             </div>
           </body>
         </ThemeRegistry>

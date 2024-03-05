@@ -18,7 +18,7 @@ const SidebarComponent = () => {
     >
       <Box
         display={"flex"}
-        className="py-4 space-x-2 rounded-tr-2xl justify-center"
+        className="py-5 space-x-2 rounded-tr-2xl justify-center"
         paddingX={isMinimized ? "12px" : "29px"}
       >
         <Image src={POLDA_LOGO} alt="logo polda" width={40} height={53} />

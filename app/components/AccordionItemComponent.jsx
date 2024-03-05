@@ -11,7 +11,7 @@ const AccordionItemComponent = ({ children, label }) => {
         display={"flex"}
         justifyContent={"space-between"}
         onClick={() => setIsOpened(!isOpened)}
-        className="py-2.5 px-3 hover:bg-neutral-200 rounded-lg cursor-pointer"
+        className="py-2.5 px-3 hover:bg-neutral-200 rounded-lg cursor-pointer transition-all"
       >
         <Typography className="text-sm text-neutral-600 font-bold">
           {label}
