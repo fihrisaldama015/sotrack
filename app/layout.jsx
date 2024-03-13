@@ -1,8 +1,8 @@
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "react-toastify/dist/ReactToastify.css";
-import { SidebarComponent } from "./components";
 import "./globals.css";
 import StoreProvider from "./redux/StoreProvider";
+import { ToastContainer } from "react-toastify";
 
 export const metadata = {
   title: "Social Media Monitoring",
@@ -15,10 +15,8 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <ThemeRegistry>
           <body id="__next">
-            <div className="flex bg-[#F9F9F9]">
-              <SidebarComponent />
-              <div className="bg-[#F9F9F9] py-6 px-8 w-full">{children}</div>
-            </div>
+            <ToastContainer />
+            <div>{children}</div>
           </body>
         </ThemeRegistry>
       </html>

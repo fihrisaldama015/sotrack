@@ -39,6 +39,11 @@ const TwitterCategoryFormComponent = () => {
     setParameter("");
   };
 
+  const resetFilter = () => {
+    setCategory("");
+    setParameter("");
+  };
+
   return (
     <form
       style={{ width: 440 }}
@@ -87,6 +92,7 @@ const TwitterCategoryFormComponent = () => {
           type="button"
           variant="outlined"
           className="rounded-lg"
+          onClick={resetFilter}
           style={{ border: "2px solid" }}
         >
           Reset Filter

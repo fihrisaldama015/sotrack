@@ -3,10 +3,10 @@ import MUIDataTable from "mui-datatables";
 const columns = ["No", "Category", "Platform", "Parameter", "Action"];
 
 const data = [
-  ["1", "Keyword", "Twitter", "Yonkers", ""],
-  ["2", "Keyword", "Twitter", "Hartford", ""],
-  ["3", "Mention", "Twitter", "Tampa", ""],
-  ["4", "Topic", "Twitter", "Dallas", ""],
+  ["1", "Keyword", "Twitter", "Polda", ""],
+  ["2", "Keyword", "Twitter", "Polda Jatim", ""],
+  ["3", "Mention", "Twitter", "@poldajatim", ""],
+  ["4", "Topic", "Twitter", "Begal", ""],
 ];
 
 const options = {

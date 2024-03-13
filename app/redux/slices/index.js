@@ -1,3 +1,4 @@
-import ModalSlice from './ModalSlice'
+import LoginSlice from "./LoginSlice";
+import ModalSlice from "./ModalSlice";
 
-export{ModalSlice}
+export { LoginSlice, ModalSlice };
