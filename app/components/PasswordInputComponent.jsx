@@ -37,6 +37,9 @@ const PasswordInput = ({ name, register, errors, validationSchema }) => {
       {errors && errors[name]?.type === "minLength" && (
         <span className="text-red-500 text-sm">{errors[name]?.message}</span>
       )}
+      {errors && errors[name]?.type === "validate" && (
+        <span className="text-red-500 text-sm">{errors[name]?.message}</span>
+      )}
     </>
   );
 };

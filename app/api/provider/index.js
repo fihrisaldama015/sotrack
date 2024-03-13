@@ -141,3 +141,45 @@ export const PROVIDER_PUT = async (pathUrl, data, token = "") => {
 
   return response;
 };
+
+export const PROVIDER_PUT_WITH_PARAMS = async (pathUrl, data, params) => {
+  const headers = {
+    "Content-Type": "application/json",
+    // 'ADS-Key':ADS_KEY
+  };
+
+  const parsedParams = Object.keys(params)
+    .map((key) => `${key}=${params[key]}`)
+    .join("&");
+
+  const response = await axios
+    .put(`${BASE_URL}/${pathUrl}?${parsedParams}`, data, { headers })
+    .then((res) => {
+      switch (res.status) {
+        case 200:
+          return res.data;
+        case 201:
+          return res.data;
+        default:
+          console.log("error");
+          break;
+      }
+    })
+    .catch((err) => {
+      switch (err.response.status) {
+        case 400:
+          throw err.response.data;
+        case 401:
+          throw err.response.data;
+        case 403:
+          throw "forbidden";
+        case 404:
+          throw err.response.data;
+        default:
+          console.log("error");
+          break;
+      }
+    });
+
+  return response;
+};
