@@ -9,7 +9,13 @@ const InputEmail = ({ name, register, errors, validationSchema }) => {
         InputProps={{
           sx: { borderRadius: 2 },
         }}
-        {...register(name, validationSchema)}
+        {...register(name, {
+          pattern: {
+            value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+            message: "Invalid email address",
+          },
+          ...validationSchema,
+        })}
       />
       {errors && errors[name]?.type === "required" && (
         <span className="text-red-500 text-sm">{errors[name]?.message}</span>

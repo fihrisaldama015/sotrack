@@ -1,15 +1,10 @@
 "use client";
 
 import { registerUser } from "@/app/api/repository/UserRepository";
+import InputEmail from "@/app/components/InputEmailComponent";
 import PasswordInput from "@/app/components/PasswordInputComponent";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-import {
-  Button,
-  FormControl,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, FormControl, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -65,28 +60,14 @@ const SignUpFormComponent = () => {
         <Typography className="mb-3 font-medium text-base">
           Email Address
         </Typography>
-        <TextField
-          placeholder="email@domain.com"
-          type="email"
-          InputProps={{ sx: { borderRadius: 2 } }}
-          {...register("email", {
+        <InputEmail
+          name={"email"}
+          errors={errors}
+          register={register}
+          validationSchema={{
             required: "Email is required",
-            pattern: {
-              value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-              message: "Invalid email address",
-            },
-          })}
+          }}
         />
-        {errors && errors["email"]?.type === "required" && (
-          <span className="text-red-500 text-sm">
-            {errors["email"]?.message}
-          </span>
-        )}
-        {errors && errors["email"]?.type === "pattern" && (
-          <span className="text-red-500 text-sm">
-            {errors["email"]?.message}
-          </span>
-        )}
       </FormControl>
       <FormControl>
         <Typography className="mb-3 font-medium text-base">Password</Typography>
