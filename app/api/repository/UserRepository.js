@@ -5,6 +5,11 @@ export const loginUser = async (data) => {
   return response;
 };
 
+export const registerUser = async (data) => {
+  const response = await PROVIDER_POST(`register`, data);
+  return response;
+};
+
 export const verifyOTP = async (data, token) => {
   const response = await PROVIDER_PUT(`verifyOtp`, data, token);
   return response;

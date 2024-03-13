@@ -1,0 +1,132 @@
+"use client";
+
+import { registerUser } from "@/app/api/repository/UserRepository";
+import PasswordInput from "@/app/components/PasswordInputComponent";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+import {
+  Button,
+  FormControl,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
+const SignUpFormComponent = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const router = useRouter();
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await registerUser({
+        email: data.email,
+        password: data.password,
+      });
+      if (res) {
+        toast.success(
+          `Congratulations you're accound has been successfully created!, ${res.message}`,
+          {
+            position: "top-center",
+            autoClose: 5000,
+          }
+        );
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error(
+        `${
+          error?.error
+            ? error?.error
+            : "Terjadi kesalahan dari server, coba lagi"
+        }`,
+        {
+          position: "top-center",
+          autoClose: 5000,
+        }
+      );
+      console.log({ error: error });
+    }
+  };
+
+  return (
+    <form
+      style={{ width: 420 }}
+      className="flex flex-col gap-7"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <FormControl>
+        <Typography className="mb-3 font-medium text-base">
+          Email Address
+        </Typography>
+        <TextField
+          placeholder="email@domain.com"
+          type="email"
+          InputProps={{ sx: { borderRadius: 2 } }}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+              message: "Invalid email address",
+            },
+          })}
+        />
+        {errors && errors["email"]?.type === "required" && (
+          <span className="text-red-500 text-sm">
+            {errors["email"]?.message}
+          </span>
+        )}
+        {errors && errors["email"]?.type === "pattern" && (
+          <span className="text-red-500 text-sm">
+            {errors["email"]?.message}
+          </span>
+        )}
+      </FormControl>
+      <FormControl>
+        <Typography className="mb-3 font-medium text-base">Password</Typography>
+        <PasswordInput
+          name="password"
+          register={register}
+          validationSchema={{
+            required: "Password Is Required",
+            minLength: {
+              value: 6,
+              message: "Please enter a minimum of 6 characters",
+            },
+          }}
+          errors={errors}
+        />
+      </FormControl>
+      <Stack direction={"column"}>
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          disabled={isSubmitting}
+          className="mt-3 mb-5 py-3 rounded-lg font-semibold tracking-wide text-xl"
+        >
+          {isSubmitting ? (
+            <RotateRightIcon className="animate-spin" />
+          ) : (
+            "Sign Up"
+          )}
+        </Button>
+
+        <Typography className="text-center text-[#4F4F4F]">
+          Already have an account?{" "}
+          <Link href={"/login"} className="no-underline text-primary-800">
+            Login here.
+          </Link>
+        </Typography>
+      </Stack>
+    </form>
+  );
+};
+
+export default SignUpFormComponent;
