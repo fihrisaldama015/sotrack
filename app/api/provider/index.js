@@ -1,10 +1,11 @@
 import { BASE_URL } from "@/app/utils/constants";
 import axios from "axios";
 
-export const PROVIDER_GET = async (pathUrl) => {
+export const PROVIDER_GET = async (pathUrl, token = "") => {
   const headers = {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
+    Authorization: `Bearer ${token}`,
   };
   const response = await axios
     .get(`${BASE_URL}/${pathUrl}`, { headers })
@@ -67,10 +68,11 @@ export const PROVIDER_POST = async (pathUrl, data, token = "") => {
   return response;
 };
 
-export const PROVIDER_DELETE = async (pathUrl, data) => {
+export const PROVIDER_DELETE = async (pathUrl, data, token) => {
   const headers = {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
+    Authorization: `Bearer ${token}`,
   };
 
   const response = await axios
@@ -96,6 +98,7 @@ export const PROVIDER_DELETE = async (pathUrl, data) => {
           throw err.response.data;
         default:
           console.log("error");
+          throw err.response.data;
           break;
       }
     });

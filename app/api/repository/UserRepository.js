@@ -1,4 +1,5 @@
 import {
+  PROVIDER_GET,
   PROVIDER_POST,
   PROVIDER_PUT,
   PROVIDER_PUT_WITH_PARAMS,
@@ -29,11 +30,17 @@ export const resetPassword = async (data, params) => {
 };
 
 export const verifyOTP = async (data, token) => {
-  const response = await PROVIDER_POST(`verifyOtp`, data, token);
+  const response = await PROVIDER_PUT(`verifyOtp`, data, token);
   return response;
 };
 
 export const refreshOTP = async (data, token) => {
-  const response = await PROVIDER_POST(`refreshOtp`, data, token);
+  const response = await PROVIDER_PUT(`refreshOtp`, data, token);
+  return response;
+};
+
+export const refreshToken = async (token) => {
+  const response = await PROVIDER_GET(`refreshToken`, token);
+  console.log("yahahahaha");
   return response;
 };

@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const LoginSlice = createSlice({
-  name: "Modal",
+  name: "login",
   initialState,
   reducers: {
     changeEmailLogin: (state, action) => {

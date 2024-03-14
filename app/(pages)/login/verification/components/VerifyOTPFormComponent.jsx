@@ -1,24 +1,43 @@
 "use client";
 
 import { refreshOTP, verifyOTP } from "@/app/api/repository/UserRepository";
+import {
+  FormatCountDown,
+  openPopUpError,
+  openPopUpSuccess,
+} from "@/app/utils/extensions";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
 import { Button, Stack, Typography } from "@mui/material";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import RotateRightIcon from "@mui/icons-material/RotateRight";
 
 const VerifyOTPForm = () => {
   const [isResendingOTP, setIsResendingOTP] = useState(false);
+  const [timerCountDown, setTimerCountdown] = useState(240);
   const { emailLogin, otp_token } = useSelector((state) => state.loginReducer);
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { isSubmitting },
   } = useForm();
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const myInterval = setInterval(() => {
+      if (timerCountDown > 0) {
+        setTimerCountdown((prev) => prev - 1);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+  }, []);
 
   const onSubmit = async (data) => {
     const joinedOTP = `${data.first}${data.second}${data.third}${data.fourth}`;
@@ -30,23 +49,18 @@ const VerifyOTPForm = () => {
         otp_token
       );
       if (res) {
-        toast.success(`Success Verify! ${res.message}`, {
-          position: "top-center",
-          autoClose: 5000,
+        openPopUpSuccess(dispatch, `Success Verify! ${res.message}`);
+        setCookie("accessToken", res.data.accessToken, {
+          path: "/",
+          maxAge: 60 * 15,
         });
+
         router.push("/dashboard");
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }
@@ -61,26 +75,17 @@ const VerifyOTPForm = () => {
     try {
       const res = await refreshOTP({}, otp_token);
       if (res) {
-        toast.success(`${res.message}! Please Check your Email.`, {
-          position: "top-center",
-          autoClose: 5000,
-        });
-        // router.push("/dashboard");
+        openPopUpSuccess(dispatch, `${res.message}! Please Check your Email.`);
+        setTimerCountdown(240);
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }
+    reset();
     setIsResendingOTP(false);
   };
   return (
@@ -98,7 +103,6 @@ const VerifyOTPForm = () => {
             maxLength="1"
             disabled={isSubmitting}
             autoFocus={true}
-            onPaste="return false;"
             {...register("first", { required: true })}
           />
           <input
@@ -107,7 +111,6 @@ const VerifyOTPForm = () => {
             id="second"
             maxLength="1"
             disabled={isSubmitting}
-            onPaste="return false;"
             {...register("second", { required: true })}
           />
           <input
@@ -116,7 +119,6 @@ const VerifyOTPForm = () => {
             id="third"
             maxLength="1"
             disabled={isSubmitting}
-            onPaste="return false;"
             {...register("third", { required: true })}
           />
           <input
@@ -125,7 +127,6 @@ const VerifyOTPForm = () => {
             id="fourth"
             maxLength="1"
             disabled={isSubmitting}
-            onPaste="return false;"
             {...register("fourth", { required: true })}
           />
         </div>
@@ -134,7 +135,9 @@ const VerifyOTPForm = () => {
           className="text-primary-500 cursor-pointer"
           onClick={handleResendOTP}
         >
-          Resend Code
+          Resend Code {"("}
+          {FormatCountDown(timerCountDown)}
+          {")"}
         </Typography>
         <Button
           type="submit"

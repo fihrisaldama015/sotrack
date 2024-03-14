@@ -2,13 +2,17 @@ import { DOWNLOAD } from "@/app/utils/assets";
 import { Box, Divider, Typography } from "@mui/material";
 import Image from "next/image";
 import SocialMediaTabsComponent from "./components/SocialMediaTabsComponent";
+import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Social Media Monitoring",
   description: "Social Media Monitoring Dashboard",
 };
 
-export default function RootLayout({ children }) {
+export default async function SettingLayout({ children }) {
+  const token = cookies().get("accessToken")?.value;
+  const allPlatform = await getAllPlatform(token);
   return (
     <Box className="space-y-4">
       <Box
@@ -28,14 +32,14 @@ export default function RootLayout({ children }) {
         </Box>
       </Box>
       <Divider className="border-none h-[2px] bg-neutral-300" />
-      <Box className="p-6">
+      <Box className="p-6 bg-white rounded-lg">
         <Box
           display="flex"
           marginBottom={"40px"}
           borderBottom={"1px solid #868E96"}
           className="w-fit"
         >
-          <SocialMediaTabsComponent />
+          {allPlatform && <SocialMediaTabsComponent platform={allPlatform} />}
         </Box>
         {children}
       </Box>

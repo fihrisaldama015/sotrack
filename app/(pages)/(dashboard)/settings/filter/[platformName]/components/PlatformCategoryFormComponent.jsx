@@ -1,9 +1,9 @@
 "use client";
+import { addFilter } from "@/app/api/repository/FilterRepository";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import {
-  Box,
   Button,
   FormControl,
-  FormGroup,
   InputLabel,
   MenuItem,
   Select,
@@ -12,35 +12,40 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const styles = () => ({
-  cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
-      borderColor: `#ff0 !important`,
-    },
-  },
-
-  cssFocused: {},
-
-  notchedOutline: {
-    borderWidth: "1px",
-    borderColor: "green !important",
-  },
-});
-
-const TwitterCategoryFormComponent = () => {
-  const [category, setCategory] = useState("");
+const PlatformCategoryForm = ({ token, category }) => {
+  const [categoryId, setCategoryId] = useState("");
   const [parameter, setParameter] = useState("");
+  const dispatch = useDispatch();
+  const { platformId } = useSelector((state) => state.platformReducer);
 
-  const handleSubmitFilter = (e) => {
+  const CATEGORY_COLOR = new Map()
+    .set("Keyword", "#3E3AFF")
+    .set("Mention", "#F4C41A")
+    .set("Topic", "#1B59F8");
+
+  const handleSubmitFilter = async (e) => {
     e.preventDefault();
-    console.log({ category, parameter });
-    setCategory("");
+    try {
+      await addFilter(
+        {
+          category_id: categoryId,
+          parameter,
+          platform_id: platformId,
+        },
+        token
+      );
+      openPopUpSuccess(dispatch, "Success Add Filter");
+    } catch (error) {
+      openPopUpError(dispatch, `${error.error}: ${error.message}`);
+    }
+    setCategoryId("");
     setParameter("");
   };
 
   const resetFilter = () => {
-    setCategory("");
+    setCategoryId("");
     setParameter("");
   };
 
@@ -61,15 +66,16 @@ const TwitterCategoryFormComponent = () => {
           onChange={(e) => setCategory(e.target.value)}
           className="rounded-lg"
         >
-          <MenuItem value={"keyword"} className="text-[#3E3AFF] font-bold">
-            Keyword
-          </MenuItem>
-          <MenuItem value={"mention"} className="text-[#F4C41A] font-bold">
-            Mention
-          </MenuItem>
-          <MenuItem value={"topic"} className="text-[#1B59F8] font-bold">
-            Topic
-          </MenuItem>
+          {category?.map((item) => (
+            <MenuItem
+              key={item.id}
+              value={item.id}
+              className={`font-bold`}
+              sx={{ color: `${CATEGORY_COLOR.get(item.name)}` }}
+            >
+              {item.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <Typography className="mt-2 font-semibold text-sm">Parameter</Typography>
@@ -105,4 +111,4 @@ const TwitterCategoryFormComponent = () => {
   );
 };
 
-export default TwitterCategoryFormComponent;
+export default PlatformCategoryForm;

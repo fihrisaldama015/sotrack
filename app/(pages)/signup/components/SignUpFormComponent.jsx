@@ -26,7 +26,7 @@ const SignUpFormComponent = () => {
       });
       if (res) {
         toast.success(
-          `Congratulations you're accound has been successfully created!, ${res.message}`,
+          `Congratulation, your account has been successfully created!`,
           {
             position: "top-center",
             autoClose: 5000,

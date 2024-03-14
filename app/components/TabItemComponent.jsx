@@ -1,9 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import Link from "next/link";
 
-const TabItemComponent = ({ label, href, currentRoute }) => {
+const TabItemComponent = ({ label, href, currentRoute, onClick }) => {
   return (
-    <Link href={href} className="no-underline">
+    <div className="no-underline" onClick={onClick}>
       <Box
         className="px-5 pb-2.5 cursor-pointer hover:border-black group transition-all"
         borderBottom={"2px solid"}
@@ -16,7 +15,7 @@ const TabItemComponent = ({ label, href, currentRoute }) => {
           {label}
         </Typography>
       </Box>
-    </Link>
+    </div>
   );
 };
 

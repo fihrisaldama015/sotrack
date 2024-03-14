@@ -7,6 +7,7 @@ import {
   changeEmailLogin,
   changeOTPToken,
 } from "@/app/redux/slices/LoginSlice";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import { Button, FormControl, Stack, Typography } from "@mui/material";
 import Link from "next/link";
@@ -31,10 +32,7 @@ const LoginFormComponent = () => {
         password: data.password,
       });
       if (res) {
-        toast.success(`Success login!, ${res.message}`, {
-          position: "top-center",
-          autoClose: 5000,
-        });
+        openPopUpSuccess(dispatch, `Success login!, ${res.message}`);
         dispatch(
           changeEmailLogin({
             emailLogin: data.email,
@@ -48,16 +46,9 @@ const LoginFormComponent = () => {
         router.push("/login/verification");
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }
