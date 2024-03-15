@@ -24,7 +24,11 @@ const FilterPlatformPage = async ({ params }) => {
         <Typography className="mb-6 text-base font-semibold text-[#343A40]">
           Filter Settings
         </Typography>
-        <PlatformCategoryForm token={token} category={category} />
+        <PlatformCategoryForm
+          token={token}
+          category={category}
+          platformName={platformName}
+        />
       </Box>
       <Box className="my-0 h-full flex flex-col justify-start">
         <Typography className=" text-base font-semibold text-[#343A40]">

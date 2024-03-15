@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const PlatformCategoryForm = ({ token, category }) => {
+const PlatformCategoryForm = ({ token, category, platformName }) => {
   const [categoryId, setCategoryId] = useState("");
   const [parameter, setParameter] = useState("");
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ const PlatformCategoryForm = ({ token, category }) => {
         token
       );
       openPopUpSuccess(dispatch, "Success Add Filter");
+      location.reload();
     } catch (error) {
       openPopUpError(dispatch, `${error.error}: ${error.message}`);
     }
@@ -61,9 +62,9 @@ const PlatformCategoryForm = ({ token, category }) => {
         <Select
           labelId="category-select-label"
           id="category-select"
-          value={category}
+          value={categoryId}
           label="Select Category"
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => setCategoryId(e.target.value)}
           className="rounded-lg"
         >
           {category?.map((item) => (

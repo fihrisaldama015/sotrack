@@ -4,7 +4,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 const AlertWarning = ({ isOpen, action, message, close }) => {
   return (
     <Box
-      className="absolute w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+      className="fixed w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
       sx={{
         opacity: isOpen ? "1" : "0",
         visibility: isOpen ? "visible" : "hidden",

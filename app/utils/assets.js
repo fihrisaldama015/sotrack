@@ -9,6 +9,10 @@ const BG_NEW_PASSWORD = "/assets/images/new_password_bg.png";
 const BOTTOM_ARROW = "/assets/icon/Chevron.svg";
 const UNION = "/assets/icon/Union.svg";
 const DOWNLOAD = "/assets/icon/Download.svg";
+const TWITTER = "/assets/icon/twitter.svg";
+const INSTAGRAM = "/assets/icon/instagram.svg";
+const FACEBOOK = "/assets/icon/facebook.svg";
+const TIKTOK = "/assets/icon/tiktok.svg";
 
 export {
   ADMA_LOGO,
@@ -18,6 +22,10 @@ export {
   BG_OTP,
   BOTTOM_ARROW,
   DOWNLOAD,
+  INSTAGRAM,
   POLDA_LOGO,
+  TWITTER,
   UNION,
+  FACEBOOK,
+  TIKTOK,
 };
