@@ -31,6 +31,7 @@ export const resetPassword = async (data, params) => {
 
 export const verifyOTP = async (data, token) => {
   const response = await PROVIDER_PUT(`verifyOtp`, data, token);
+  console.log("opt response => ", { response });
   return response;
 };
 

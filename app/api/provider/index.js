@@ -6,9 +6,10 @@ export const PROVIDER_GET = async (pathUrl, token = "") => {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
     Authorization: `Bearer ${token}`,
+    "Access-Control-Allow-Credentials": true,
   };
   const response = await axios
-    .get(`${BASE_URL}/${pathUrl}`, { headers })
+    .get(`${BASE_URL}/${pathUrl}`, { headers, withCredentials: true })
     .then((res) => {
       switch (res.status) {
         case 200:
@@ -34,10 +35,11 @@ export const PROVIDER_POST = async (pathUrl, data, token = "") => {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
     Authorization: `Bearer ${token}`,
+    "Access-Control-Allow-Credentials": true,
   };
 
   const response = await axios
-    .post(`${BASE_URL}/${pathUrl}`, data, { headers })
+    .post(`${BASE_URL}/${pathUrl}`, data, { headers, withCredentials: true })
     .then((res) => {
       switch (res.status) {
         case 200:
@@ -73,10 +75,11 @@ export const PROVIDER_DELETE = async (pathUrl, data, token) => {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
     Authorization: `Bearer ${token}`,
+    "Access-Control-Allow-Credentials": true,
   };
 
   const response = await axios
-    .delete(`${BASE_URL}/${pathUrl}`, { headers })
+    .delete(`${BASE_URL}/${pathUrl}`, { headers, withCredentials: true })
     .then((res) => {
       switch (res.status) {
         case 200:
@@ -111,13 +114,15 @@ export const PROVIDER_PUT = async (pathUrl, data, token = "") => {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
     Authorization: `Bearer ${token}`,
+    "Access-Control-Allow-Credentials": true,
   };
 
   const response = await axios
-    .put(`${BASE_URL}/${pathUrl}`, data, { headers })
+    .put(`${BASE_URL}/${pathUrl}`, data, { headers, withCredentials: true })
     .then((res) => {
       switch (res.status) {
         case 200:
+          console.log("res => ", { res });
           return res.data;
         case 201:
           return res.data;
@@ -149,6 +154,7 @@ export const PROVIDER_PUT_WITH_PARAMS = async (pathUrl, data, params) => {
   const headers = {
     "Content-Type": "application/json",
     // 'ADS-Key':ADS_KEY
+    "Access-Control-Allow-Credentials": true,
   };
 
   const parsedParams = Object.keys(params)
@@ -156,7 +162,10 @@ export const PROVIDER_PUT_WITH_PARAMS = async (pathUrl, data, params) => {
     .join("&");
 
   const response = await axios
-    .put(`${BASE_URL}/${pathUrl}?${parsedParams}`, data, { headers })
+    .put(`${BASE_URL}/${pathUrl}?${parsedParams}`, data, {
+      headers,
+      withCredentials: true,
+    })
     .then((res) => {
       switch (res.status) {
         case 200:
