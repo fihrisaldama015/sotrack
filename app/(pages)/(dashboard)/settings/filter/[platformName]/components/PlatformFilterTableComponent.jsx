@@ -1,18 +1,19 @@
 "use client";
 import {
   deleteFilter,
-  getAllFilterByPlatformId,
+  getUserFilterByPlatformId,
 } from "@/app/api/repository/FilterRepository";
 import AlertWarning from "@/app/components/AlertWarningComponent";
-import { FACEBOOK, INSTAGRAM, TIKTOK, TWITTER } from "@/app/utils/assets";
+import { changeFilterData } from "@/app/redux/slices/FilterSlice";
+import { FACEBOOK, INSTAGRAM, NEWS, TIKTOK, TWITTER } from "@/app/utils/assets";
 import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import { RotateRightOutlined } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Typography } from "@mui/material";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,54 +27,64 @@ const PLATFORM_ICON = new Map()
   .set("twitter", TWITTER)
   .set("instagram", INSTAGRAM)
   .set("facebook", FACEBOOK)
-  .set("tiktok", TIKTOK);
+  .set("tiktok", TIKTOK)
+  .set("news", NEWS);
 
-const formatDataToTable = (data, platformName, categoryMap) => {
-  return data.map((item, index) => {
-    return [
-      item.id,
-      index + 1,
-      categoryMap.get(item.category_id),
-      platformName,
-      item.parameter,
-      "",
-    ];
-  });
-};
+// const formatDataToTable = (data, platformName, categoryMap) => {
+//   return data.map((item, index) => {
+//     return [
+//       item.id,
+//       item.category_id,
+//       index + 1,
+//       categoryMap.get(item.category_id),
+//       platformName,
+//       item.parameter,
+//       "",
+//     ];
+//   });
+// };
 
-const getInitialData = async (platformId, token, platformName, category) => {
-  let categoryMap = new Map();
+// const getInitialData = async (platformId, token, platformName, category) => {
+//   let categoryMap = new Map();
 
-  category.forEach((item) => {
-    categoryMap.set(item.id, item.name);
-  });
-  const filter = await getAllFilterByPlatformId(platformId, token);
-  if (filter?.length > 0) {
-    return formatDataToTable(filter, platformName, categoryMap);
-  }
-  return [];
-};
+//   category?.forEach((item) => {
+//     categoryMap.set(item.id, item.name);
+//   });
+//   const filter = await getUserFilterByPlatformId(platformId, token);
+//   if (filter?.length > 0) {
+//     return formatDataToTable(filter, platformName, categoryMap);
+//   }
+//   return [];
+// };
 
-const PlatformFilterTable = ({ platformName, token, category }) => {
-  const [filterData, setFilterData] = useState([]);
+const PlatformFilterTable = ({
+  platformName,
+  token,
+  category,
+  filterData,
+  refreshPage,
+}) => {
   const [filterId, setFilterId] = useState("");
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const { platformId } = useSelector((state) => state.platformReducer);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (filterData.length > 0) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  }, [filterData]);
 
   const handleDeleteFilter = async () => {
     setIsAlertOpen(false);
     try {
       setIsLoading(true);
       const response = await deleteFilter(filterId, token);
-      const data = await getInitialData(
-        platformId,
-        token,
-        platformName,
-        category
-      );
-      setFilterData(data);
+      refreshPage();
       setIsLoading(false);
 
       openPopUpSuccess(dispatch, "Success Delete Filter");
@@ -81,20 +92,6 @@ const PlatformFilterTable = ({ platformName, token, category }) => {
       openPopUpError(dispatch, `${error?.error}: ${error?.message}`);
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      const data = await getInitialData(
-        platformId,
-        token,
-        platformName,
-        category
-      );
-      setFilterData(data);
-      setIsLoading(false);
-    })();
-  }, []);
 
   const options = {
     filterType: "checkbox",
@@ -116,6 +113,7 @@ const PlatformFilterTable = ({ platformName, token, category }) => {
 
   const columns = [
     { name: "id", label: "Id", options: { display: false } },
+    { name: "category_id", label: "Category Id", options: { display: false } },
     {
       name: "no",
       label: "No",
@@ -164,7 +162,7 @@ const PlatformFilterTable = ({ platformName, token, category }) => {
               direction={"row"}
               spacing={1}
               alignItems={"center"}
-              className="py-1 pr-3 pl-2 rounded-lg ring-1 ring-[#F0F0F0] shadow-sm"
+              className="py-1 pr-3 pl-2 rounded-lg ring-1 ring-[#F0F0F0] shadow-md"
             >
               <Image
                 src={PLATFORM_ICON.get(value)}
@@ -219,6 +217,20 @@ const PlatformFilterTable = ({ platformName, token, category }) => {
                 className="items-center p-1 rounded-lg bg-[#FFF0B9] cursor-pointer"
                 onClick={(event) => {
                   event.stopPropagation();
+                  dispatch(
+                    changeFilterData({
+                      filterData: {
+                        id: tableMeta.rowData[0],
+                        category_id: tableMeta.rowData[1],
+                        category: tableMeta.rowData[3],
+                        platform: tableMeta.rowData[4],
+                        parameter: tableMeta.rowData[5],
+                      },
+                    })
+                  );
+                  router.push(
+                    `/settings/filter/${platformName}/edit/${tableMeta.rowData[0]}`
+                  );
                 }}
               >
                 <EditOutlinedIcon color="warning" />
@@ -238,11 +250,7 @@ const PlatformFilterTable = ({ platformName, token, category }) => {
         action={handleDeleteFilter}
         close={() => setIsAlertOpen(false)}
       />
-      {/* {isLoading ? (
-        <Loader/>
-      ) : ( */}
       <MUIDataTable data={filterData} columns={columns} options={options} />
-      {/* )} */}
     </>
   );
 };

@@ -30,6 +30,15 @@ module.exports = {
       "2xl": "1536px",
       // => @media (min-width: 1536px) { ... }
     },
+    animation: {
+      popup: "popup 0.5s ease-in-out",
+    },
+    keyframes: {
+      popup: {
+        "0%": { transform: "scale(0)" },
+        "100%": { transform: "scale(1)" },
+      },
+    },
   },
   plugins: [],
 };

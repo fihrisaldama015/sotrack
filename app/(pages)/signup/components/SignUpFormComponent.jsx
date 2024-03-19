@@ -3,12 +3,13 @@
 import { registerUser } from "@/app/api/repository/UserRepository";
 import InputEmail from "@/app/components/InputEmailComponent";
 import PasswordInput from "@/app/components/PasswordInputComponent";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import { Button, FormControl, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 const SignUpFormComponent = () => {
   const {
@@ -17,6 +18,7 @@ const SignUpFormComponent = () => {
     formState: { errors, isSubmitting },
   } = useForm();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
     try {
@@ -25,26 +27,16 @@ const SignUpFormComponent = () => {
         password: data.password,
       });
       if (res) {
-        toast.success(
-          `Congratulation, your account has been successfully created!`,
-          {
-            position: "top-center",
-            autoClose: 5000,
-          }
+        openPopUpSuccess(
+          dispatch,
+          `Congratulation, your account has been successfully created!`
         );
         router.push("/login");
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }

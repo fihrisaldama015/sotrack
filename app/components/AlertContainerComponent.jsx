@@ -34,7 +34,7 @@ const Alert = ({ type, message }) => {
     );
   };
   return (
-    <Box className="fixed w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <Box className="fixed w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
       <Box
         className={`p-12 pb-7 flex flex-col gap-2 justify-center items-center w-full rounded-t-xl ${
           type == "error" ? "bg-[#FF7575]" : "bg-[#34D399]"

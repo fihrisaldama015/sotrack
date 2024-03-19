@@ -15,11 +15,6 @@ const SocialMediaTabsComponent = ({ platform }) => {
   };
   return (
     <>
-      {/* <TabItemComponent
-        label={"Twitter"}
-        href="/settings/filter"
-        currentRoute={pathname}
-      /> */}
       {platform?.map((platform) => (
         <TabItemComponent
           key={platform.id}
@@ -29,26 +24,6 @@ const SocialMediaTabsComponent = ({ platform }) => {
           currentRoute={pathname}
         />
       ))}
-      {/* <TabItemComponent
-        label={"Instagram"}
-        href="/settings/filter/instagram"
-        currentRoute={pathname}
-      />
-      <TabItemComponent
-        label={"Facebook"}
-        href="/settings/filter/facebook"
-        currentRoute={pathname}
-      />
-      <TabItemComponent
-        label={"Tiktok"}
-        href="/settings/filter/tiktok"
-        currentRoute={pathname}
-      />
-      <TabItemComponent
-        label={"News"}
-        href="/settings/filter/news"
-        currentRoute={pathname}
-      /> */}
     </>
   );
 };

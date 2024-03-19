@@ -31,7 +31,6 @@ export const resetPassword = async (data, params) => {
 
 export const verifyOTP = async (data, token) => {
   const response = await PROVIDER_PUT(`verifyOtp`, data, token);
-  console.log("opt response => ", { response });
   return response;
 };
 
@@ -40,8 +39,8 @@ export const refreshOTP = async (data, token) => {
   return response;
 };
 
-export const refreshToken = async (token) => {
-  const response = await PROVIDER_GET(`refreshToken`, token);
+export const refreshToken = async () => {
+  const response = await PROVIDER_GET(`refreshToken`);
   console.log("yahahahaha");
   return response;
 };

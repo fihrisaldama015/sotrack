@@ -13,6 +13,7 @@ const TWITTER = "/assets/icon/twitter.svg";
 const INSTAGRAM = "/assets/icon/instagram.svg";
 const FACEBOOK = "/assets/icon/facebook.svg";
 const TIKTOK = "/assets/icon/tiktok.svg";
+const NEWS = "/assets/icon/news.svg";
 
 export {
   ADMA_LOGO,
@@ -22,10 +23,11 @@ export {
   BG_OTP,
   BOTTOM_ARROW,
   DOWNLOAD,
+  FACEBOOK,
   INSTAGRAM,
+  NEWS,
   POLDA_LOGO,
+  TIKTOK,
   TWITTER,
   UNION,
-  FACEBOOK,
-  TIKTOK,
 };

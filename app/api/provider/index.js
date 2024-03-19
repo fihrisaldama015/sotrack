@@ -61,6 +61,8 @@ export const PROVIDER_POST = async (pathUrl, data, token = "") => {
           throw "forbidden";
         case 404:
           throw err.response.data;
+        case 422:
+          throw err.response.data;
         default:
           console.log("error");
           break;
@@ -122,7 +124,6 @@ export const PROVIDER_PUT = async (pathUrl, data, token = "") => {
     .then((res) => {
       switch (res.status) {
         case 200:
-          console.log("res => ", { res });
           return res.data;
         case 201:
           return res.data;

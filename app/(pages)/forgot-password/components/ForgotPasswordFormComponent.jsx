@@ -1,10 +1,11 @@
 "use client";
 import { forgotPassword } from "@/app/api/repository/UserRepository";
 import InputEmail from "@/app/components/InputEmailComponent";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
 import { Button, FormControl, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import RotateRightIcon from "@mui/icons-material/RotateRight";
+import { useDispatch } from "react-redux";
 
 const ForgotPasswordForm = () => {
   const {
@@ -12,6 +13,7 @@ const ForgotPasswordForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
     try {
@@ -19,25 +21,15 @@ const ForgotPasswordForm = () => {
         email: data.email,
       });
       if (res) {
-        toast.success(
-          `${res.message}! If not present, please check spam folder also.`,
-          {
-            position: "top-center",
-            autoClose: 5000,
-          }
+        openPopUpSuccess(
+          dispatch,
+          `${res.message}! If not present, please check spam folder also.`
         );
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }

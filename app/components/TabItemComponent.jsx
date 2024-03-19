@@ -6,11 +6,11 @@ const TabItemComponent = ({ label, href, currentRoute, onClick }) => {
       <Box
         className="px-5 pb-2.5 cursor-pointer hover:border-black group transition-all"
         borderBottom={"2px solid"}
-        borderColor={currentRoute === href ? "black" : "transparent"}
+        borderColor={currentRoute.includes(href) ? "black" : "transparent"}
       >
         <Typography
           className="text-sm font-medium group-hover:text-black transition-all"
-          color={currentRoute === href ? "black" : "#868E96"}
+          color={currentRoute.includes(href) ? "black" : "#868E96"}
         >
           {label}
         </Typography>

@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
+import { useDispatch } from "react-redux";
 
 const ResetPasswordForm = () => {
   const {
@@ -20,24 +22,19 @@ const ResetPasswordForm = () => {
   const password = useRef({});
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   password.current = watch("password", "");
   const resetToken = searchParams.get("reset") || "";
   const onSubmit = async (data) => {
     if (data.password !== data.passwordConfirm) {
-      toast.error(`Password and Confirm Password must be same`, {
-        position: "top-center",
-        autoClose: 5000,
-      });
+      openPopUpError(dispatch, "Password and Confirm Password must be same");
       return;
     }
     if (!resetToken) {
-      toast.error(
-        `Reset token not found!, try using the link from your email`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        "Reset token not found!, try using the link from your email"
       );
       return;
     }
@@ -51,27 +48,16 @@ const ResetPasswordForm = () => {
         }
       );
       if (res) {
-        toast.success(
-          `Congratulations you're new password has been successfully created!. ${res.message}`,
-          {
-            position: "top-center",
-            autoClose: 5000,
-          }
+        openPopUpSuccess(
+          dispatch,
+          `Congratulations you're new password has been successfully created!. ${res.message}`
         );
-
         router.push("/login");
       }
     } catch (error) {
-      toast.error(
-        `${
-          error?.error
-            ? error?.error
-            : "Terjadi kesalahan dari server, coba lagi"
-        }`,
-        {
-          position: "top-center",
-          autoClose: 5000,
-        }
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
       console.log({ error: error });
     }

@@ -1,5 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { LoginSlice, ModalSlice, PlatformSlice, PopupSlice } from "./slices";
+import {
+  FilterSlice,
+  LoginSlice,
+  ModalSlice,
+  PlatformSlice,
+  PopupSlice,
+} from "./slices";
 
 export const Store = configureStore({
   reducer: {
@@ -7,5 +13,6 @@ export const Store = configureStore({
     loginReducer: LoginSlice,
     popupReducer: PopupSlice,
     platformReducer: PlatformSlice,
+    filterReducer: FilterSlice,
   },
 });
