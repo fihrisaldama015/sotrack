@@ -132,7 +132,7 @@ const VerifyOTPForm = () => {
         </div>
         <Typography
           variant="p"
-          className="text-primary-500 cursor-pointer"
+          className="text-primary-500 cursor-pointer w-fit"
           onClick={handleResendOTP}
         >
           Resend Code {"("}

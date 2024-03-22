@@ -1,13 +1,13 @@
 "use client";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Box, Divider, Stack, Typography } from "@mui/material";
+import { setCookie } from "cookies-next";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { POLDA_LOGO, UNION } from "../utils/assets";
-import AccordionItemComponent from "./AccordionItemComponent";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { setCookie } from "cookies-next";
+import AccordionItem from "./AccordionItemComponent";
 import AlertWarning from "./AlertWarningComponent";
 
 const SidebarComponent = () => {
@@ -75,44 +75,32 @@ const SidebarComponent = () => {
           >
             DASHBOARD
           </Typography>
-          <AccordionItemComponent label={"POLDA JATIM"}>
-            <Link href="/dashboard" className="no-underline">
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF]  rounded-lg cursor-pointer ${
-                  pathname == "/dashboard" ? "bg-[#EEF3FF]" : "bg-white"
-                }`}
-              >
-                <Box className="w-2 h-2 bg-[#F2994A] rounded-full"></Box>
-                <Typography
-                  className="text-sm text-neutral-600"
-                  fontWeight={pathname === "/dashboard" ? 600 : 500}
-                >
-                  Analytics
-                </Typography>
-              </Box>
-            </Link>
-            <Link href="/dashboard/timeline" className="no-underline">
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
-                  pathname == "/dashboard/timeline"
-                    ? "bg-[#EEF3FF]"
-                    : "bg-white"
-                }`}
-              >
-                <Box className="w-2 h-2 bg-[#F25E4A] rounded-full"></Box>
-                <Typography
-                  className="text-sm text-neutral-600"
-                  fontWeight={pathname === "/dashboard/timeline" ? 600 : 500}
-                >
-                  Timeline
-                </Typography>
-              </Box>
-            </Link>
-          </AccordionItemComponent>
+          <AccordionItem label={"POLDA JATIM"}>
+            <AccordionItemLink
+              color="#F2994A"
+              label="Analytics"
+              path="/dashboard"
+              pathname={pathname}
+            />
+            <AccordionItemLink
+              color="#F25E4A"
+              label="Timeline"
+              path="/dashboard/timeline"
+              pathname={pathname}
+            />
+            <AccordionItemLink
+              color={"#F25E4A"}
+              label={"Public Report"}
+              path={"/dashboard/public-report"}
+              pathname={pathname}
+            />
+            <AccordionItemLink
+              color={"#F25E4A"}
+              label={"Media Broadcast Hub"}
+              path={"/dashboard/media-broadcast-hub"}
+              pathname={pathname}
+            />
+          </AccordionItem>
         </Box>
         <Box
           display={isMinimized ? "none" : "flex"}
@@ -125,7 +113,7 @@ const SidebarComponent = () => {
           >
             SETTINGS
           </Typography>
-          <AccordionItemComponent label="Settings">
+          <AccordionItem label="Settings">
             <Link href="/settings/filter/twitter" className="no-underline">
               <Box
                 display={"flex"}
@@ -143,7 +131,7 @@ const SidebarComponent = () => {
                 </Typography>
               </Box>
             </Link>
-          </AccordionItemComponent>
+          </AccordionItem>
         </Box>
         <Box className="absolute flex flex-col w-full bottom-0 bg-[#FAFAFA]">
           <Divider className="border-none h-[2px] bg-neutral-300" />
@@ -181,3 +169,28 @@ const SidebarComponent = () => {
 };
 
 export default SidebarComponent;
+
+const AccordionItemLink = ({ label, path, color, pathname }) => {
+  return (
+    <Link href={path} className="no-underline">
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
+          pathname == path ? "bg-[#EEF3FF]" : "bg-white"
+        }`}
+      >
+        <Box
+          className="w-2 h-2 rounded-full"
+          sx={{ backgroundColor: `${color}` }}
+        ></Box>
+        <Typography
+          className="text-sm text-neutral-600"
+          fontWeight={pathname === path ? 600 : 500}
+        >
+          {label}
+        </Typography>
+      </Box>
+    </Link>
+  );
+};

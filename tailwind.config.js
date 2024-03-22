@@ -13,6 +13,15 @@ module.exports = {
           800: "#0F172A",
         },
       },
+      animation: {
+        popup: "popup 0.5s ease-in-out",
+      },
+      keyframes: {
+        popup: {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
     },
     screens: {
       "2xs": "320px",
@@ -29,15 +38,6 @@ module.exports = {
       // => @media (min-width: 1280px) { ... }
       "2xl": "1536px",
       // => @media (min-width: 1536px) { ... }
-    },
-    animation: {
-      popup: "popup 0.5s ease-in-out",
-    },
-    keyframes: {
-      popup: {
-        "0%": { transform: "scale(0)" },
-        "100%": { transform: "scale(1)" },
-      },
     },
   },
   plugins: [],

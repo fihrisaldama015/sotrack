@@ -32,14 +32,14 @@ export default function RootLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    if (!accessToken) {
-      refreshCurrentToken(router);
-    }
-  }, [accessToken]);
+  // useEffect(() => {
+  //   if (!accessToken) {
+  //     refreshCurrentToken(router);
+  //   }
+  // }, [accessToken]);
 
   return (
-    <div className="flex bg-[#F9F9F9]">
+    <div className="flex bg-[#F9F9F9] w-[100vw]">
       <SidebarComponent />
       <div className="bg-[#F9F9F9] py-6 px-8 w-full">{children}</div>
     </div>

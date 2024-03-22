@@ -3,6 +3,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeIsPopUpOpen } from "../redux/slices/PopupSlice";
+import { CheckCircleOutline } from "@mui/icons-material";
 
 const AlertContainer = () => {
   const { isPopUpOpen, popUpMessage, popUpType } = useSelector(
@@ -41,13 +42,20 @@ const Alert = ({ type, message }) => {
         }`}
       >
         <Box className="my-4">
-          <ErrorOutlineIcon
-            className="text-white scale-[2.5]"
-            fontSize="large"
-          />
+          {type === "error" ? (
+            <ErrorOutlineIcon
+              className="text-white scale-[2.5]"
+              fontSize="large"
+            />
+          ) : (
+            <CheckCircleOutline
+              className="text-white scale-[2.5]"
+              fontSize="large"
+            />
+          )}
         </Box>
         <Typography className="font-semibold text-2xl text-white">
-          {type === "error" ? "Error" : "Success"}
+          {type === "error" ? "ERROR" : "SUCCESS"}
         </Typography>
       </Box>
       <Stack

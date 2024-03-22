@@ -3,7 +3,7 @@ import Image from "next/image";
 import { BOTTOM_ARROW } from "../utils/assets";
 import { useState } from "react";
 
-const AccordionItemComponent = ({ children, label }) => {
+const AccordionItem = ({ children, label }) => {
   const [isOpened, setIsOpened] = useState(true);
   return (
     <>
@@ -26,7 +26,7 @@ const AccordionItemComponent = ({ children, label }) => {
       </Box>
       <div
         className={`${
-          isOpened ? "h-[4rem]" : "h-[0px] opacity-0 invisible"
+          isOpened ? "h-fit" : "h-[0px] opacity-0 invisible"
         } flex flex-col gap-2 transition-all duration-200`}
       >
         {children}
@@ -35,4 +35,4 @@ const AccordionItemComponent = ({ children, label }) => {
   );
 };
 
-export default AccordionItemComponent;
+export default AccordionItem;
