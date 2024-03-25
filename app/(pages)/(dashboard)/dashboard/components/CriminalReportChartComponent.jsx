@@ -12,10 +12,10 @@ const CriminalReportChart = ({ data, type }) => {
         padding={0.75}
         innerPadding={0}
         groupMode="grouped"
-        valueScale={{ type: "linear" }}
+        valueScale={{ type: "symlog" }}
         indexScale={{ type: "band", round: true }}
         colors={{ scheme: "category10" }}
-        borderRadius={5}
+        borderRadius={8}
         borderColor={{
           from: "color",
           modifiers: [["darker", 1.6]],
@@ -32,10 +32,14 @@ const CriminalReportChart = ({ data, type }) => {
           tickPadding: 5,
           tickRotation: 0,
           legend:
-            type == "monthly" ? "Month" : type == "yearly" ? "Year" : "Day",
+            type == "monthly"
+              ? "Month"
+              : type == "yearly"
+              ? "Year"
+              : "Week count in Year",
           legendPosition: "middle",
           legendOffset: 32,
-          truncateTickAt: 4,
+          truncateTickAt: 8,
         }}
         enableGridY={false}
         enableLabel={false}

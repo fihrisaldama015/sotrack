@@ -72,96 +72,179 @@ const generateCrimeData = (count) => {
 };
 
 export const getCriminalReportByType = async (type, token) => {
-  const res = await axios.get(
-    //   `crime-statistic`,
-    `https://jsonplaceholder.typicode.com/posts?type=${type}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  const data = generateRandomCriminalReportData(type);
-  return data;
-};
+  const res = await PROVIDER_GET(`criminalReports?range=${type}`, token);
+  const data = res.data;
+  let chartData = [];
 
-const generateRandomCriminalReportData = (type) => {
-  let data;
-  switch (type) {
-    case "monthly":
-      data = generateMonthlyCriminalReportData();
-      break;
-    case "yearly":
-      data = generateYearlyCriminalReportData();
-      break;
-    case "weekly":
-      data = generateWeeklyCriminalReportData();
-      break;
-    default:
-      throw new Error("Invalid type");
+  if (type === "monthly") {
+    chartData = getMonthlyCriminalReport(data);
+  } else if (type === "yearly") {
+    chartData = getYearlyCriminalReport(data);
+  } else if (type === "weekly") {
+    chartData = getWeeklyCriminalReport(data);
   }
-  return data;
+
+  return chartData;
 };
 
-const generateMonthlyCriminalReportData = () => {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const monthlyData = [];
-  for (let i = 0; i < 12; i++) {
-    const monthIndex = i;
-    const data = Math.floor(Math.random() * 350) + 51;
-    monthlyData.push({
-      index: months[monthIndex],
-      data: data,
+const getYearlyCriminalReport = (data) => {
+  const yearData = [];
+
+  Object.keys(data).map((key) => {
+    let totalCountPerYear = 0;
+    const temp_year = data[key];
+    Object.keys(temp_year).map((key) => {
+      let totalCountPerMonth = 0;
+      const temp_month = temp_year[key];
+      Object.keys(temp_month).map((key) => {
+        totalCountPerMonth += temp_month[key];
+      });
+      totalCountPerYear += totalCountPerMonth;
     });
-  }
+    yearData.push({
+      index: key,
+      data: totalCountPerYear,
+    });
+  });
+  return yearData;
+};
+
+const getMonthlyCriminalReport = (data) => {
+  const monthlyData = [];
+  const month = {
+    1: "Jan",
+    2: "Feb",
+    3: "Mar",
+    4: "Apr",
+    5: "May",
+    6: "Jun",
+    7: "Jul",
+    8: "Aug",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+
+  Object.keys(data).map((key) => {
+    const temp_year = data[key];
+    const current_year = key;
+    Object.keys(temp_year).map((key) => {
+      let totalCount = 0;
+      const temp_month = temp_year[key];
+      Object.keys(temp_month).map((key) => {
+        totalCount += temp_month[key];
+      });
+      monthlyData.push({
+        index: `${month[key]} ${current_year}`,
+        data: totalCount,
+      });
+    });
+  });
+
   return monthlyData;
 };
 
-const generateYearlyCriminalReportData = () => {
-  const startYear = 2016;
-  const endYear = 2024;
-  const yearlyData = [];
-  for (let year = startYear; year <= endYear; year++) {
-    const data = Math.floor(Math.random() * 1500) + 501;
-    yearlyData.push({
-      index: year.toString(),
-      data: data,
-    });
-  }
-  return yearlyData;
-};
-
-const generateWeeklyCriminalReportData = () => {
-  const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+const getWeeklyCriminalReport = (data) => {
   const weeklyData = [];
-  for (let i = 0; i < 7; i++) {
-    const dayIndex = i;
-    const data = Math.floor(Math.random() * 30) + 1;
-    weeklyData.push({
-      index: daysOfWeek[dayIndex],
-      data: data,
+
+  Object.keys(data).map((key) => {
+    const temp_year = data[key];
+    const current_year = key;
+    Object.keys(temp_year).map((key) => {
+      const temp_month = temp_year[key];
+      const current_month = key;
+      Object.keys(temp_month).map((key) => {
+        const temp_week = temp_month[key];
+
+        weeklyData.push({
+          index: `Week ${key} (${current_year})`,
+          data: temp_week,
+        });
+      });
     });
-  }
+  });
+
   return weeklyData;
 };
+
+// const generateRandomCriminalReportData = (type) => {
+//   let data;
+//   switch (type) {
+//     case "monthly":
+//       data = generateMonthlyCriminalReportData();
+//       break;
+//     case "yearly":
+//       data = generateYearlyCriminalReportData();
+//       break;
+//     case "weekly":
+//       data = generateWeeklyCriminalReportData();
+//       break;
+//     default:
+//       throw new Error("Invalid type");
+//   }
+//   return data;
+// };
+
+// const generateMonthlyCriminalReportData = () => {
+//   const months = [
+//     "January",
+//     "February",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "August",
+//     "September",
+//     "October",
+//     "November",
+//     "December",
+//   ];
+//   const monthlyData = [];
+//   for (let i = 0; i < 12; i++) {
+//     const monthIndex = i;
+//     const data = Math.floor(Math.random() * 350) + 51;
+//     monthlyData.push({
+//       index: months[monthIndex],
+//       data: data,
+//     });
+//   }
+//   return monthlyData;
+// };
+
+// const generateYearlyCriminalReportData = () => {
+//   const startYear = 2016;
+//   const endYear = 2024;
+//   const yearlyData = [];
+//   for (let year = startYear; year <= endYear; year++) {
+//     const data = Math.floor(Math.random() * 1500) + 501;
+//     yearlyData.push({
+//       index: year.toString(),
+//       data: data,
+//     });
+//   }
+//   return yearlyData;
+// };
+
+// const generateWeeklyCriminalReportData = () => {
+//   const daysOfWeek = [
+//     "Monday",
+//     "Tuesday",
+//     "Wednesday",
+//     "Thursday",
+//     "Friday",
+//     "Saturday",
+//     "Sunday",
+//   ];
+//   const weeklyData = [];
+//   for (let i = 0; i < 7; i++) {
+//     const dayIndex = i;
+//     const data = Math.floor(Math.random() * 30) + 1;
+//     weeklyData.push({
+//       index: daysOfWeek[dayIndex],
+//       data: data,
+//     });
+//   }
+//   return weeklyData;
+// };
