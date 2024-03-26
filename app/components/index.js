@@ -13,9 +13,7 @@ export {
   AlertWarning,
   InputEmail,
   LoadingComponent,
-  LoadingComponent,
   PasswordInput,
-  SidebarComponent,
   SidebarComponent,
   TabItemComponent,
 };
