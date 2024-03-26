@@ -2,20 +2,33 @@
 import { ResponsiveBar } from "@nivo/bar";
 
 const CriminalReportChart = ({ data, type }) => {
+  const length = data.length ? data.length : 1;
+  const borderRadius = 100 / (length * 2);
+  console.log(length);
+  console.log(borderRadius);
   return (
-    <div className="h-72 w-full">
+    <div className="h-72 w-full [&>div>div>svg>g>g>rect]:fill-[url(#mygradient)] [&>div>div]:before:content-[url(/assets/icon/Gradient.svg)]">
+      <svg width="0" height="0" visibility="hidden">
+        <defs>
+          <linearGradient id="mygradient" gradientTransform="rotate(90)">
+            <stop offset="0" class="" stopColor="#6690fa" />
+            <stop offset="1" class="" stopColor="#4679f9" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <ResponsiveBar
         data={data}
         keys={["data"]}
         indexBy={"index"}
-        margin={{ top: 30, right: 0, bottom: 50, left: 20 }}
+        margin={{ top: 20, right: 0, bottom: 40, left: 20 }}
         padding={0.75}
         innerPadding={0}
         groupMode="grouped"
         valueScale={{ type: "symlog" }}
         indexScale={{ type: "band", round: true }}
         colors={{ scheme: "category10" }}
-        borderRadius={8}
+        borderRadius={borderRadius}
         borderColor={{
           from: "color",
           modifiers: [["darker", 1.6]],
@@ -31,15 +44,15 @@ const CriminalReportChart = ({ data, type }) => {
           tickSize: 0,
           tickPadding: 5,
           tickRotation: 0,
-          legend:
-            type == "monthly"
-              ? "Month"
-              : type == "yearly"
-              ? "Year"
-              : "Week count in Year",
-          legendPosition: "middle",
-          legendOffset: 32,
-          truncateTickAt: 8,
+          // legend:
+          //   type == "monthly"
+          //     ? "Month"
+          //     : type == "yearly"
+          //     ? "Year"
+          //     : "Week count in Year",
+          // legendPosition: "middle",
+          // legendOffset: 32,
+          // truncateTickAt: 8,
         }}
         enableGridY={false}
         enableLabel={false}

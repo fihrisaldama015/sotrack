@@ -11,3 +11,15 @@
       -moz-appearance: textfield !important;
     }
  }
+
+ /* svg rect {
+  fill: url(#mygradient);
+} */
+
+#mygradient stop.start-color {
+  stop-color: red;
+}
+
+#mygradient stop.end-color {
+  stop-color: blue;
+}

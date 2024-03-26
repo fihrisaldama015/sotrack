@@ -8,7 +8,7 @@ const TypeOfCrimeChart = ({ data }) => {
         data={data}
         keys={["jumlah laporan", "data"]}
         indexBy="type_of_crime"
-        margin={{ top: 50, right: 20, bottom: 50, left: 30 }}
+        margin={{ top: 30, right: 20, bottom: 30, left: 30 }}
         padding={0.5}
         innerPadding={4}
         groupMode="grouped"
@@ -31,10 +31,10 @@ const TypeOfCrimeChart = ({ data }) => {
           tickSize: 0,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "type of crime",
-          legendPosition: "middle",
-          legendOffset: 32,
-          truncateTickAt: 10,
+          // legend: "type of crime",
+          // legendPosition: "middle",
+          // legendOffset: 32,
+          // truncateTickAt: 10,
         }}
         gridYValues={5}
         enableLabel={false}
