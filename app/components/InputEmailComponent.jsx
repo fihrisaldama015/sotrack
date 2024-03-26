@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 const InputEmail = ({ name, register, errors, validationSchema }) => {
   return (

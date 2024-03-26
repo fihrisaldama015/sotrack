@@ -1,9 +1,12 @@
 "use client";
+import CheckCircleOutline from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { changeIsPopUpOpen } from "../redux/slices/PopupSlice";
-import { CheckCircleOutline } from "@mui/icons-material";
 
 const AlertContainer = () => {
   const { isPopUpOpen, popUpMessage, popUpType } = useSelector(

@@ -1,9 +1,11 @@
+import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
 import { DOWNLOAD } from "@/app/utils/assets";
-import { Box, Divider, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import SocialMediaTabsComponent from "./components/SocialMediaTabsComponent";
-import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
-import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Social Media Monitoring",

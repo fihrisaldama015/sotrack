@@ -1,5 +1,7 @@
 import { getAllCategory } from "@/app/api/repository/CategoryRepository";
-import { Box, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { cookies } from "next/headers";
 import PlatformCategoryForm from "../../components/PlatformCategoryFormComponent";
 

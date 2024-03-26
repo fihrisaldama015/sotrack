@@ -1,14 +1,18 @@
 "use client";
-import { ErrorOutline } from "@mui/icons-material";
-import { CalendarToday } from "@mui/icons-material/";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import CalendarToday from "@mui/icons-material/CalendarToday";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import { getCrimeStatisticByDate } from "@/app/api/repository/DashboardAnalyticsRepository";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import { useState } from "react";
 import TypeOfCrimeChart from "./TypeOfCrimeChartComponent";
-import { getCookie } from "cookies-next";
-import { getCrimeStatisticByDate } from "@/app/api/repository/DashboardAnalyticsRepository";
 
 const CrimeStatistic = () => {
   const [chartData, setChartData] = useState(CRIME_DATA);

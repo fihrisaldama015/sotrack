@@ -1,15 +1,17 @@
 "use client";
-import { ExpandMore } from "@mui/icons-material";
-import { Box, Stack, Typography } from "@mui/material";
+import { getCriminalReportByType } from "@/app/api/repository/DashboardAnalyticsRepository";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { getCookie } from "cookies-next";
 import { useState } from "react";
 import CriminalReportChart from "./CriminalReportChartComponent";
-import { getCriminalReportByType } from "@/app/api/repository/DashboardAnalyticsRepository";
-import { getCookie } from "cookies-next";
 
-const CriminalReport = () => {
+const CriminalReport = ({ initialData }) => {
   const [showParameter, setShowParameter] = useState(false);
   const [parameter, setParameter] = useState("monthly");
-  const [chartData, setChartData] = useState(CRIMINAL_REPORT_DATA);
+  const [chartData, setChartData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = getCookie("accessToken");
 

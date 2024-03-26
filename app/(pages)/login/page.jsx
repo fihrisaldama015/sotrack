@@ -1,7 +1,9 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { BG_LOGIN } from "@/app/utils/assets";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import LoginFormComponent from "./components/LoginFormComponent";
-import { BG_LOGIN } from "@/app/utils/assets";
 
 const LoginPage = () => {
   return (

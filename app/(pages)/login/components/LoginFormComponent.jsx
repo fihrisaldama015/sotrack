@@ -9,12 +9,13 @@ import {
 } from "@/app/redux/slices/LoginSlice";
 import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-import { Button, FormControl, Stack, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 
 const LoginFormComponent = () => {
   const {

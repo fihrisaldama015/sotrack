@@ -1,15 +1,17 @@
 "use client";
 import { resetPassword } from "@/app/api/repository/UserRepository";
 import PasswordInput from "@/app/components/PasswordInputComponent";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-import { Button, FormControl, Stack, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import { useDispatch } from "react-redux";
 
 const ResetPasswordForm = () => {

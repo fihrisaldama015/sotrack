@@ -1,7 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Image from "next/image";
-import { BOTTOM_ARROW } from "../utils/assets";
 import { useState } from "react";
+import { BOTTOM_ARROW } from "../utils/assets";
 
 const AccordionItem = ({ children, label }) => {
   const [isOpened, setIsOpened] = useState(true);

@@ -7,13 +7,14 @@ import {
   openPopUpSuccess,
 } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-import { Button, Stack, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
 const VerifyOTPForm = () => {
   const [isResendingOTP, setIsResendingOTP] = useState(false);

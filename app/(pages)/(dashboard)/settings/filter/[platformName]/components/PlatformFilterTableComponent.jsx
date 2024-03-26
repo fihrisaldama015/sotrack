@@ -1,21 +1,20 @@
 "use client";
-import {
-  deleteFilter,
-  getUserFilterByPlatformId,
-} from "@/app/api/repository/FilterRepository";
+import { deleteFilter } from "@/app/api/repository/FilterRepository";
 import AlertWarning from "@/app/components/AlertWarningComponent";
 import { changeFilterData } from "@/app/redux/slices/FilterSlice";
 import { FACEBOOK, INSTAGRAM, NEWS, TIKTOK, TWITTER } from "@/app/utils/assets";
 import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
-import { RotateRightOutlined } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Box, Stack, Typography } from "@mui/material";
+import RotateRightOutlined from "@mui/icons-material/RotateRightOutlined";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import MUIDataTable from "mui-datatables";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const CATEGORY_COLOR = new Map()
   .set("Keyword", "#3E3AFF")
@@ -30,37 +29,9 @@ const PLATFORM_ICON = new Map()
   .set("tiktok", TIKTOK)
   .set("news", NEWS);
 
-// const formatDataToTable = (data, platformName, categoryMap) => {
-//   return data.map((item, index) => {
-//     return [
-//       item.id,
-//       item.category_id,
-//       index + 1,
-//       categoryMap.get(item.category_id),
-//       platformName,
-//       item.parameter,
-//       "",
-//     ];
-//   });
-// };
-
-// const getInitialData = async (platformId, token, platformName, category) => {
-//   let categoryMap = new Map();
-
-//   category?.forEach((item) => {
-//     categoryMap.set(item.id, item.name);
-//   });
-//   const filter = await getUserFilterByPlatformId(platformId, token);
-//   if (filter?.length > 0) {
-//     return formatDataToTable(filter, platformName, categoryMap);
-//   }
-//   return [];
-// };
-
 const PlatformFilterTable = ({
   platformName,
   token,
-  category,
   filterData,
   refreshPage,
 }) => {
@@ -68,22 +39,17 @@ const PlatformFilterTable = ({
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const { platformId } = useSelector((state) => state.platformReducer);
   const router = useRouter();
 
   useEffect(() => {
-    if (filterData.length > 0) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   }, [filterData]);
 
   const handleDeleteFilter = async () => {
     setIsAlertOpen(false);
     try {
       setIsLoading(true);
-      const response = await deleteFilter(filterId, token);
+      await deleteFilter(filterId, token);
       refreshPage();
       setIsLoading(false);
 

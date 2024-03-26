@@ -3,7 +3,9 @@ import { forgotPassword } from "@/app/api/repository/UserRepository";
 import InputEmail from "@/app/components/InputEmailComponent";
 import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
-import { Button, FormControl, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 

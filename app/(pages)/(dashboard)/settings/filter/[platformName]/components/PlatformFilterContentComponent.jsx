@@ -1,11 +1,13 @@
 "use client";
-import { Box, Stack, Typography } from "@mui/material";
+import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import PlatformCategoryForm from "./PlatformCategoryFormComponent";
 import PlatformFilterTable from "./PlatformFilterTableComponent";
-import { useRouter } from "next/navigation";
-import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 
 const PlatformFilterContent = ({ token, platformName, category }) => {
   const router = useRouter();
@@ -58,7 +60,6 @@ const PlatformFilterContent = ({ token, platformName, category }) => {
         <PlatformFilterTable
           token={token}
           platformName={platformName}
-          category={category}
           filterData={filterData}
           refreshPage={refreshPage}
         />
