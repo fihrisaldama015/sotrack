@@ -41,6 +41,5 @@ export const refreshOTP = async (data, token) => {
 
 export const refreshToken = async () => {
   const response = await PROVIDER_GET(`refreshToken`);
-  console.log("yahahahaha");
   return response;
 };

@@ -2,20 +2,23 @@
 import { ResponsiveBar } from "@nivo/bar";
 
 const TypeOfCrimeChart = ({ data }) => {
+  const length = data?.length ? data.length : 1;
+  let borderRadius = 40 - length * 3;
+  borderRadius = borderRadius < 3 ? 3 : borderRadius;
   return (
     <div className="h-72 w-full">
       <ResponsiveBar
         data={data}
-        keys={["jumlah laporan", "data"]}
+        keys={["data"]}
         indexBy="type_of_crime"
         margin={{ top: 30, right: 20, bottom: 30, left: 30 }}
-        padding={0.5}
+        padding={0.6}
         innerPadding={4}
         groupMode="grouped"
-        valueScale={{ type: "linear" }}
+        valueScale={{ type: "symlog" }}
         indexScale={{ type: "band", round: true }}
         colors={{ scheme: "category10" }}
-        borderRadius={6}
+        borderRadius={borderRadius}
         borderColor={{
           from: "color",
           modifiers: [["darker", 1.6]],
@@ -25,7 +28,7 @@ const TypeOfCrimeChart = ({ data }) => {
         axisLeft={{
           tickSize: 0,
           tickValues: 5,
-          tickPadding: -12,
+          tickPadding: 0,
         }}
         axisBottom={{
           tickSize: 0,
@@ -34,7 +37,7 @@ const TypeOfCrimeChart = ({ data }) => {
           // legend: "type of crime",
           // legendPosition: "middle",
           // legendOffset: 32,
-          // truncateTickAt: 10,
+          truncateTickAt: 8,
         }}
         gridYValues={5}
         enableLabel={false}

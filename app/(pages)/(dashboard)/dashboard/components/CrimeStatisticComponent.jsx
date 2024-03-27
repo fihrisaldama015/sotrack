@@ -14,8 +14,8 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import TypeOfCrimeChart from "./TypeOfCrimeChartComponent";
 
-const CrimeStatistic = () => {
-  const [chartData, setChartData] = useState(CRIME_DATA);
+const CrimeStatistic = ({ initialData }) => {
+  const [chartData, setChartData] = useState(initialData);
   const [startDate, setStartDate] = useState(dayjs().date(1));
   const [endDate, setEndDate] = useState(dayjs());
 
@@ -27,6 +27,14 @@ const CrimeStatistic = () => {
 
   const refreshChart = async (e) => {
     e.preventDefault();
+    if (startDate.isAfter(endDate)) {
+      alert("Start date cannot be after end date");
+      return;
+    }
+    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
+      alert("Date cannot be in the future");
+      return;
+    }
     setChartStartDate(startDate);
     setChartEndDate(endDate);
     setShowDatePicker(false);

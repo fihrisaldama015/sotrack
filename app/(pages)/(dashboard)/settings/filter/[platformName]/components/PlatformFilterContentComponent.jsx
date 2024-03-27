@@ -28,8 +28,6 @@ const PlatformFilterContent = ({ token, platformName, category }) => {
   }, []);
 
   const refreshPage = async () => {
-    console.log("refreshing");
-
     const data = await getInitialData(
       platformId,
       token,
