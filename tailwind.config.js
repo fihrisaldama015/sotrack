@@ -12,6 +12,9 @@ module.exports = {
           500: "#1B59F8",
           800: "#0F172A",
         },
+        grey: {
+          800: "#64748B",
+        },
       },
       animation: {
         popup: "popup 0.5s ease-in-out",

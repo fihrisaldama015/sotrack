@@ -13,10 +13,11 @@ import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import { useState } from "react";
 import TypeOfCrimeChart from "./TypeOfCrimeChartComponent";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const CrimeStatistic = ({ initialData }) => {
   const [chartData, setChartData] = useState(initialData);
-  const [startDate, setStartDate] = useState(dayjs().date(1));
+  const [startDate, setStartDate] = useState(dayjs().date(0));
   const [endDate, setEndDate] = useState(dayjs());
 
   const [chartStartDate, setChartStartDate] = useState(startDate);
@@ -114,8 +115,15 @@ const CrimeStatistic = ({ initialData }) => {
           </form>
         </Box>
       </Stack>
-
-      <TypeOfCrimeChart data={isLoading ? [] : chartData} />
+      <Box className="relative">
+        {isLoading && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8 flex items-center gap-2 w-48">
+            <LoadingSpinner />
+            Loading Chart Data
+          </div>
+        )}
+        <TypeOfCrimeChart data={isLoading ? [] : chartData} />
+      </Box>
     </Box>
   );
 };

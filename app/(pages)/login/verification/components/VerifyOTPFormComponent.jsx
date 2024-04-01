@@ -10,7 +10,7 @@ import RotateRightIcon from "@mui/icons-material/RotateRight";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { setCookie } from "cookies-next";
+import { getCookie, getCookies, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,6 +55,17 @@ const VerifyOTPForm = () => {
           path: "/",
           maxAge: 60 * 15,
         });
+        const allCookies = getCookies();
+        const cookieHeaders = res;
+        // cookieHeaders.split("; ");
+        console.log("🚀 ~ onSubmit ~ cookieHeaders:", cookieHeaders);
+
+        console.log("🚀 ~ onSubmit ~ allCookies:", allCookies);
+        // const refreshToken = getCookie("refresh_token");
+        // setCookie("refresh_token", refreshToken, {
+        //   path: "/",
+        //   maxAge: 60 * 60 * 24 * 7,
+        // });
 
         router.push("/dashboard");
       }

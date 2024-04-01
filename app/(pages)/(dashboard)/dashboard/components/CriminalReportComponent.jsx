@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
 import { useState } from "react";
 import CriminalReportChart from "./CriminalReportChartComponent";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const CriminalReport = ({ initialData }) => {
   const [showParameter, setShowParameter] = useState(false);
@@ -79,7 +80,13 @@ const CriminalReport = ({ initialData }) => {
         </Box>
       </Stack>
 
-      <Box className="px-4">
+      <Box className="px-4 relative">
+        {isLoading && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8 flex items-center gap-2 w-48">
+            <LoadingSpinner />
+            Loading Chart Data
+          </div>
+        )}
         <CriminalReportChart
           data={isLoading ? [] : chartData}
           type={parameter}

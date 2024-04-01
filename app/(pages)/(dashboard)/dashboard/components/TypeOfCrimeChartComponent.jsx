@@ -2,7 +2,7 @@
 import { ResponsiveBar } from "@nivo/bar";
 
 const TypeOfCrimeChart = ({ data }) => {
-  const length = data?.length ? data.length : 1;
+  const length = data?.length > 0 ? data.length : 1;
   let borderRadius = 40 - length * 3;
   borderRadius = borderRadius < 3 ? 3 : borderRadius;
   return (

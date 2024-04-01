@@ -7,6 +7,8 @@ import {
 } from "@/app/api/repository/DashboardAnalyticsRepository";
 import { cookies } from "next/headers";
 import dayjs from "dayjs";
+import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
+import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
 
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
@@ -19,7 +21,7 @@ const getInitialCriminalReport = async () => {
 };
 
 const getInitialCrimeStatistic = async () => {
-  const startDate = dayjs().day(1);
+  const startDate = dayjs().day(0);
   const endDate = dayjs();
   const accessToken = cookies().get("accessToken")?.value;
   try {
@@ -39,10 +41,18 @@ const DashboardPage = async () => {
   const initialCriminalReport = await getInitialCriminalReport();
 
   return (
-    <Stack direction={"column"} className="max-w-[calc(100vw-350px)] ">
-      <Stack direction={"row"} spacing={1.5} className="w-full">
+    <Stack
+      direction={"column"}
+      spacing={1.5}
+      className="max-w-[calc(100vw-350px)] "
+    >
+      <Stack className="lg:flex-row flex-col gap-3 w-full">
         <CrimeStatistic initialData={initialCrimeStatistic} />
         <CriminalReport initialData={initialCriminalReport} />
+      </Stack>
+      <Stack className="lg:flex-row flex-col gap-3 w-full">
+        <MostDiscusedLately />
+        <SocialMentionTracker />
       </Stack>
     </Stack>
   );

@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
   }, [accessToken]);
 
   return (
-    <div className="flex bg-[#F9F9F9] w-[100vw]">
+    <div className="flex bg-[#F9F9F9]">
       <SidebarComponent />
       <div className="bg-[#F9F9F9] py-6 px-8 w-full">{children}</div>
     </div>
