@@ -1,18 +1,37 @@
-import Stack from "@mui/material/Stack";
-import SourceDetailContent from "./components/SourceDetailContentComponent";
+import dayjs from "dayjs";
+import { PROVIDER_GET } from "../provider";
 
-const SourceDetailPage = ({ params }) => {
-  return (
-    <Stack spacing={2} className="w-full">
-      <SourceDetailContent
-        platformId={params.platformId}
-        sourceTrackerData={INITIAL_DATA}
-      />
-    </Stack>
+export const getSourceTrackerByDate = async (startDate, endDate, token) => {
+  const currentDate = dayjs().format("YYYY-MM-DD");
+
+  const { data } = await fetch(
+    //   `criminalType?from=${startDate}&to=${endDate}`,
+    `https://jsonplaceholder.typicode.com/posts?start_date=${startDate}&end_date=${endDate}`
+    // token
   );
+
+  if (currentDate < startDate || currentDate < endDate) {
+    throw new Error("Invalid date");
+  }
+  let sourceTrackerData = generatesourceTrackerData(startDate, endDate);
+  //   let sourceTrackerData = getSourceTracker(data);
+  return sourceTrackerData;
 };
 
-export default SourceDetailPage;
+const generatesourceTrackerData = (startDate, endDate) => {
+  const sourceTrackerData = [];
+  for (let i = 0; i < 10; i++) {
+    sourceTrackerData.push({
+      no: i + 1,
+      id: `#${INITIAL_DATA[i].no}`,
+      date: dayjs().format("MMM DD, YYYY"),
+      source: INITIAL_DATA[i].source,
+      mention: INITIAL_DATA[i].mention,
+      about: INITIAL_DATA[i].about,
+    });
+  }
+  return sourceTrackerData;
+};
 
 const INITIAL_DATA = [
   {

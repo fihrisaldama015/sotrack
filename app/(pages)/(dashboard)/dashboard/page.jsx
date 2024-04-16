@@ -17,6 +17,7 @@ const getInitialCriminalReport = async () => {
     return res;
   } catch (error) {
     console.log("🚀 ~ refreshChart ~ error:", error);
+    return [];
   }
 };
 
@@ -33,6 +34,7 @@ const getInitialCrimeStatistic = async () => {
     return res;
   } catch (error) {
     console.log("🚀 ~ refreshChart ~ error:", error);
+    return [];
   }
 };
 

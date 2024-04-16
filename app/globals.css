@@ -23,3 +23,7 @@
 #mygradient stop.end-color {
   stop-color: blue;
 }
+
+.customDataGrid .MuiDataGrid-cell:focus {
+  outline: none !important;
+}
