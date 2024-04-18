@@ -2,7 +2,7 @@
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import CalendarToday from "@mui/icons-material/CalendarToday";
 import dayjs from "dayjs";
@@ -10,6 +10,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Button } from "@mui/material";
 import Image from "next/image";
+import { getCookie } from "cookies-next";
+import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -18,7 +20,7 @@ const PLATFORM_ICON = {
   facebook: "/assets/icon/facebook.svg",
 };
 
-const MostDiscusedLately = () => {
+const MostDiscusedLately = ({ initialData }) => {
   const [platform, setPlatform] = useState("twitter");
   const [showPlatform, setShowPlatform] = useState(false);
 
@@ -28,11 +30,27 @@ const MostDiscusedLately = () => {
   const [chartStartDate, setChartStartDate] = useState(startDate);
   const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const accessToken = getCookie("accessToken");
 
   const handlePlatformChange = (platform) => {
     setPlatform(platform);
     setShowPlatform(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getMostDiscusedLatelyByDate(
+          chartStartDate.format("YYYY-MM-DD"),
+          chartEndDate.format("YYYY-MM-DD"),
+          accessToken
+        );
+        console.log("🚀 ~ MOST DISCUSED:", res);
+      } catch (error) {
+        console.log("🚀 ~ error:", error);
+      }
+    })();
+  }, []);
 
   const refreshData = (e) => {
     e.preventDefault();
@@ -181,7 +199,7 @@ const MostDiscusedLately = () => {
         </Stack>
       </Stack>
       <Stack direction={"column"} className="">
-        {MOST_DISCUSSED_DATA.map((data, index) => (
+        {initialData.map((data, index) => (
           <Stack
             key={index}
             direction={"row"}
@@ -214,38 +232,3 @@ const MostDiscusedLately = () => {
 };
 
 export default MostDiscusedLately;
-
-const MOST_DISCUSSED_DATA = [
-  {
-    topic: "Begal Suhat",
-    mentions: 151,
-  },
-  {
-    topic: "Demo Mahasiswa",
-    mentions: 126,
-  },
-  {
-    topic: "Terorisme",
-    mentions: 75,
-  },
-  {
-    topic: "Kericuhan",
-    mentions: 73,
-  },
-  {
-    topic: "Penipuan",
-    mentions: 71,
-  },
-  {
-    topic: "Pemerkosaan",
-    mentions: 69,
-  },
-  {
-    topic: "Pembunuhan",
-    mentions: 68,
-  },
-  {
-    topic: "Korupsi",
-    mentions: 67,
-  },
-];

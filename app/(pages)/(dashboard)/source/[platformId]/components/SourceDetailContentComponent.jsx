@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
 import { getCookie } from "cookies-next";
+import { getMentionSource } from "@/app/api/repository/SourceTrackerRepository";
 
 const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
   const [data, setData] = useState(sourceTrackerData);
@@ -24,6 +25,28 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
+
+  const getMentionData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await getMentionSource(
+        chartStartDate.format("YYYY-MM-DD"),
+        chartEndDate.format("YYYY-MM-DD"),
+        accessToken
+      );
+      console.log("🚀 ~ getMentionData ~ res:", res);
+      setData(res.data);
+    } catch (error) {
+      console.log("🚀 ~ getMentionData ~ error:", error);
+      alert(
+        "Please Connect your Facebook account in Social Media Connect Meny to view data"
+      );
+    }
+  };
+
+  useEffect(() => {
+    getMentionData();
+  }, []);
 
   useEffect(() => {
     if (search) {

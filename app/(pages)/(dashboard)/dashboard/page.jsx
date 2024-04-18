@@ -1,14 +1,15 @@
-import { Stack } from "@mui/material";
-import CrimeStatistic from "./components/CrimeStatisticComponent";
-import CriminalReport from "./components/CriminalReportComponent";
 import {
   getCrimeStatisticByDate,
   getCriminalReportByType,
 } from "@/app/api/repository/DashboardAnalyticsRepository";
-import { cookies } from "next/headers";
+import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
+import { Stack } from "@mui/material";
 import dayjs from "dayjs";
-import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
+import { cookies } from "next/headers";
+import CrimeStatistic from "./components/CrimeStatisticComponent";
+import CriminalReport from "./components/CriminalReportComponent";
 import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
+import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
 
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
@@ -38,9 +39,27 @@ const getInitialCrimeStatistic = async () => {
   }
 };
 
+const getInitialMostDiscussed = async () => {
+  const startDate = dayjs().day(0);
+  const endDate = dayjs();
+  const accessToken = cookies().get("accessToken")?.value;
+  try {
+    const res = await getMostDiscusedLatelyByDate(
+      startDate.format("YYYY-MM-DD"),
+      endDate.format("YYYY-MM-DD"),
+      accessToken
+    );
+    return res;
+  } catch (error) {
+    console.log("🚀 ~ refreshChart ~ error:", error);
+    return [];
+  }
+};
+
 const DashboardPage = async () => {
   const initialCrimeStatistic = await getInitialCrimeStatistic();
   const initialCriminalReport = await getInitialCriminalReport();
+  const initialMostDiscussed = await getInitialMostDiscussed();
 
   return (
     <Stack
@@ -53,7 +72,7 @@ const DashboardPage = async () => {
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
       <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <MostDiscusedLately />
+        <MostDiscusedLately initialData={MOST_DISCUSSED_DATA} />
         <SocialMentionTracker />
       </Stack>
     </Stack>
@@ -61,3 +80,38 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
+
+const MOST_DISCUSSED_DATA = [
+  {
+    topic: "Begal Suhat",
+    mentions: 151,
+  },
+  {
+    topic: "Demo Mahasiswa",
+    mentions: 126,
+  },
+  {
+    topic: "Terorisme",
+    mentions: 75,
+  },
+  {
+    topic: "Kericuhan",
+    mentions: 73,
+  },
+  {
+    topic: "Penipuan",
+    mentions: 71,
+  },
+  {
+    topic: "Pemerkosaan",
+    mentions: 69,
+  },
+  {
+    topic: "Pembunuhan",
+    mentions: 68,
+  },
+  {
+    topic: "Korupsi",
+    mentions: 67,
+  },
+];

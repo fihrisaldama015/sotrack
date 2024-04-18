@@ -134,6 +134,12 @@ const SidebarComponent = () => {
                 </Typography>
               </Box>
             </Link>
+            <AccordionItemLink
+              color="#4AF26F"
+              label="Connect Account"
+              path="/connect/facebook"
+              pathname={pathname}
+            />
           </AccordionItem>
         </Box>
         <Box className="absolute flex flex-col w-full bottom-0 bg-[#FAFAFA]">

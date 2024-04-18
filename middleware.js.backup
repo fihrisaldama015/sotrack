@@ -43,5 +43,6 @@ export async function middleware(request) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/dashboard/:path*",
+  // matcher: "/dashboard/:path*",
+  matcher: "/login/:path*", // Match any request with a path of /login
 };
