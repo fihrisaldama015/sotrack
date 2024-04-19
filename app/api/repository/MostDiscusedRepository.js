@@ -27,7 +27,7 @@ export const getMostDiscusedLatelyByDate = async (
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
-  let mostDiscussed = getFormattedMostDiscussed(data);
+  let mostDiscussed = getFormattedMostDiscussed(mostData);
 
   return mostDiscussed;
 };
