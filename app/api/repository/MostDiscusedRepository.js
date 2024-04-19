@@ -7,7 +7,7 @@ export const getMostDiscusedLatelyByDate = async (
   token,
   platform
 ) => {
-  const currentDate = dayjs().format("YYYY-MM-DD");
+  const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 
   const MOST_DISCUSSED = {
     message: "success",
@@ -19,8 +19,8 @@ export const getMostDiscusedLatelyByDate = async (
   };
   const { data } = MOST_DISCUSSED;
   const { data: mostData } = await PROVIDER_GET(
-    // `mostDiscussed?platform=${platform}&pageId=112810043827081&since=${startDate}&until=${endDate}`,
-    `mostDiscussed?platform=${platform}&pageId=290758567444646&since=${startDate}&until=${endDate}`,
+    `mostDiscussed?platform=${platform}&pageId=112810043827081&since=${startDate}&until=${endDate}`,
+    // `mostDiscussed?platform=${platform}&pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
   console.log("🚀 ~ mostData:", mostData);

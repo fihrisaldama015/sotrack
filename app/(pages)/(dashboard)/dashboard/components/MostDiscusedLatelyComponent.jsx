@@ -24,11 +24,11 @@ const PLATFORM_ICON = {
 const MostDiscusedLately = ({ initialData }) => {
   const [platform, setPlatform] = useState("facebook");
   const [showPlatform, setShowPlatform] = useState(false);
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [startDate, setStartDate] = useState(dayjs().date(1));
-  const [endDate, setEndDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
 
   const [chartStartDate, setChartStartDate] = useState(startDate);
   const [chartEndDate, setChartEndDate] = useState(endDate);
@@ -38,15 +38,13 @@ const MostDiscusedLately = ({ initialData }) => {
   const handlePlatformChange = (platform) => {
     setPlatform(platform);
     setShowPlatform(false);
-  };
-
-  useEffect(() => {
     refreshData();
-  }, [platform]);
+  };
 
   useEffect(() => {
     (async () => {
       try {
+        setIsLoading(true);
         const res = await getMostDiscusedLatelyByDate(
           chartStartDate.format("YYYY-MM-DD"),
           chartEndDate.format("YYYY-MM-DD"),
@@ -57,6 +55,7 @@ const MostDiscusedLately = ({ initialData }) => {
       } catch (error) {
         console.log("🚀 ~ error:", error);
       }
+      setIsLoading(false);
     })();
   }, []);
 
@@ -65,10 +64,11 @@ const MostDiscusedLately = ({ initialData }) => {
       alert("Start date cannot be after end date");
       return;
     }
-    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
+    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs().add(1, "day"))) {
       alert("Date cannot be in the future");
       return;
     }
+    setShowDatePicker(false);
     try {
       setIsLoading(true);
       const res = await getMostDiscusedLatelyByDate(
@@ -84,10 +84,8 @@ const MostDiscusedLately = ({ initialData }) => {
 
     setChartStartDate(startDate);
     setChartEndDate(endDate);
-    setShowDatePicker(false);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+
+    setIsLoading(false);
   };
   return (
     <Box className="p-6 bg-white flex flex-col gap-6 flex-1 rounded-xl shadow-lg shadow-slate-100">

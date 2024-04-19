@@ -73,7 +73,7 @@ const DashboardPage = async () => {
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
       <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <MostDiscusedLately initialData={MOST_DISCUSSED_DATA} />
+        <MostDiscusedLately initialData={[]} />
         <SocialMentionTracker />
       </Stack>
     </Stack>
@@ -81,38 +81,3 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
-
-const MOST_DISCUSSED_DATA = [
-  {
-    topic: "Begal Suhat",
-    mentions: 151,
-  },
-  {
-    topic: "Demo Mahasiswa",
-    mentions: 126,
-  },
-  {
-    topic: "Terorisme",
-    mentions: 75,
-  },
-  {
-    topic: "Kericuhan",
-    mentions: 73,
-  },
-  {
-    topic: "Penipuan",
-    mentions: 71,
-  },
-  {
-    topic: "Pemerkosaan",
-    mentions: 69,
-  },
-  {
-    topic: "Pembunuhan",
-    mentions: 68,
-  },
-  {
-    topic: "Korupsi",
-    mentions: 67,
-  },
-];

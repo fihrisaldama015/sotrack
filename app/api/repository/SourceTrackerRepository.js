@@ -19,21 +19,32 @@ export const getSourceTrackerByDate = async (startDate, endDate, token) => {
 };
 
 export const getMentionSource = async (startDate, endDate, token) => {
-  const currentDate = dayjs().format("YYYY-MM-DD");
+  const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 
   const { data } = await PROVIDER_GET(
-    // `mentionSource?pageId=112810043827081&since=${startDate}&until=${endDate}`,
-    `mentionSource?pageId=290758567444646&since=${startDate}&until=${endDate}`,
+    `mentionSource?pageId=112810043827081&since=${startDate}&until=${endDate}`,
+    // `mentionSource?pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
 
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
-  let sourceTrackerData = data;
+  let sourceTrackerData = getFormattedMentionSource(data);
   console.log("🚀 ~ getMentionSource ~ data:", data);
 
-  return data;
+  return sourceTrackerData;
+};
+
+const getFormattedMentionSource = (data) => {
+  const formattedData = Object.keys(data).map((key) => {
+    return {
+      source: key,
+      mentions: data[key],
+    };
+  });
+
+  return formattedData;
 };
 
 const generatesourceTrackerData = (startDate, endDate) => {
