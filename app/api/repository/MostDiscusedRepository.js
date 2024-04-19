@@ -19,7 +19,8 @@ export const getMostDiscusedLatelyByDate = async (
   };
   const { data } = MOST_DISCUSSED;
   const { data: mostData } = await PROVIDER_GET(
-    `mostDiscussed?platform=${platform}&pageId=112810043827081&since=${startDate}&until=${endDate}`,
+    // `mostDiscussed?platform=${platform}&pageId=112810043827081&since=${startDate}&until=${endDate}`,
+    `mostDiscussed?platform=${platform}&pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
   console.log("🚀 ~ mostData:", mostData);
