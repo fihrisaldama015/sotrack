@@ -47,7 +47,8 @@ const getInitialMostDiscussed = async () => {
     const res = await getMostDiscusedLatelyByDate(
       startDate.format("YYYY-MM-DD"),
       endDate.format("YYYY-MM-DD"),
-      accessToken
+      accessToken,
+      "facebook"
     );
     return res;
   } catch (error) {
@@ -59,7 +60,7 @@ const getInitialMostDiscussed = async () => {
 const DashboardPage = async () => {
   const initialCrimeStatistic = await getInitialCrimeStatistic();
   const initialCriminalReport = await getInitialCriminalReport();
-  const initialMostDiscussed = await getInitialMostDiscussed();
+  // const initialMostDiscussed = await getInitialMostDiscussed();
 
   return (
     <Stack

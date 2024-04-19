@@ -12,6 +12,7 @@ import { Button } from "@mui/material";
 import Image from "next/image";
 import { getCookie } from "cookies-next";
 import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -21,8 +22,10 @@ const PLATFORM_ICON = {
 };
 
 const MostDiscusedLately = ({ initialData }) => {
-  const [platform, setPlatform] = useState("twitter");
+  const [platform, setPlatform] = useState("facebook");
   const [showPlatform, setShowPlatform] = useState(false);
+  const [data, setData] = useState(initialData);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [startDate, setStartDate] = useState(dayjs().date(1));
   const [endDate, setEndDate] = useState(dayjs());
@@ -38,22 +41,26 @@ const MostDiscusedLately = ({ initialData }) => {
   };
 
   useEffect(() => {
+    refreshData();
+  }, [platform]);
+
+  useEffect(() => {
     (async () => {
       try {
         const res = await getMostDiscusedLatelyByDate(
           chartStartDate.format("YYYY-MM-DD"),
           chartEndDate.format("YYYY-MM-DD"),
-          accessToken
+          accessToken,
+          "facebook"
         );
-        console.log("🚀 ~ MOST DISCUSED:", res);
+        setData(res);
       } catch (error) {
         console.log("🚀 ~ error:", error);
       }
     })();
   }, []);
 
-  const refreshData = (e) => {
-    e.preventDefault();
+  const refreshData = async () => {
     if (startDate.isAfter(endDate)) {
       alert("Start date cannot be after end date");
       return;
@@ -62,9 +69,25 @@ const MostDiscusedLately = ({ initialData }) => {
       alert("Date cannot be in the future");
       return;
     }
+    try {
+      setIsLoading(true);
+      const res = await getMostDiscusedLatelyByDate(
+        startDate.format("YYYY-MM-DD"),
+        endDate.format("YYYY-MM-DD"),
+        accessToken,
+        platform
+      );
+      setData(res);
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+
     setChartStartDate(startDate);
     setChartEndDate(endDate);
     setShowDatePicker(false);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
   return (
     <Box className="p-6 bg-white flex flex-col gap-6 flex-1 rounded-xl shadow-lg shadow-slate-100">
@@ -158,7 +181,10 @@ const MostDiscusedLately = ({ initialData }) => {
               </Typography>
             </Stack>
             <form
-              onSubmit={refreshData}
+              onSubmit={(e) => {
+                e.preventDefault();
+                refreshData();
+              }}
               className="absolute right-0 top-8 flex flex-col items-end gap-4 bg-slate-50 p-6 w-96 z-10 shadow-lg rounded-xl transition-all"
               style={{
                 visibility: showDatePicker ? "visible" : "hidden",
@@ -199,9 +225,16 @@ const MostDiscusedLately = ({ initialData }) => {
         </Stack>
       </Stack>
       <Stack direction={"column"} className="">
-        {initialData.map((data, index) => (
+        {isLoading && (
+          <div className="w-full h-48 flex justify-center items-center">
+            <LoadingSpinner />
+            Loading
+          </div>
+        )}
+        {data.map((data, index) => (
           <Stack
             key={index}
+            display={isLoading ? "none" : "flex"}
             direction={"row"}
             alignItems={"center"}
             className="px-4 py-6 text-[#404040]"

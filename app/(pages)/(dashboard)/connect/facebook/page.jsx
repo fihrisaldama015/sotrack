@@ -62,11 +62,11 @@ const ConnectFacebook = () => {
         <Typography className=" text-base font-semibold text-[#343A40]">
           Connected Account
         </Typography>
-        <Stack direction={"column"} className="">
+        <Stack direction={"column"}>
           <Stack
             direction={"row"}
             alignItems={"center"}
-            className="px-4 py-1 text-[#404040]"
+            className="px-4 py-1 text-[#404040] border-0 border-b-[1px] border-solid border-slate-200"
           >
             <Typography width={60} className="text-sm">
               No
@@ -91,7 +91,7 @@ const ConnectFacebook = () => {
             <Stack
               direction={"row"}
               alignItems={"center"}
-              className="px-4 py-1 text-[#404040]"
+              className="px-4 py-1 text-[#404040] border-0 border-b-[1px] border-solid border-slate-200"
             >
               <Typography width={70} className="text-sm">
                 1

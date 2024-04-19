@@ -1,64 +1,37 @@
 "use client";
+import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
-import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
+import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
-import SourceTrackerTable from "./SourceTrackerTableComponent";
-import TopicSelect from "./TopicSelectComponent";
-import { PLATFORM_ICON } from "@/app/utils/constants";
-import { useSearchParams } from "next/navigation";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
-import { getCookie } from "cookies-next";
-import { getMentionSource } from "@/app/api/repository/SourceTrackerRepository";
 
-const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
+const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
   const [data, setData] = useState(sourceTrackerData);
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
-  const [topic, setTopic] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
 
-  const getMentionData = async () => {
-    try {
-      setIsLoading(true);
-      const res = await getMentionSource(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
-        accessToken
-      );
-      console.log("🚀 ~ getMentionData ~ res:", res);
-      setData(res.data);
-    } catch (error) {
-      console.log("🚀 ~ getMentionData ~ error:", error);
-      alert("Please Connect your Social Media account in Menu to view data");
-    }
-  };
-
-  // useEffect(() => {
-  //   getMentionData();
-  // }, []);
-
   useEffect(() => {
     if (search) {
       setIsLoading(true);
-      const filteredData = sourceTrackerData.filter((item) => {
-        return item.mention.toLowerCase().includes(search.toLowerCase());
+      const filteredData = data.filter((item) => {
+        return item.message.toLowerCase().includes(search.toLowerCase());
       });
       setData(filteredData);
+      setIsLoading(false);
     } else {
       setData(sourceTrackerData);
     }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
   }, [search]);
 
   const refreshData = async (startDate, endDate) => {
@@ -75,7 +48,6 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }
-
     setIsLoading(false);
   };
   return (
@@ -90,7 +62,6 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
           }}
           refreshData={refreshData}
         />
-        <TopicSelect topic={topic} setTopic={setTopic} />
         <SearchBar />
       </Stack>
       <Stack
@@ -99,19 +70,8 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
         className="px-7 py-6 bg-white  bg-red-500/10 rounded-[10px]"
       >
         <Stack direction={"row"} alignItems={"center"} spacing={1}>
-          <Image
-            src={
-              platformId in PLATFORM_ICON
-                ? PLATFORM_ICON[platformId]
-                : "/assets/icon/news.svg"
-            }
-            width={16}
-            height={16}
-            className="object-contain"
-            alt="platform icon"
-          />
           <Typography className="text-base font-bold text-primary-800 first-letter:capitalize">
-            {platformId} Mention Details
+            Media Broadcast
           </Typography>
         </Stack>
         {isLoading ? (
@@ -120,11 +80,11 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
             Loading Data...
           </Stack>
         ) : (
-          <SourceTrackerTable initialData={data} />
+          <MediaBroadcastHubTable initialData={data} />
         )}
       </Stack>
     </>
   );
 };
 
-export default SourceDetailContent;
+export default MediaBroadcastHubContent;

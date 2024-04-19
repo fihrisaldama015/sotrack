@@ -24,6 +24,6 @@
   stop-color: blue;
 }
 
-.customDataGrid .MuiDataGrid-cell:focus {
+.customDataGrid .MuiDataGrid-cell:focus, .customDataGrid .MuiDataGrid-cellCheckbox:focus {
   outline: none !important;
 }
