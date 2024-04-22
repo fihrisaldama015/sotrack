@@ -41,13 +41,21 @@ const CrimeStatistic = ({ initialData }) => {
     setShowDatePicker(false);
     try {
       setIsLoading(true);
-      const res = await getCrimeStatisticByDate(
+      const CrimeStatisticResult = await getCrimeStatisticByDate(
         startDate.format("YYYY-MM-DD"),
         endDate.format("YYYY-MM-DD"),
         accessToken
       );
+      console.log(
+        "🚀 ~ refreshChart ~ startDate:",
+        startDate.format("YYYY-MM-DD")
+      );
+      console.log(
+        "🚀 ~ refreshChart ~ CrimeStatisticResult FROM CLIENT:",
+        CrimeStatisticResult
+      );
 
-      setChartData(res);
+      setChartData(CrimeStatisticResult);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }

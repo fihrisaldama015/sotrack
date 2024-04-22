@@ -13,6 +13,8 @@ import Image from "next/image";
 import { getCookie } from "cookies-next";
 import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import PersonIcon from "@mui/icons-material/Person";
+import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -21,42 +23,78 @@ const PLATFORM_ICON = {
   facebook: "/assets/icon/facebook.svg",
 };
 
+const checkConnectedInstagramFromFacebook = (pageList) => {
+  const connectedPage = pageList.find(
+    (page) => "instagram_business_account" in page
+  );
+  if (connectedPage) {
+    return connectedPage.id;
+  }
+  return "";
+};
+
 const MostDiscusedLately = ({ initialData }) => {
-  const [platform, setPlatform] = useState("facebook");
-  const [showPlatform, setShowPlatform] = useState(false);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [platform, setPlatform] = useState("facebook");
+  const [showPlatform, setShowPlatform] = useState(false);
+
+  const [parameter, setParameter] = useState("");
+  const [showParameter, setShowParameter] = useState(false);
+
+  const [pageList, setPageList] = useState([]);
+
   const [startDate, setStartDate] = useState(dayjs().date(1));
   const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
-
   const [chartStartDate, setChartStartDate] = useState(startDate);
   const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
   const accessToken = getCookie("accessToken");
 
   const handlePlatformChange = (platform) => {
     setPlatform(platform);
     setShowPlatform(false);
-    refreshData();
+    // refreshData();
+  };
+
+  const getMostDiscusedLatelyData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await getMostDiscusedLatelyByDate(
+        chartStartDate.format("YYYY-MM-DD"),
+        chartEndDate.format("YYYY-MM-DD"),
+        accessToken,
+        platform,
+        parameter
+      );
+      setData(res);
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+    setIsLoading(false);
+  };
+
+  const getPageListData = async () => {
+    try {
+      const pageListResult = await getPageList();
+      const pageId = checkConnectedInstagramFromFacebook(pageListResult);
+      setParameter(pageId);
+      setPageList(pageListResult);
+    } catch (error) {
+      console.log("🚀 ~ error - Get Page List:", error);
+    }
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await getMostDiscusedLatelyByDate(
-          chartStartDate.format("YYYY-MM-DD"),
-          chartEndDate.format("YYYY-MM-DD"),
-          accessToken,
-          "facebook"
-        );
-        setData(res);
-      } catch (error) {
-        console.log("🚀 ~ error:", error);
-      }
-      setIsLoading(false);
-    })();
+    if (parameter !== "") {
+      getMostDiscusedLatelyData();
+    }
+  }, [parameter, platform]);
+
+  useEffect(() => {
+    getPageListData();
   }, []);
 
   const refreshData = async () => {
@@ -75,7 +113,8 @@ const MostDiscusedLately = ({ initialData }) => {
         startDate.format("YYYY-MM-DD"),
         endDate.format("YYYY-MM-DD"),
         accessToken,
-        platform
+        platform,
+        parameter
       );
       setData(res);
     } catch (error) {
@@ -98,7 +137,13 @@ const MostDiscusedLately = ({ initialData }) => {
             Most Discused Lately
           </Typography>
         </Stack>
-        <Stack direction={"row"} spacing={1} alignItems={"center"}>
+        <Stack
+          direction={"row"}
+          flexWrap={"wrap"}
+          spacing={1}
+          alignItems={"center"}
+          justifyContent={"flex-end"}
+        >
           <Box className="relative">
             <Stack
               direction={"row"}
@@ -160,6 +205,58 @@ const MostDiscusedLately = ({ initialData }) => {
                 >
                   News
                 </Box>
+              </Stack>
+            </form>
+          </Box>
+          <Box className="relative">
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              spacing={0.5}
+              onClick={() => setShowParameter(!showParameter)}
+              className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
+            >
+              <PersonIcon color="grey" sx={{ width: 16 }} />
+              <Typography className="text-xs font-normal first-letter:capitalize">
+                {parameter === ""
+                  ? "Choose Page"
+                  : pageList.find((page) => page.id === parameter)?.name}
+              </Typography>
+              <ExpandMore color="grey" sx={{ width: 16 }} />
+            </Stack>
+            <form
+              className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
+              style={{
+                visibility: showParameter ? "visible" : "hidden",
+                opacity: showParameter ? 1 : 0,
+              }}
+            >
+              <Stack direction={"column"} spacing={0}>
+                {pageList.length > 0 &&
+                  pageList.map((page, id) => (
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      spacing={2}
+                      key={id}
+                      onClick={() => {
+                        setParameter(page.id);
+                        setShowParameter(false);
+                      }}
+                      className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
+                    >
+                      <Typography> {page.name}</Typography>
+                      {"instagram_business_account" in page && (
+                        <Image
+                          src="/assets/icon/instagram.svg"
+                          width={16}
+                          height={16}
+                          alt="instagram"
+                        />
+                      )}
+                    </Stack>
+                  ))}
               </Stack>
             </form>
           </Box>

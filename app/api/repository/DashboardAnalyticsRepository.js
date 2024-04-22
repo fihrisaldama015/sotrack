@@ -6,7 +6,6 @@ export const getCrimeStatisticByDate = async (startDate, endDate, token) => {
 
   const { data } = await PROVIDER_GET(
     `criminalType?from=${startDate}&to=${endDate}`,
-    // `https://jsonplaceholder.typicode.com/posts?start_date=${startDate}&end_date=${endDate}`,
     token
   );
 

@@ -2,7 +2,6 @@ import {
   getCrimeStatisticByDate,
   getCriminalReportByType,
 } from "@/app/api/repository/DashboardAnalyticsRepository";
-import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
 import { Stack } from "@mui/material";
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
@@ -23,7 +22,7 @@ const getInitialCriminalReport = async () => {
 };
 
 const getInitialCrimeStatistic = async () => {
-  const startDate = dayjs().day(0);
+  const startDate = dayjs().subtract(1, "month").endOf("month");
   const endDate = dayjs();
   const accessToken = cookies().get("accessToken")?.value;
   try {
@@ -39,29 +38,38 @@ const getInitialCrimeStatistic = async () => {
   }
 };
 
-const getInitialMostDiscussed = async () => {
-  const startDate = dayjs().day(0);
-  const endDate = dayjs();
-  const accessToken = cookies().get("accessToken")?.value;
-  try {
-    const res = await getMostDiscusedLatelyByDate(
-      startDate.format("YYYY-MM-DD"),
-      endDate.format("YYYY-MM-DD"),
-      accessToken,
-      "facebook"
-    );
-    return res;
-  } catch (error) {
-    console.log("🚀 ~ refreshChart ~ error:", error);
-    return [];
-  }
-};
+// const getInitialMostDiscussed = async () => {
+//   const startDate = dayjs().day(0);
+//   const endDate = dayjs();
+//   const accessToken = cookies().get("accessToken")?.value;
+//   try {
+//     const res = await getMostDiscusedLatelyByDate(
+//       startDate.format("YYYY-MM-DD"),
+//       endDate.format("YYYY-MM-DD"),
+//       accessToken,
+//       "facebook"
+//     );
+//     return res;
+//   } catch (error) {
+//     console.log("🚀 ~ refreshChart ~ error:", error);
+//     return [];
+//   }
+// };
+
+// const getInitialPageList = async () => {
+//   try {
+//     const res = await getPageList();
+//     return res;
+//   } catch (error) {
+//     console.log("🚀 ~ getInitialPageList ~ error:", error.message);
+//   }
+// };
 
 const DashboardPage = async () => {
   const initialCrimeStatistic = await getInitialCrimeStatistic();
   const initialCriminalReport = await getInitialCriminalReport();
   // const initialMostDiscussed = await getInitialMostDiscussed();
-
+  // const initialPageList = await getInitialPageList();
   return (
     <Stack
       direction={"column"}

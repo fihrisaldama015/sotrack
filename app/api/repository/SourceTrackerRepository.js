@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { PROVIDER_GET } from "../provider";
+import axios from "axios";
 
 export const getSourceTrackerByDate = async (startDate, endDate, token) => {
   const currentDate = dayjs().format("YYYY-MM-DD");
@@ -18,11 +19,11 @@ export const getSourceTrackerByDate = async (startDate, endDate, token) => {
   return sourceTrackerData;
 };
 
-export const getMentionSource = async (startDate, endDate, token) => {
+export const getMentionSource = async (startDate, endDate, token, pageId) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 
   const { data } = await PROVIDER_GET(
-    `mentionSource?pageId=112810043827081&since=${startDate}&until=${endDate}`,
+    `mentionSource?pageId=${pageId}&since=${startDate}&until=${endDate}`,
     // `mentionSource?pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
@@ -31,7 +32,6 @@ export const getMentionSource = async (startDate, endDate, token) => {
     throw new Error("Invalid date");
   }
   let sourceTrackerData = getFormattedMentionSource(data);
-  console.log("🚀 ~ getMentionSource ~ data:", data);
 
   return sourceTrackerData;
 };
@@ -45,6 +45,15 @@ const getFormattedMentionSource = (data) => {
   });
 
   return formattedData;
+};
+
+export const getPageList = async () => {
+  const {
+    data: { data },
+  } = await PROVIDER_GET(`facebook/page`);
+
+  let pageListData = data;
+  return pageListData;
 };
 
 const generatesourceTrackerData = (startDate, endDate) => {

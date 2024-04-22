@@ -59,7 +59,7 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
-  }, [search]);
+  }, [search, topic]);
 
   const refreshData = async (startDate, endDate) => {
     setChartStartDate(startDate);
