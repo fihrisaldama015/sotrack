@@ -62,10 +62,15 @@ export default TopicSelect;
 
 const TOPIC = [
   "All",
-  "Pencurian",
-  "Curanmor",
-  "Begal Motor",
-  "Pencurian Mobil",
-  "Pencurian Motor",
-  "Pencurian Sepeda",
+  "Murder",
+  "Fraud",
+  "Theft",
+  "Shooting",
+  "Threat",
+  "Abuse",
+  "Drugs",
+  "Kidnapping",
+  "Sexual Harrasment",
+  "Accidents",
+  "Demonstrate",
 ];

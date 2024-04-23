@@ -1,19 +1,21 @@
 "use client";
+import {
+  getMentionSourceDetail,
+  // getSourceTrackerByDate,
+} from "@/app/api/repository/SourceTrackerRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { PLATFORM_ICON } from "@/app/utils/constants";
 import { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import SearchBar from "./SearchBarComponent";
 import SourceTrackerTable from "./SourceTrackerTableComponent";
 import TopicSelect from "./TopicSelectComponent";
-import { PLATFORM_ICON } from "@/app/utils/constants";
-import { useSearchParams } from "next/navigation";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
-import { getCookie } from "cookies-next";
-import { getMentionSource } from "@/app/api/repository/SourceTrackerRepository";
 
 const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
   const [data, setData] = useState(sourceTrackerData);
@@ -26,25 +28,27 @@ const SourceDetailContent = ({ platformId, sourceTrackerData }) => {
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
 
-  const getMentionData = async () => {
+  const getMentionDetailData = async () => {
     try {
       setIsLoading(true);
-      const res = await getMentionSource(
+      const res = await getMentionSourceDetail(
         chartStartDate.format("YYYY-MM-DD"),
         chartEndDate.format("YYYY-MM-DD"),
-        accessToken
+        accessToken,
+        "112810043827081",
+        platformId
       );
-      console.log("🚀 ~ getMentionData ~ res:", res);
-      setData(res.data);
+      console.log("🚀 ~ getMentionDetailData ~ res:", res);
+      // setData(res.data);
     } catch (error) {
-      console.log("🚀 ~ getMentionData ~ error:", error);
+      console.log("🚀 ~ getMentionDetailData ~ error:", error);
       alert("Please Connect your Social Media account in Menu to view data");
     }
   };
 
-  // useEffect(() => {
-  //   getMentionData();
-  // }, []);
+  useEffect(() => {
+    getMentionDetailData();
+  }, []);
 
   useEffect(() => {
     if (search) {

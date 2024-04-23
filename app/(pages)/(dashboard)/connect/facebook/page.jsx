@@ -1,4 +1,5 @@
 "use client";
+import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 import { AlertWarning } from "@/app/components";
 import { BASE_URL } from "@/app/utils/constants";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -12,9 +13,11 @@ import { useEffect, useState } from "react";
 
 const ConnectFacebook = () => {
   const facebook_id = getCookie("facebook_user_id") ?? "";
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(true);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const router = useRouter();
+  const [pageList, setPageList] = useState([]);
 
   const logout = () => {
     deleteCookie("facebook_user_id");
@@ -22,10 +25,21 @@ const ConnectFacebook = () => {
     router.refresh();
   };
 
-  useEffect(() => {
-    if (facebook_id != "") {
+  const getPageListData = async () => {
+    try {
+      const pageListResult = await getPageList();
+      setPageList(pageListResult);
       setIsLoading(false);
+    } catch (error) {
+      console.log("🚀 ~ error - Get Page List:", error);
     }
+  };
+
+  useEffect(() => {
+    // if (facebook_id != "") {
+    //   setIsLoading(false);
+    // }
+    getPageListData();
   }, []);
 
   return (
@@ -104,43 +118,46 @@ const ConnectFacebook = () => {
                 </Stack>
               </Stack>
             </Stack>
-            {!isLoading ? (
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                className="px-4 py-1 text-[#404040] border-0 border-b-[1px] border-solid border-slate-200"
-              >
-                <Typography width={70} className="text-sm">
-                  1
-                </Typography>
-                <Typography>{facebook_id}</Typography>
-                <Stack
-                  direction={"row"}
-                  justifyContent={"flex-end"}
-                  spacing={2}
-                  alignItems={"center"}
-                  className=" w-full"
-                >
-                  <Stack width={80}>
-                    <Typography className="text-sm font-medium text-[#34D399]">
-                      Connected
+            {!isLoading
+              ? pageList.map((page, id) => (
+                  <Stack
+                    key={id}
+                    direction={"row"}
+                    alignItems={"center"}
+                    className="px-4 py-1 text-[#404040] border-0 border-b-[1px] border-solid border-slate-200"
+                  >
+                    <Typography className="text-sm w-[70px]">
+                      {id + 1}
                     </Typography>
-                  </Stack>
-                  <Stack alignItems={"flex-end"}>
+                    <Typography>{page.name}</Typography>
                     <Stack
                       direction={"row"}
+                      justifyContent={"flex-end"}
+                      spacing={2}
                       alignItems={"center"}
-                      borderRadius={2}
-                      onClick={logout}
-                      justifyContent={"center"}
-                      className="py-2.5 px-3 w-full bg-[#FFEDED] hover:bg-red-100 cursor-pointer transition-all"
+                      className=" w-full"
                     >
-                      <LogoutIcon color="error" sx={{ width: 18 }} />
+                      <Stack width={80}>
+                        <Typography className="text-sm font-medium text-[#34D399]">
+                          Connected
+                        </Typography>
+                      </Stack>
+                      <Stack alignItems={"flex-end"}>
+                        <Stack
+                          direction={"row"}
+                          alignItems={"center"}
+                          borderRadius={2}
+                          onClick={logout}
+                          justifyContent={"center"}
+                          className="py-2.5 px-3 w-full bg-[#FFEDED] hover:bg-red-100 cursor-pointer transition-all"
+                        >
+                          <LogoutIcon color="error" sx={{ width: 18 }} />
+                        </Stack>
+                      </Stack>
                     </Stack>
                   </Stack>
-                </Stack>
-              </Stack>
-            ) : null}
+                ))
+              : null}
           </Stack>
         </Box>
       </Stack>

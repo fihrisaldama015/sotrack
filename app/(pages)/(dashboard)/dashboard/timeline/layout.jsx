@@ -5,11 +5,11 @@ import Typography from "@mui/material/Typography";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Social Media Monitoring",
+  title: "Social Media Monitoring | Timeline",
   description: "Social Media Monitoring Dashboard",
 };
 
-export default async function BroadcastLayout({ children }) {
+export default async function TimelineLayout({ children }) {
   return (
     <Box className="space-y-4">
       <Box
@@ -29,7 +29,7 @@ export default async function BroadcastLayout({ children }) {
         </Box>
       </Box>
       <Divider className="border-none h-[2px] bg-neutral-300" />
-      <Box className="">{children}</Box>
+      <Box className="pt-4">{children}</Box>
     </Box>
   );
 }

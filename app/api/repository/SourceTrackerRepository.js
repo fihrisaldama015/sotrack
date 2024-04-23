@@ -1,30 +1,11 @@
 import dayjs from "dayjs";
 import { PROVIDER_GET } from "../provider";
-import axios from "axios";
-
-export const getSourceTrackerByDate = async (startDate, endDate, token) => {
-  const currentDate = dayjs().format("YYYY-MM-DD");
-
-  const { data } = await fetch(
-    //   `criminalType?from=${startDate}&to=${endDate}`,
-    `https://jsonplaceholder.typicode.com/posts?start_date=${startDate}&end_date=${endDate}`
-    // token
-  );
-
-  if (currentDate < startDate || currentDate < endDate) {
-    throw new Error("Invalid date");
-  }
-  let sourceTrackerData = generatesourceTrackerData(startDate, endDate);
-  //   let sourceTrackerData = getSourceTracker(data);
-  return sourceTrackerData;
-};
 
 export const getMentionSource = async (startDate, endDate, token, pageId) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 
   const { data } = await PROVIDER_GET(
     `mentionSource?pageId=${pageId}&since=${startDate}&until=${endDate}`,
-    // `mentionSource?pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
 
@@ -56,19 +37,28 @@ export const getPageList = async () => {
   return pageListData;
 };
 
-const generatesourceTrackerData = (startDate, endDate) => {
-  const sourceTrackerData = [];
-  for (let i = 0; i < 10; i++) {
-    sourceTrackerData.push({
-      no: i + 1,
-      id: `#${INITIAL_DATA[i].no}`,
-      date: dayjs().format("MMM DD, YYYY"),
-      source: INITIAL_DATA[i].source,
-      mention: INITIAL_DATA[i].mention,
-      about: INITIAL_DATA[i].about,
-    });
+export const getMentionSourceDetail = async (
+  startDate,
+  endDate,
+  token,
+  pageId = "",
+  platform,
+  topic = "All"
+) => {
+  const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
+
+  const { data } = await PROVIDER_GET(
+    `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}`,
+    token
+  );
+
+  if (currentDate < startDate || currentDate < endDate) {
+    throw new Error("Invalid date");
   }
-  return sourceTrackerData;
+  let mentionSourceDetailData = data;
+  console.log("🚀 ~ mentionSourceDetailData:", mentionSourceDetailData);
+
+  return mentionSourceDetailData;
 };
 
 const INITIAL_DATA = [
