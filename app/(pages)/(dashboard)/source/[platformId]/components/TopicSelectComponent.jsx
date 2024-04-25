@@ -5,12 +5,13 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useState } from "react";
 
-const TopicSelect = ({ topic, setTopic }) => {
+const TopicSelect = ({ topic, setTopic, refreshData }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   const handleTopicChange = async (topic) => {
     setTopic(topic);
     setShowDropDown(false);
+    refreshData(null, null, topic);
   };
   return (
     <Box className="relative md:w-[40%] lg:w-[30%]">

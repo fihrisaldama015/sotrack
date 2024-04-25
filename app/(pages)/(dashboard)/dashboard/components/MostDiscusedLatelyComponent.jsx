@@ -15,6 +15,8 @@ import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRe
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import PersonIcon from "@mui/icons-material/Person";
 import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
+import { useDispatch, useSelector } from "react-redux";
+import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -51,6 +53,9 @@ const MostDiscusedLately = ({ initialData }) => {
   const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const dispatch = useDispatch();
+  const { facebookPageList } = useSelector((state) => state.facebookReducer);
+
   const accessToken = getCookie("accessToken");
 
   const handlePlatformChange = (platform) => {
@@ -82,6 +87,11 @@ const MostDiscusedLately = ({ initialData }) => {
       const pageId = checkConnectedInstagramFromFacebook(pageListResult);
       setParameter(pageId);
       setPageList(pageListResult);
+      dispatch(
+        changeFacebookPageList({
+          facebookPageList: pageListResult,
+        })
+      );
     } catch (error) {
       console.log("🚀 ~ error - Get Page List:", error);
     }
@@ -94,7 +104,16 @@ const MostDiscusedLately = ({ initialData }) => {
   }, [parameter, platform]);
 
   useEffect(() => {
-    getPageListData();
+    if (platform === "facebook" || platform === "instagram") {
+      if (facebookPageList.length === 0) {
+        getPageListData();
+      } else {
+        setPageList(facebookPageList);
+        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+      }
+    } else {
+      getMostDiscusedLatelyData();
+    }
   }, []);
 
   const refreshData = async () => {

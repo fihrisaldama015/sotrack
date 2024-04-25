@@ -6,7 +6,7 @@ import TargetIcon from "./TargetIconComponent";
 
 const MostDiscussed = () => {
   return (
-    <Stack className="w-96 bg-white rounded-[10px] p-5 space-y-4">
+    <Stack className="w-80 bg-white rounded-[10px] p-5 space-y-4">
       <Stack spacing={2.5} direction={"row"}>
         <Box className="flex items-center">
           <TargetIcon />

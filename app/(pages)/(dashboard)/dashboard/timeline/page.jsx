@@ -12,7 +12,7 @@ const TimelinePage = async () => {
   const token = cookies().get("accessToken")?.value;
   const allPlatform = await getAllPlatform(token);
   return (
-    <Stack spacing={2} direction={"row"} className="w-full">
+    <Box className="w-full flex gap-4 flex-row md:flex-col-reverse">
       <Stack spacing={2} direction={"column"} className="flex-1">
         <Stack className=" bg-white h-fit rounded-[10px] p-5 space-y-4">
           <Stack spacing={2.5} direction={"row"}>
@@ -36,7 +36,7 @@ const TimelinePage = async () => {
         <Timeline platform={allPlatform} />
       </Stack>
       <MostDiscussed />
-    </Stack>
+    </Box>
   );
 };
 

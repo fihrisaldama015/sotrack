@@ -27,7 +27,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const checkConnectedInstagramFromFacebook = (pageList) => {
   const connectedPage = pageList.find(
@@ -53,6 +53,8 @@ const SocialMentionTracker = () => {
   const [chartStartDate, setChartStartDate] = useState(startDate);
   const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const { facebookPageList } = useSelector((state) => state.facebookReducer);
 
   const accessToken = getCookie("accessToken");
   const dispatch = useDispatch();
@@ -98,7 +100,12 @@ const SocialMentionTracker = () => {
   }, [parameter]);
 
   useEffect(() => {
-    getPageListData();
+    if (facebookPageList.length === 0) {
+      getPageListData();
+    } else {
+      setPageList(facebookPageList);
+      setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+    }
   }, []);
 
   const refreshData = async () => {

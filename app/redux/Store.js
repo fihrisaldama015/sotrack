@@ -5,6 +5,7 @@ import {
   ModalSlice,
   PlatformSlice,
   PopupSlice,
+  FacebookPageSlice,
 } from "./slices";
 
 export const Store = configureStore({
@@ -14,5 +15,6 @@ export const Store = configureStore({
     popupReducer: PopupSlice,
     platformReducer: PlatformSlice,
     filterReducer: FilterSlice,
+    facebookReducer: FacebookPageSlice,
   },
 });

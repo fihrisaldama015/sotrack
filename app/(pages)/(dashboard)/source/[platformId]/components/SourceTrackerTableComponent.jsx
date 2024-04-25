@@ -39,7 +39,7 @@ const columns = [
           wordWrap: "break-word",
           lineHeight: "1.5",
           maxHeight: "3.75rem",
-          padding: ".25rem 0",
+          padding: ".5rem 0",
           overflowY: "hidden",
           display: "-webkit-box",
           WebkitBoxOrient: "vertical",

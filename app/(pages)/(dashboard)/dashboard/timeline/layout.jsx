@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function TimelineLayout({ children }) {
   return (
-    <Box className="space-y-4">
+    <Box className="">
       <Box
         display={"flex"}
         justifyContent={"space-between"}
