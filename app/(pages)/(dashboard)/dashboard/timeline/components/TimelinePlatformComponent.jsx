@@ -2,7 +2,12 @@ import { useState } from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-const TimelinePlatform = ({ platform, selected, setSelected }) => {
+const TimelinePlatform = ({
+  platform,
+  selected,
+  setSelected,
+  setSelectedId,
+}) => {
   const [isHover, setIsHover] = useState(false);
   const active = platform.name.toLowerCase() == selected;
   return (
@@ -12,9 +17,12 @@ const TimelinePlatform = ({ platform, selected, setSelected }) => {
       spacing={1}
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      onClick={() => setSelected(platform.name.toLowerCase())}
-      className={`py-2.5 px-4 bg-white rounded-lg ring-1 ring-[#E0E0E0] hover:ring-[#1B59F8CC] cursor-pointer transition-all group ${
-        active ? "ring-[#1B59F8CC]" : ""
+      onClick={() => {
+        setSelectedId(platform.id);
+        setSelected(platform.name.toLowerCase());
+      }}
+      className={`py-2.5 px-4 bg-white rounded-lg ring-1 hover:ring-[#1B59F8CC] cursor-pointer transition-all group ${
+        active ? "ring-[#1B59F8CC]" : "ring-[#E0E0E0]"
       }`}
     >
       <TimelinePlatformIcon
