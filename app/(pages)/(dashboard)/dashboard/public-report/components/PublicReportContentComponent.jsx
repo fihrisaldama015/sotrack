@@ -9,12 +9,10 @@ import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
-import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
-import Add from "@mui/icons-material/Add";
-import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
+import PublicReportTable from "./PublicReportTableComponent";
 
-const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
+const PublicReportContent = ({ platformId, sourceTrackerData }) => {
   const [data, setData] = useState(sourceTrackerData);
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
@@ -56,26 +54,6 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
   return (
     <>
       <Stack direction={"row"} className="gap-2" flexWrap={"wrap"}>
-        <Button
-          variant="contained"
-          color="primary"
-          className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-blue-700/20 m-1 flex items-center gap-2"
-        >
-          <Add />
-          <Typography className="text-base font-semibold text-white">
-            Add New
-          </Typography>
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-red-700/20 m-1 flex items-center gap-2"
-        >
-          <DeleteForeverOutlined />
-          <Typography className="text-base font-semibold text-white">
-            Delete
-          </Typography>
-        </Button>
         <DatePicker
           chartStartDate={chartStartDate}
           chartEndDate={chartEndDate}
@@ -86,6 +64,13 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
           refreshData={refreshData}
         />
         <SearchBar />
+        <Button
+          variant="contained"
+          color="primary"
+          className="px-8 py-1 rounded-xl text-base font-semibold text-white shadow-lg shadow-green-700/20 m-1"
+        >
+          Share Link Form
+        </Button>
       </Stack>
       <Stack
         direction={"column"}
@@ -94,7 +79,7 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
       >
         <Stack direction={"row"} alignItems={"center"} spacing={1}>
           <Typography className="text-base font-bold text-primary-800 first-letter:capitalize">
-            Media Broadcast
+            Public Report
           </Typography>
         </Stack>
         {isLoading ? (
@@ -103,11 +88,11 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
             Loading Data...
           </Stack>
         ) : (
-          <MediaBroadcastHubTable initialData={data} />
+          <PublicReportTable initialData={data} />
         )}
       </Stack>
     </>
   );
 };
 
-export default MediaBroadcastHubContent;
+export default PublicReportContent;
