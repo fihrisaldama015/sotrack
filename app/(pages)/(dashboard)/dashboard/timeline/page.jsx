@@ -1,4 +1,3 @@
-import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
@@ -10,8 +9,6 @@ import Timeline from "./components/TimelineComponent";
 
 const TimelinePage = async () => {
   const token = cookies().get("accessToken")?.value;
-  const allPlatform = await getAllPlatform(token);
-  console.log("🚀 ~ TimelinePage ~ allPlatform:", allPlatform);
   return (
     <Box className="w-full flex gap-4 flex-row max-md:flex-col-reverse h-[100svh]">
       <Stack spacing={2} direction={"column"} className="flex-1">
@@ -34,7 +31,7 @@ const TimelinePage = async () => {
             No Data
           </Typography>
         </Stack>
-        <Timeline platform={allPlatform} />
+        <Timeline />
       </Stack>
       <MostDiscussed />
     </Box>

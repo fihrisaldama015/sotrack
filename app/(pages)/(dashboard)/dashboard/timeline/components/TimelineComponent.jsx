@@ -20,6 +20,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Card from "./TimelineCardComponent";
 import TimelinePlatform from "./TimelinePlatformComponent";
+import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
+import useSWR from "swr";
 
 const checkConnectedInstagramFromFacebook = (pageList) => {
   const connectedPage = pageList.find(
@@ -36,7 +38,12 @@ const joinSelectedFilter = (filter) => {
   return join;
 };
 
-const Timeline = ({ platform }) => {
+const getAllPlatformList = async (token) => {
+  const res = await getAllPlatform(token);
+  return res;
+};
+
+const Timeline = () => {
   const { facebookPageList } = useSelector((state) => state.facebookReducer);
   const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
@@ -171,6 +178,14 @@ const Timeline = ({ platform }) => {
     const value = event.target.value;
     setParameter(value);
   };
+
+  const { data: platforms, error } = useSWR("/api/platform", () =>
+    getAllPlatformList(accessToken)
+  );
+
+  if (error) return <div>Error loading platform data...</div>;
+  if (!platforms) return <div>Loading platform data...</div>;
+
   return (
     <Stack direction={"column"} className="space-y-4 h-full">
       <Stack direction={"row"} spacing={1}>
@@ -186,7 +201,7 @@ const Timeline = ({ platform }) => {
             />
           </Stack>
         </Box>
-        {platform?.map((item, id) => (
+        {platforms?.map((item, id) => (
           <TimelinePlatform
             key={id}
             platform={item}
