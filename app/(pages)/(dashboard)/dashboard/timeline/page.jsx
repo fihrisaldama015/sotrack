@@ -11,8 +11,9 @@ import Timeline from "./components/TimelineComponent";
 const TimelinePage = async () => {
   const token = cookies().get("accessToken")?.value;
   const allPlatform = await getAllPlatform(token);
+  console.log("🚀 ~ TimelinePage ~ allPlatform:", allPlatform);
   return (
-    <Box className="w-full flex gap-4 flex-row max-md:flex-col-reverse">
+    <Box className="w-full flex gap-4 flex-row max-md:flex-col-reverse h-[100svh]">
       <Stack spacing={2} direction={"column"} className="flex-1">
         <Stack className=" bg-white h-fit rounded-[10px] p-5 space-y-4">
           <Stack spacing={2.5} direction={"row"}>

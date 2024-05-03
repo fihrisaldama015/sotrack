@@ -14,7 +14,7 @@ const AccordionItem = ({ children, label }) => {
         onClick={() => setIsOpened(!isOpened)}
         className="py-2.5 px-3 hover:bg-neutral-200 rounded-lg cursor-pointer transition-all"
       >
-        <Typography className="text-sm text-neutral-600 font-bold">
+        <Typography className="text-sm tracking-wider text-neutral-600 font-bold">
           {label}
         </Typography>
         <Image

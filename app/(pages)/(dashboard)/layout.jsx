@@ -19,7 +19,7 @@ const refreshCurrentToken = async (router) => {
       maxAge: 60 * 15,
     });
     alert("Your session has expired, please refresh the page or login again.");
-    router.refresh();
+    router.push("/dashboard");
   } catch (e) {
     console.log({ errorRefreshToken: e });
     router.push("/login");

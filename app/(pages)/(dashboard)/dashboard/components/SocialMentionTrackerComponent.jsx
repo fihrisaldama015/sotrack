@@ -249,9 +249,23 @@ const SocialMentionTracker = () => {
       {isLoading && (
         <div className="w-full h-48 flex justify-center items-center">
           <LoadingSpinner />
-          Loading
+          Loading Social Mention Data
         </div>
       )}
+      {data.length == 0 && !isLoading && (
+        <div className="w-full h-48 flex justify-center items-center">
+          No Data, Please select another date range
+        </div>
+      )}
+      {pageList.length == 0 && (
+        <div className="w-full h-48 flex justify-center items-center">
+          {isLoading && <LoadingSpinner />}
+          {isLoading
+            ? "Loading Facebook Page List"
+            : "No Connected Facebook Account, go to Connect Account Menu"}
+        </div>
+      )}
+
       <Table sx={{ display: isLoading ? "none" : "" }}>
         <TableHead>
           <TableRow>

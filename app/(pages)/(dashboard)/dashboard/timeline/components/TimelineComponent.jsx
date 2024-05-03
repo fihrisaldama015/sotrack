@@ -1,6 +1,8 @@
 "use client";
 import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
 import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
+import { getTimelineByPlatform } from "@/app/api/repository/TimelineRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -13,14 +15,11 @@ import {
   Typography,
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import React, { useEffect, useMemo, useState } from "react";
+import { getCookie } from "cookies-next";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Card from "./TimelineCardComponent";
 import TimelinePlatform from "./TimelinePlatformComponent";
-import { getCookie } from "cookies-next";
-import { getTimelineByPlatform } from "@/app/api/repository/TimelineRepository";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import dayjs from "dayjs";
 
 const checkConnectedInstagramFromFacebook = (pageList) => {
   const connectedPage = pageList.find(
@@ -42,10 +41,10 @@ const Timeline = ({ platform }) => {
   const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
   const [isLoading, setIsLoading] = useState(false);
-  const [timelineData, setTimelineData] = useState(DATA);
-  const [selectedPlatform, setSelectedPlatform] = useState("facebook");
+  const [timelineData, setTimelineData] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState("news");
   const [selectedPlatformId, setSelectedPlatformId] = useState(
-    "ad897bd4-fa88-4742-a664-39a0f2826d89"
+    "c3751388-805f-49e1-a4f2-33151e454047"
   );
 
   const [parameter, setParameter] = useState("newest");
@@ -59,37 +58,18 @@ const Timeline = ({ platform }) => {
   const [pageList, setPageList] = useState([]);
   const [pageFilter, setPageFilter] = useState("");
 
-  const getTimelineData = async (pageId, filterList) => {
+  const getTimelineData = async (pageId) => {
     try {
-      console.log(filterList.length === 0);
-      console.log("🚀 ~ getTimelineData ~ filterList:", filterList);
-      console.log(
-        filterList.length === 0 ? "true" : joinSelectedFilter(mentionsFilter)
-      );
       setIsLoading(true);
       const res = await getTimelineByPlatform(
         accessToken,
         selectedPlatform,
-        pageFilter,
-        filterList.length === 0 ? "true" : joinSelectedFilter(mentionsFilter),
+        pageId,
+        hashtagFilter[0] == "" ? "true" : "",
         joinSelectedFilter(hashtagFilter),
-        pageId
+        parameter
       );
-      const output = res.map((item, id) => {
-        return {
-          id,
-          date: dayjs(item.date).format("MMM DD, YYYY"),
-          fullName:
-            selectedPlatform === "facebook"
-              ? "Facebook User"
-              : "Instagram User",
-          username: "@username",
-          message: item.mention,
-          avatar: "/assets/images/polda_logo.png",
-        };
-      });
-      setTimelineData(output);
-      console.log("🚀 ~ getTimelineData ~ res:", output);
+      setTimelineData(res);
       setIsLoading(false);
     } catch (error) {
       console.log("🚀 ~ getTimelineData ~ error:", error);
@@ -101,39 +81,12 @@ const Timeline = ({ platform }) => {
       selectedPlatformId,
       accessToken
     );
-    setHashtagFilterList(res);
-    console.log("🚀 ~ getFilterData ~ res:", res);
-    return res;
-  };
-
-  const handleMentionsFilter = (event) => {
-    const value = event.target.value;
-    const isChecked = !event.target.checked;
-    if (isChecked) {
-      setMentionsFilter((prev) => prev.filter((item) => item !== value));
+    if (res) {
+      setHashtagFilterList(res);
+      return res;
     } else {
-      setMentionsFilter((prev) => [...prev, value]);
+      return [];
     }
-  };
-
-  const handleHashtagFilter = (event) => {
-    const value = event.target.value;
-    const isChecked = !event.target.checked;
-    if (isChecked) {
-      setHashtagFilter((prev) => prev.filter((item) => item !== value));
-    } else {
-      setHashtagFilter((prev) => [...prev, value]);
-    }
-  };
-
-  const handlePageFilter = (event) => {
-    const value = event.target.value;
-    setPageFilter(value);
-  };
-
-  const handleSortFilter = (event) => {
-    const value = event.target.value;
-    setParameter(value);
   };
 
   const getPageListData = async () => {
@@ -152,17 +105,8 @@ const Timeline = ({ platform }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (selectedPlatform === "facebook" || selectedPlatform === "instagram") {
-  //     if (pageFilter !== "") {
-  //       getTimelineData();
-  //     }
-  //   } else {
-  //     getTimelineData();
-  //   }
-  // }, [pageFilter, selectedPlatform]);
-
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       const filterData = await getFilterData();
       if (selectedPlatform === "facebook" || selectedPlatform === "instagram") {
@@ -174,20 +118,61 @@ const Timeline = ({ platform }) => {
           setPageList(facebookPageList);
           setPageFilter(pageIdFromSavedState);
           if (pageFilter !== "") {
-            getTimelineData(pageIdFromSavedState, filterData);
+            getTimelineData(pageIdFromSavedState);
           }
         }
+      } else if (selectedPlatform === "news") {
+        getTimelineData("");
       }
     })();
   }, [selectedPlatformId]);
+
   useEffect(() => {
     if (hashtagFilter.length > 0) {
       const joinedHashtag = joinSelectedFilter(hashtagFilter);
       console.log("🚀 ~ useEffect ~ joinedHashtag:", joinedHashtag);
+      setShowFilter(false);
+      const pageIdFromSavedState =
+        checkConnectedInstagramFromFacebook(facebookPageList);
+      getTimelineData(pageIdFromSavedState);
     }
   }, [hashtagFilter]);
+
+  const handleMentionsFilter = (event) => {
+    const value = event.target.value;
+    const isChecked = !event.target.checked;
+    if (isChecked) {
+      setMentionsFilter((prev) => prev.filter((item) => item !== value));
+    } else {
+      setMentionsFilter((prev) => [...prev, value]);
+    }
+  };
+
+  const handleHashtagFilter = (event) => {
+    const value = event.target.value;
+    const isChecked = !event.target.checked;
+    if (isChecked) {
+      hashtagFilter.length == 1
+        ? setHashtagFilter([""])
+        : setHashtagFilter((prev) => prev.filter((item) => item !== value));
+    } else {
+      hashtagFilter.length == 1
+        ? setHashtagFilter([value])
+        : setHashtagFilter((prev) => [...prev, value]);
+    }
+  };
+
+  const handlePageFilter = (event) => {
+    const value = event.target.value;
+    setPageFilter(value);
+  };
+
+  const handleSortFilter = (event) => {
+    const value = event.target.value;
+    setParameter(value);
+  };
   return (
-    <Stack direction={"column"} className="space-y-4 h-screen">
+    <Stack direction={"column"} className="space-y-4 h-full">
       <Stack direction={"row"} spacing={1}>
         <Box className="relative">
           <Stack
@@ -280,11 +265,26 @@ const Timeline = ({ platform }) => {
             handler={handleHashtagFilter}
             data={hashtagFilterList}
           />
-          <MentionFilter
-            filter={mentionsFilter}
-            handler={handleMentionsFilter}
-            data={MENTION_DATA}
-          />
+
+          {selectedPlatform == "instagram" && (
+            <>
+              <Typography className="mt-8 font-semibold text-xs text-[#9098A3]">
+                Mentions
+              </Typography>
+              <Stack direction={"row"} flexWrap={"wrap"} spacing={0}>
+                {hashtagFilter[0] !== "" ? (
+                  <Typography className="text-xs mt-2">
+                    If one or more Hashtag is selected, mention can't be used
+                  </Typography>
+                ) : (
+                  <FormControlLabel
+                    control={<Checkbox readOnly defaultChecked />}
+                    label={`@this account`}
+                  />
+                )}
+              </Stack>
+            </>
+          )}
           {(selectedPlatform == "facebook" ||
             selectedPlatform == "instagram") && (
             <PageFilter
@@ -294,60 +294,45 @@ const Timeline = ({ platform }) => {
             />
           )}
         </form>
-
-        <Box className="flex flex-1 h-full">
-          <Stack spacing={1.25} className="flex-1 h-full overflow-hidden">
-            {isLoading && (
-              <div className="w-full h-48 flex justify-center items-center">
-                <LoadingSpinner />
-                Loading
-              </div>
-            )}
-            {!isLoading &&
-              timelineData.map((post, id) => (
-                <Card
-                  key={id}
-                  date={post.date}
-                  fullName={post.fullName}
-                  username={post.username}
-                  message={post.message}
-                  post_url={post.post_url}
-                  avatar={post.avatar}
-                />
-              ))}
-          </Stack>
-        </Box>
+        <Stack spacing={1.25} className="h-[70svh] overflow-auto">
+          {isLoading && (
+            <div className="w-full h-48 flex justify-center items-center">
+              <LoadingSpinner />
+              Loading
+            </div>
+          )}
+          {!isLoading &&
+            timelineData.map((post, id) => (
+              <Card
+                key={id}
+                date={post.timestamp}
+                fullName={
+                  selectedPlatform === "facebook"
+                    ? "Facebook User"
+                    : selectedPlatform === "instagram"
+                    ? "Instagram User"
+                    : post.source
+                }
+                username={"@username"}
+                message={post.caption}
+                post_url={post.permalink}
+                avatar={
+                  selectedPlatform === "facebook" ||
+                  selectedPlatform == "instagram"
+                    ? "/assets/images/polda_logo.png"
+                    : `/assets/icon/${post.source}.png`
+                }
+                comment={post.comments_count ?? 0}
+                like={post.like_count ?? 0}
+              />
+            ))}
+        </Stack>
       </Box>
     </Stack>
   );
 };
 
 export default Timeline;
-
-const DATA = [
-  {
-    id: "1",
-    date: "May 19, 2023",
-    fullName: "Tania Nursafitri ",
-    username: "@nursafitritan7",
-    message:
-      "INFO ORANG HILANG\nNama: SALSA CAHYA BELLA\nUmur: 16 Tahun\nJenis Kelamin: Perempuan\nPekerjaan: Pelajar\nAlamat: Kendalrejo, RT 001/003, Kendalrejo, Bagor, Nganjuk, Jatim\n\n@Polda_Jatim",
-    avatar:
-      "https://s3-alpha-sig.figma.com/img/f127/01bd/073e2bc1cd36ec23f693b57248587006?Expires=1714953600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=bU0ZAeBAQt829peBwCpvdfU~lJiNB9hrverUCZYGy1FmxvecWC8UxfELb1K2QoiAA23FHd3W7RFzJgH74COoWj4eDzT1ZKZglfnQB~155kC5B3N87nrpRxf8KukBsAYRz~qCYAhXbRfjpKUsOUqG9FbLAGEdUGAexfo1VZ96z7suONLjO-sVecIjh3gTfd2bfUz8opTARIc~4b~81iCU9-1thhxx~jD-Faxff30XogoAyjlFu1U19vQ~QIhvb050WIp1El5QCrEnkyw5zzntPCSAcCvc155joZYspCX5GAiR99goRLOgKisc2rgpKRg6EGihDOuqS7CkLx8QkwlWyQ__",
-  },
-  {
-    id: "2",
-    date: "Nov 15, 2021",
-    fullName: "HUMAS POLDA JATIM",
-    username: "@HumasPoldaJatim",
-    message:
-      "Dalam rangka mengamankan perhelatan FIFA U-17 World Cup Indonesia 2023, Polri melalui Korpolairud Baharkam Polri telah menyiapkan dua helikopter AW169 dengan nomor register 3307 sebagai kru medis dan sarana evakuasi\n\nSinergi Demi Keamanan\n#PialaDuniaLancar",
-    post_url:
-      "https://s3-alpha-sig.figma.com/img/24aa/0e3c/b6e3d32ee0c415f3c72e7869c43b60d3?Expires=1714953600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=BrG6q2f7rrRiCJ01xqm7npBohfe-mAgFyGlZvkViek~FPZRohHZgqRZYB7VJykIITguavrn61MLuY~Ssby0J9-uuCF5uiNhxC8v859gPfJU4zzeXy-8m4Dr7ZO44srad9VEOHhts0Ao-OoTgbmb7EkJSMgy-I4aH7OWz3KxetxQpWmTVEXBipVsVorVSI2BdsjnqDEL~XhIEjBRsnFM1A~zS2Jz50AJlzGWhWDgsO0s~ISFnK5COnN7Dv6h2~~say6JfUPgRFubzOGW1yLca9j36aamg~myBLoknpAwDz5f2bO3AniITrPZPU4HdoNfwmT8TYlB5d4DbtJYvEWBVyw__",
-    avatar:
-      "https://s3-alpha-sig.figma.com/img/5b9e/3b44/8bd019e1a79d63426254153cff55342f?Expires=1714953600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZLhereTR96Fgvouvpt9Tpf79nguCQxH95d9jGWnWceeWgxrJyBtTmRRBjZcmJo-LLrRtaMuvOWexhRe0QDouF0NpqYChwfQv7ma4n2LuGoU4uw3wPHj8aLXxQeHUgHta2Mna0H-Q8wNfOAq-voAfDmcWGPPEPXihUD7UMg1zwCWrSuwh~6IKAmJNkf6577j8cm6vtZ5eme4g79aIYpV-wxB3JZORyLWpsju1MCc-dPY9dMkFMg57gi7JMCyg8hoOJOv8dMZ~SfISSCmHEcfmv7el-mXIBU9-ybiBJryfIog-E~pl3YyxJ92A8Zb-eC2zvCRbEaWPB2ZQxPUG88mSSw__",
-  },
-];
 
 const HashtagFilter = React.memo(({ filter, handler, data }) => {
   return (
@@ -380,7 +365,7 @@ const HashtagFilter = React.memo(({ filter, handler, data }) => {
   );
 });
 
-const MentionFilter = ({ filter, handler, data }) => {
+const MentionFilter = React.memo(({ filter, handler, data }) => {
   return (
     <>
       <Typography className="mt-8 font-semibold text-xs text-[#9098A3]">
@@ -404,9 +389,9 @@ const MentionFilter = ({ filter, handler, data }) => {
       </Stack>
     </>
   );
-};
+});
 
-const PageFilter = ({ filter, handler, data }) => {
+const PageFilter = React.memo(({ filter, handler, data }) => {
   return (
     <>
       <Typography className="mt-8 font-semibold text-xs text-[#9098A3]">
@@ -437,7 +422,7 @@ const PageFilter = ({ filter, handler, data }) => {
       </RadioGroup>
     </>
   );
-};
+});
 
 const MENTION_DATA = [
   {
@@ -445,17 +430,5 @@ const MENTION_DATA = [
   },
   {
     parameter: "HumasPoldaJatim",
-  },
-];
-
-const HASHTAG_DATA = [
-  {
-    parameter: "PoldaJatim",
-  },
-  {
-    parameter: "PolisiDaerahJawaTimur",
-  },
-  {
-    parameter: "PolsekSurabaya",
   },
 ];

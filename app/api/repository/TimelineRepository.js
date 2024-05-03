@@ -8,13 +8,18 @@ export const getTimelineByPlatform = async (
   hashtag = "",
   order = "newest"
 ) => {
+  console.log("🚀 ~ mention IN REPOSITORY:", mention);
+  console.log("🚀 ~ hashtag IN REPOSITORY:", hashtag);
   try {
     let URL = `timeline?platform=${platform}&pageId=${pageId}&mention=${mention}&hashtag=${hashtag}&order=${order}`;
     if (platform == "instagram") {
-      if (hashtag == "")
+      if (hashtag == "") {
+        console.log("TIDAK ADA HASHTAG");
         URL = `timeline?platform=${platform}&pageId=${pageId}&mention=${mention}`;
-      else if ((mention = ""))
+      } else if (mention == "") {
+        console.log("TIDAK ADA MENTION");
         URL = `timeline?platform=${platform}&pageId=${pageId}&hashtag=${hashtag}&order=${order}`;
+      }
     }
     const { data } = await PROVIDER_GET(URL, token);
 

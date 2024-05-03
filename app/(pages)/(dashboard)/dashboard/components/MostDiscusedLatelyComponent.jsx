@@ -342,9 +342,24 @@ const MostDiscusedLately = ({ initialData }) => {
         {isLoading && (
           <div className="w-full h-48 flex justify-center items-center">
             <LoadingSpinner />
-            Loading
+            Loading Most Discussed Data
           </div>
         )}
+        {data.length == 0 && !isLoading && (
+          <div className="w-full h-48 flex justify-center items-center">
+            No Data, Please select another date range or platform
+          </div>
+        )}
+        {(platform == "facebook" || platform == "instagram") &&
+          pageList.length == 0 && (
+            <div className="w-full h-48 flex justify-center items-center">
+              {isLoading && <LoadingSpinner />}
+              {isLoading
+                ? "Loading Facebook Page List"
+                : "No Connected Facebook Account, go to Connect Account Menu"}
+            </div>
+          )}
+
         {data.map((data, index) => (
           <Stack
             key={index}

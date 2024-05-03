@@ -43,16 +43,33 @@ const SidebarComponent = () => {
           className="py-5 space-x-2 rounded-tr-2xl justify-center"
           paddingX={isMinimized ? "12px" : "29px"}
         >
-          <Image src={POLDA_LOGO} alt="logo polda" width={40} height={53} />
-          <Typography
-            className={`text-xl font-extrabold transition-all duration-500 ${
-              isMinimized
-                ? "w-[0px] h-[0px] opacity-0 invisible"
-                : "w-[13ch] h-min opacity-100"
-            }`}
-          >
-            POLISI DAERAH JAWA TIMUR
-          </Typography>
+          <Image
+            src={POLDA_LOGO}
+            alt="logo polda"
+            width={244}
+            height={172}
+            className="w-14 h-auto object-contain"
+          />
+          <Stack direction={"column"}>
+            <Typography
+              className={`text-xl font-black tracking-wide transition-all duration-500 ${
+                isMinimized
+                  ? "w-[0px] h-[0px] opacity-0 invisible"
+                  : "w-[13ch] h-min opacity-100"
+              }`}
+            >
+              SOCIALENS
+            </Typography>
+            <Typography
+              className={`text-xs transition-all duration-500 ${
+                isMinimized
+                  ? "w-[0px] h-[0px] opacity-0 invisible"
+                  : "w-[21ch] h-min opacity-100"
+              }`}
+            >
+              Social Media Monitoring
+            </Typography>
+          </Stack>
         </Box>
         <Divider className="border-none h-[2px] bg-neutral-300" />
         <Box position={"relative"}>
@@ -78,7 +95,7 @@ const SidebarComponent = () => {
           >
             DASHBOARD
           </Typography>
-          <AccordionItem label={"POLDA JATIM"}>
+          <AccordionItem label={"SOCIALENS"}>
             <AccordionItemLink
               color="#F2994A"
               label="Analytics"
@@ -194,7 +211,7 @@ const AccordionItemLink = ({ label, path, color, pathname }) => {
           sx={{ backgroundColor: `${color}` }}
         ></Box>
         <Typography
-          className="text-sm text-neutral-600"
+          className="text-sm tracking-wide text-neutral-600"
           fontWeight={pathname === path ? 600 : 500}
         >
           {label}
