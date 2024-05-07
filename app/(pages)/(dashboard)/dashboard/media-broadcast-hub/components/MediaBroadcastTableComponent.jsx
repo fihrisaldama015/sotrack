@@ -2,14 +2,49 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
+import dayjs from "dayjs";
+import { Stack, Typography } from "@mui/material";
 
 const columns = [
   {
-    field: "date",
+    field: "created_at",
     headerName: "Date",
     width: 150,
+    renderCell: (params) => (
+      <div>{dayjs(params.value).format("MMM DD, YYYY")}</div>
+    ),
   },
-  { field: "recipient", headerName: "Recipient", width: 150 },
+  {
+    field: "receipient",
+    headerName: "Receipient",
+    width: 200,
+    renderCell: (params) => (
+      <Stack
+        direction={"row"}
+        spacing={1}
+        alignItems={"center"}
+        sx={{
+          whiteSpace: "pre-wrap",
+          wordWrap: "break-word",
+          lineHeight: "1.5",
+          maxHeight: "3.75rem",
+          padding: ".25rem 0",
+          overflowY: "hidden",
+          outline: "none !important",
+        }}
+        className="overflow-auto"
+      >
+        {params.value.split(", ").map((item, id) => (
+          <Typography
+            key={id}
+            className="text-sm first-letter:capitalize rounded-lg ring-1 ring-[#F0F0F0] shadow-md w-fit"
+          >
+            {item.substring(0, item.indexOf("@"))}...
+          </Typography>
+        ))}
+      </Stack>
+    ),
+  },
   {
     field: "city",
     headerName: "City",
@@ -34,9 +69,8 @@ const columns = [
           WebkitLineClamp: 2, // Show only 2 lines of text
           outline: "none !important",
         }}
-      >
-        {params.value}
-      </div>
+        dangerouslySetInnerHTML={{ __html: params.value }}
+      ></div>
     ),
   },
 ];

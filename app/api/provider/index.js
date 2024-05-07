@@ -30,9 +30,9 @@ export const PROVIDER_GET = async (pathUrl, token = "") => {
   return response;
 };
 
-export const PROVIDER_POST = async (pathUrl, data, token = "") => {
+export const PROVIDER_POST = async (pathUrl, data, token = "", isFormData) => {
   const headers = {
-    "Content-Type": "application/json",
+    "Content-Type": isFormData ? "multipart/form-data" : "application/json",
     // 'ADS-Key':ADS_KEY
     Authorization: `Bearer ${token}`,
     "Access-Control-Allow-Credentials": true,

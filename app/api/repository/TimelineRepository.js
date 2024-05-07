@@ -8,8 +8,6 @@ export const getTimelineByPlatform = async (
   hashtag = "",
   order = "newest"
 ) => {
-  console.log("🚀 ~ mention IN REPOSITORY:", mention);
-  console.log("🚀 ~ hashtag IN REPOSITORY:", hashtag);
   try {
     let URL = `timeline?platform=${platform}&pageId=${pageId}&mention=${mention}&hashtag=${hashtag}&order=${order}`;
     if (platform == "instagram") {

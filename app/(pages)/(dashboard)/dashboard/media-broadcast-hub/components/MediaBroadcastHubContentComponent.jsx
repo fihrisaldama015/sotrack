@@ -1,9 +1,10 @@
 "use client";
-import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import Add from "@mui/icons-material/Add";
+import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
@@ -11,29 +12,51 @@ import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
-import Add from "@mui/icons-material/Add";
-import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
+import { getMediaBroadcastEmailList } from "@/app/api/repository/MediaBroadcastRepository";
+import Link from "next/link";
 
-const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
-  const [data, setData] = useState(sourceTrackerData);
+const MediaBroadcastHubContent = () => {
+  const [data, setData] = useState([]);
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
+  const [searchData, SetSearchData] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
 
+  const getInitialEmailData = async () => {
+    try {
+      const res = await getMediaBroadcastEmailList(
+        accessToken,
+        1,
+        10,
+        dayjs().date(0).format("YYYY-MM-DD"),
+        dayjs().add(1, "day").format("YYYY-MM-DD")
+      );
+      setData(res);
+    } catch (e) {
+      console.log("🚀 ~ useEffect ~ e", e);
+    }
+  };
+
+  useEffect(() => {
+    getInitialEmailData();
+  }, []);
+
   useEffect(() => {
     if (search) {
       setIsLoading(true);
+      setIsSearching(true);
       const filteredData = data.filter((item) => {
         return item.message.toLowerCase().includes(search.toLowerCase());
       });
-      setData(filteredData);
+      SetSearchData(filteredData);
       setIsLoading(false);
     } else {
-      setData(sourceTrackerData);
+      setIsSearching(false);
     }
   }, [search]);
 
@@ -42,12 +65,6 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
     setChartEndDate(endDate);
     try {
       setIsLoading(true);
-      const res = await getSourceTrackerByDate(
-        startDate.format("YYYY-MM-DD"),
-        endDate.format("YYYY-MM-DD"),
-        accessToken
-      );
-      setData(res);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }
@@ -59,12 +76,17 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
         <Button
           variant="contained"
           color="primary"
-          className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-blue-700/20 m-1 flex items-center gap-2"
+          className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-blue-700/20 m-1 "
         >
-          <Add />
-          <Typography className="text-base font-semibold text-white">
-            Add New
-          </Typography>
+          <Link
+            href={"media-broadcast-hub/new"}
+            className="flex items-center gap-2 no-underline"
+          >
+            <Add className="text-white" />
+            <Typography className="text-base font-semibold text-white">
+              Add New
+            </Typography>
+          </Link>
         </Button>
         <Button
           variant="contained"
@@ -103,7 +125,9 @@ const MediaBroadcastHubContent = ({ platformId, sourceTrackerData }) => {
             Loading Data...
           </Stack>
         ) : (
-          <MediaBroadcastHubTable initialData={data} />
+          <MediaBroadcastHubTable
+            initialData={isSearching ? searchData : data}
+          />
         )}
       </Stack>
     </>

@@ -82,7 +82,7 @@ const MostDiscusedLately = ({ initialData }) => {
   const {
     data,
     error,
-    isValidating: loadingCache,
+    isLoading: loadingCache,
   } = useSWR(
     `/api/data/platform=${platform}&since=${chartStartDate.format(
       "YYYY-MM-DD"
@@ -96,10 +96,10 @@ const MostDiscusedLately = ({ initialData }) => {
         parameter ? parameter : ""
       ),
     {
-      // refreshInterval: 0, // Disable automatic refreshing
+      refreshInterval: 0, // Disable automatic refreshing
       revalidateOnFocus: false, // Disable revalidation on window focus
-      // staleTime: 60000,
-      revalidateOnMount: false,
+      staleTime: 60000,
+      revalidateOnMount: true,
       fallbackData: [],
     }
   );
