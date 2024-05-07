@@ -1,22 +1,23 @@
 "use client";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
+import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 import CalendarToday from "@mui/icons-material/CalendarToday";
-import dayjs from "dayjs";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import PersonIcon from "@mui/icons-material/Person";
+import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Button } from "@mui/material";
-import Image from "next/image";
 import { getCookie } from "cookies-next";
-import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import PersonIcon from "@mui/icons-material/Person";
-import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
+import dayjs from "dayjs";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
+import useSWR, { mutate } from "swr";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -36,10 +37,10 @@ const checkConnectedInstagramFromFacebook = (pageList) => {
 };
 
 const MostDiscusedLately = ({ initialData }) => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [platform, setPlatform] = useState("facebook");
+  const [platform, setPlatform] = useState("news");
   const [showPlatform, setShowPlatform] = useState(false);
 
   const [parameter, setParameter] = useState("");
@@ -61,24 +62,6 @@ const MostDiscusedLately = ({ initialData }) => {
   const handlePlatformChange = (platform) => {
     setPlatform(platform);
     setShowPlatform(false);
-    // refreshData();
-  };
-
-  const getMostDiscusedLatelyData = async () => {
-    try {
-      setIsLoading(true);
-      const res = await getMostDiscusedLatelyByDate(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
-        accessToken,
-        platform,
-        parameter
-      );
-      setData(res);
-    } catch (error) {
-      console.log("🚀 ~ error:", error);
-    }
-    setIsLoading(false);
   };
 
   const getPageListData = async () => {
@@ -96,23 +79,42 @@ const MostDiscusedLately = ({ initialData }) => {
       console.log("🚀 ~ error - Get Page List:", error);
     }
   };
-
-  useEffect(() => {
-    if (parameter !== "") {
-      getMostDiscusedLatelyData();
+  const {
+    data,
+    error,
+    isValidating: loadingCache,
+  } = useSWR(
+    `/api/data/platform=${platform}&since=${chartStartDate.format(
+      "YYYY-MM-DD"
+    )}&until=${chartEndDate.format("YYYY-MM-DD")}`,
+    () =>
+      getMostDiscusedLatelyByDate(
+        chartStartDate.format("YYYY-MM-DD"),
+        chartEndDate.format("YYYY-MM-DD"),
+        accessToken,
+        platform,
+        parameter ? parameter : ""
+      ),
+    {
+      // refreshInterval: 0, // Disable automatic refreshing
+      revalidateOnFocus: false, // Disable revalidation on window focus
+      // staleTime: 60000,
+      revalidateOnMount: false,
+      fallbackData: [],
     }
-  }, [parameter, platform]);
-
+  );
+  console.log("🚀 ~ useEffect ~ data:", data);
   useEffect(() => {
-    if (platform === "facebook" || platform === "instagram") {
-      if (facebookPageList.length === 0) {
-        getPageListData();
-      } else {
-        setPageList(facebookPageList);
-        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-      }
+    setIsLoading(loadingCache);
+
+    console.log("🚀 ~ useEffect ~ loadingCache EFFECT:", loadingCache);
+  }, [loadingCache]);
+  useEffect(() => {
+    if (facebookPageList.length === 0) {
+      getPageListData();
     } else {
-      getMostDiscusedLatelyData();
+      setPageList(facebookPageList);
+      setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
     }
   }, []);
 
@@ -128,14 +130,6 @@ const MostDiscusedLately = ({ initialData }) => {
     setShowDatePicker(false);
     try {
       setIsLoading(true);
-      const res = await getMostDiscusedLatelyByDate(
-        startDate.format("YYYY-MM-DD"),
-        endDate.format("YYYY-MM-DD"),
-        accessToken,
-        platform,
-        parameter
-      );
-      setData(res);
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }
@@ -339,6 +333,7 @@ const MostDiscusedLately = ({ initialData }) => {
         </Stack>
       </Stack>
       <Stack direction={"column"} className="">
+        {!data && <LoadingSpinner />}
         {isLoading ? (
           <div className="w-full h-48 flex justify-center items-center">
             <LoadingSpinner />

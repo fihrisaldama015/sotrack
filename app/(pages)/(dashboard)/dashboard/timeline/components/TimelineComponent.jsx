@@ -89,7 +89,7 @@ const Timeline = () => {
       accessToken
     );
     if (res) {
-      setHashtagFilterList(res);
+      // sethashtag(res);
       return res;
     } else {
       return [];
@@ -115,7 +115,7 @@ const Timeline = () => {
   useEffect(() => {
     setIsLoading(true);
     (async () => {
-      const filterData = await getFilterData();
+      // const filterData = await getFilterData();
       if (selectedPlatform === "facebook" || selectedPlatform === "instagram") {
         if (facebookPageList.length === 0) {
           getPageListData();
@@ -124,7 +124,7 @@ const Timeline = () => {
             checkConnectedInstagramFromFacebook(facebookPageList);
           setPageList(facebookPageList);
           setPageFilter(pageIdFromSavedState);
-          if (pageFilter !== "") {
+          if (pageIdFromSavedState !== "") {
             getTimelineData(pageIdFromSavedState);
           }
         }
@@ -179,12 +179,29 @@ const Timeline = () => {
     setParameter(value);
   };
 
-  const { data: platforms, error } = useSWR("/api/platform", () =>
-    getAllPlatformList(accessToken)
+  const { data: platforms, error } = useSWR(
+    "/api/platform",
+    () => getAllPlatformList(accessToken),
+    {
+      refreshInterval: 0, // Disable automatic refreshing
+      revalidateOnFocus: false, // Disable revalidation on window focus
+      staleTime: 60000, // Set a longer stale time (in milliseconds)
+    }
+  );
+  const { data: hashtag, errorHashtag } = useSWR(
+    `filter-user?platform=${selectedPlatformId}`,
+    () => getUserFilterByPlatformId(selectedPlatformId, accessToken),
+    {
+      refreshInterval: 0, // Disable automatic refreshing
+      revalidateOnFocus: false, // Disable revalidation on window focus
+      staleTime: 60000, // Set a longer stale time (in milliseconds)
+    }
   );
 
   if (error) return <div>Error loading platform data...</div>;
+  if (errorHashtag) return <div>Error loading hashtag data...</div>;
   if (!platforms) return <div>Loading platform data...</div>;
+  if (!hashtag) return <div>Loading hashtag data...</div>;
 
   return (
     <Stack direction={"column"} className="space-y-4 h-full">
@@ -278,7 +295,7 @@ const Timeline = () => {
           <HashtagFilter
             filter={hashtagFilter}
             handler={handleHashtagFilter}
-            data={hashtagFilterList}
+            data={hashtag}
           />
 
           {selectedPlatform == "instagram" && (
