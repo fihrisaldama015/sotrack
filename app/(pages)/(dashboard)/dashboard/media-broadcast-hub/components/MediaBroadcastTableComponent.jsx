@@ -32,15 +32,15 @@ const columns = [
           overflowY: "hidden",
           outline: "none !important",
         }}
-        className="overflow-auto"
+        className="overflow-x-auto no-scrollbar"
       >
         {params.value.split(", ").map((item, id) => (
-          <Typography
+          <Box
             key={id}
-            className="text-sm first-letter:capitalize rounded-lg ring-1 ring-[#F0F0F0] shadow-md w-fit"
+            className="text-sm first-letter:capitalize rounded-lg ring-1 ring-[#F0F0F0] shadow-md w-fit py-1 px-2 m-1"
           >
             {item.substring(0, item.indexOf("@"))}...
-          </Typography>
+          </Box>
         ))}
       </Stack>
     ),

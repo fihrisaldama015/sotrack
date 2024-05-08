@@ -15,8 +15,8 @@ import SearchBar from "./SearchBarComponent";
 import { getMediaBroadcastEmailList } from "@/app/api/repository/MediaBroadcastRepository";
 import Link from "next/link";
 
-const MediaBroadcastHubContent = () => {
-  const [data, setData] = useState([]);
+const MediaBroadcastHubContent = ({ initialData }) => {
+  const [data, setData] = useState(initialData);
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
@@ -42,9 +42,9 @@ const MediaBroadcastHubContent = () => {
     }
   };
 
-  useEffect(() => {
-    getInitialEmailData();
-  }, []);
+  // useEffect(() => {
+  //   getInitialEmailData();
+  // }, []);
 
   useEffect(() => {
     if (search) {
