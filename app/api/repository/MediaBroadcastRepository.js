@@ -1,4 +1,4 @@
-import { PROVIDER_GET, PROVIDER_POST } from "../provider";
+import { PROVIDER_DELETE, PROVIDER_GET, PROVIDER_POST } from "../provider";
 
 export const getMediaBroadcastEmailList = async (
   token,
@@ -41,8 +41,18 @@ export const sendMediaBroadCastEmail = async (
     files.forEach((file) => {
       form.append("files", file);
     });
-    const { data } = await PROVIDER_POST("sendEmail", form, token, true);
+    const res = await PROVIDER_POST("sendEmail", form, token, true);
 
+    return res;
+  } catch (e) {
+    console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);
+    return [];
+  }
+};
+
+export const deleteMediaBroadCastEmail = async (id, token) => {
+  try {
+    const { data } = await PROVIDER_DELETE(`deleteEmail/${id}`, null, token);
     return data;
   } catch (e) {
     console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);

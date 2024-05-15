@@ -7,32 +7,37 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-const DatePickerComponent = ({ name, register, errors, validationSchema }) => {
-  const [startDate, setStartDate] = useState(dayjs());
-
+const DatePickerComponent = ({
+  name,
+  register,
+  errors,
+  validationSchema,
+  date,
+  setDate,
+}) => {
   return (
     <Box className="w-full">
       <Stack direction={"row"} alignItems={"center"} spacing={2}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label=""
-            value={startDate}
-            onChange={(newValue) => setStartDate(newValue)}
+            value={date}
+            onChange={(newValue) => setDate(newValue)}
             className="w-full"
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderRadius: "6px",
               },
             }}
-            {...register(name, {
-              ...validationSchema,
-            })}
+            // {...register(name, {
+            //   ...validationSchema,
+            // })}
           />
         </LocalizationProvider>
       </Stack>
-      {errors && errors[name]?.type === "required" && (
+      {/* {errors && errors[name]?.type === "required" && (
         <span className="text-red-500 text-sm">{errors[name]?.message}</span>
-      )}
+      )} */}
     </Box>
   );
 };

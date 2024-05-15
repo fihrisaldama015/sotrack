@@ -134,7 +134,7 @@ const SidebarComponent = () => {
             SETTINGS
           </Typography>
           <AccordionItem label="Settings">
-            <Link href="/settings/filter/twitter" className="no-underline">
+            <Link href="/settings/filter/instagram" className="no-underline">
               <Box
                 display={"flex"}
                 alignItems={"center"}

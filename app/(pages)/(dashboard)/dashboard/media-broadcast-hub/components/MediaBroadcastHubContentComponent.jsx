@@ -1,4 +1,8 @@
 "use client";
+import {
+  deleteMediaBroadCastEmail,
+  getMediaBroadcastEmailList,
+} from "@/app/api/repository/MediaBroadcastRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Add from "@mui/icons-material/Add";
 import DeleteForeverOutlined from "@mui/icons-material/DeleteForeverOutlined";
@@ -7,19 +11,21 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
-import { getMediaBroadcastEmailList } from "@/app/api/repository/MediaBroadcastRepository";
-import Link from "next/link";
+import { useSelector } from "react-redux";
 
-const MediaBroadcastHubContent = ({ initialData }) => {
-  const [data, setData] = useState(initialData);
+const MediaBroadcastHubContent = () => {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
-  const [isLoading, setIsLoading] = useState(false);
+
   const [searchData, SetSearchData] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -27,24 +33,28 @@ const MediaBroadcastHubContent = ({ initialData }) => {
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
 
+  const { emailSelected } = useSelector((state) => state.mediaReducer);
+
   const getInitialEmailData = async () => {
+    setIsLoading(true);
     try {
       const res = await getMediaBroadcastEmailList(
         accessToken,
         1,
         10,
-        dayjs().date(0).format("YYYY-MM-DD"),
-        dayjs().add(1, "day").format("YYYY-MM-DD")
+        chartStartDate.format("YYYY-MM-DD"),
+        chartEndDate.add(1, "day").format("YYYY-MM-DD")
       );
       setData(res);
     } catch (e) {
       console.log("🚀 ~ useEffect ~ e", e);
     }
+    setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   getInitialEmailData();
-  // }, []);
+  useEffect(() => {
+    getInitialEmailData();
+  }, []);
 
   useEffect(() => {
     if (search) {
@@ -65,10 +75,36 @@ const MediaBroadcastHubContent = ({ initialData }) => {
     setChartEndDate(endDate);
     try {
       setIsLoading(true);
+      const res = await getMediaBroadcastEmailList(
+        accessToken,
+        1,
+        10,
+        startDate.format("YYYY-MM-DD"),
+        endDate.add(1, "day").format("YYYY-MM-DD")
+      );
+      setData(res);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }
     setIsLoading(false);
+  };
+
+  const DeleteEmail = async () => {
+    const deleteTheEmail = async (email) => {
+      try {
+        const response = await deleteMediaBroadCastEmail(email, accessToken);
+        return response;
+      } catch (error) {
+        console.log("🚀 ~ deleteTheEmail ~ error:", error);
+      }
+    };
+    emailSelected.map((email) => {
+      console.log("delete => ", email);
+      deleteTheEmail(email);
+    });
+    setTimeout(() => {
+      getInitialEmailData();
+    }, 1000);
   };
   return (
     <>
@@ -90,6 +126,7 @@ const MediaBroadcastHubContent = ({ initialData }) => {
         </Button>
         <Button
           variant="contained"
+          onClick={DeleteEmail}
           color="error"
           className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-red-700/20 m-1 flex items-center gap-2"
         >
@@ -120,10 +157,10 @@ const MediaBroadcastHubContent = ({ initialData }) => {
           </Typography>
         </Stack>
         {isLoading ? (
-          <Stack direction={"row"} justifyContent={"center"} spacing={2}>
+          <div className="w-full h-48 flex justify-center items-center">
             <LoadingSpinner />
             Loading Data...
-          </Stack>
+          </div>
         ) : (
           <MediaBroadcastHubTable
             initialData={isSearching ? searchData : data}

@@ -55,7 +55,7 @@ const CrimeStatistic = ({ initialData }) => {
         CrimeStatisticResult
       );
 
-      setChartData(CrimeStatisticResult);
+      // setChartData(CrimeStatisticResult);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }

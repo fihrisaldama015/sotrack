@@ -1,5 +1,5 @@
 "use client";
-import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
+// import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -11,16 +11,62 @@ import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import SearchBar from "./SearchBarComponent";
 import PublicReportTable from "./PublicReportTableComponent";
+import { Box, Divider } from "@mui/material";
+import { Close, Link, Public } from "@mui/icons-material";
+import { APP_URL, BASE_URL } from "@/app/utils/constants";
+import {
+  getAllReport,
+  getLinkForm,
+} from "@/app/api/repository/PublicReportRepository";
 
-const PublicReportContent = ({ platformId, sourceTrackerData }) => {
-  const [data, setData] = useState(sourceTrackerData);
+const PublicReportContent = ({ platformId }) => {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [openShare, setOpenShare] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
+  const [link, setLink] = useState("");
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
+
+  const copyLink = () => {
+    setShowCopied(true);
+    navigator.clipboard.writeText(link);
+    setTimeout(() => {
+      setShowCopied(false);
+    }, 3000);
+  };
+
+  const getLinkFromProfile = async (token) => {
+    const data = await getLinkForm(token);
+    const id = data.link.split("/")[4];
+    // setLink(`http://localhost:3000/form/${id}`);
+    setLink(data.link);
+    return data;
+  };
+
+  const getPublicReportData = async () => {
+    setIsLoading(true);
+    const response = await getAllReport(
+      chartStartDate.format("YYYY-MM-DD"),
+      chartEndDate.add(1, "day").format("YYYY-MM-DD")
+    );
+    setData(response);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getLinkFromProfile(accessToken);
+    getPublicReportData();
+  }, []);
 
   useEffect(() => {
     if (search) {
@@ -28,49 +74,106 @@ const PublicReportContent = ({ platformId, sourceTrackerData }) => {
       const filteredData = data.filter((item) => {
         return item.message.toLowerCase().includes(search.toLowerCase());
       });
-      setData(filteredData);
+      setIsSearching(true);
+      setFilteredData(filteredData);
       setIsLoading(false);
     } else {
-      setData(sourceTrackerData);
+      setFilteredData([]);
+      setIsSearching(false);
     }
   }, [search]);
 
   const refreshData = async (startDate, endDate) => {
     setChartStartDate(startDate);
     setChartEndDate(endDate);
-    try {
-      setIsLoading(true);
-      const res = await getSourceTrackerByDate(
-        startDate.format("YYYY-MM-DD"),
-        endDate.format("YYYY-MM-DD"),
-        accessToken
-      );
-      setData(res);
-    } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
-    }
+    setIsLoading(true);
+    const response = await getAllReport(
+      startDate.format("YYYY-MM-DD"),
+      endDate.add(1, "day").format("YYYY-MM-DD")
+    );
+    setData(response);
     setIsLoading(false);
   };
   return (
     <>
-      <Stack direction={"row"} className="gap-2" flexWrap={"wrap"}>
+      <Stack direction={"row"} className="gap-4" flexWrap={"wrap"}>
         <DatePicker
           chartStartDate={chartStartDate}
           chartEndDate={chartEndDate}
-          setChartDate={(startDate, endDate) => {
-            setChartStartDate(startDate);
-            setChartEndDate(endDate);
-          }}
           refreshData={refreshData}
         />
         <SearchBar />
-        <Button
-          variant="contained"
-          color="primary"
-          className="px-8 py-1 rounded-xl text-base font-semibold text-white shadow-lg shadow-green-700/20 m-1"
-        >
-          Share Link Form
-        </Button>
+        <Box className="relative">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenShare((value) => !value)}
+            className="px-8 py-3 rounded-[20px] text-base font-semibold text-white shadow-lg shadow-green-700/20"
+          >
+            Share Link Form
+          </Button>
+          <Box
+            className={`absolute top-16 right-0 z-10 bg-white shadow-lg rounded-[10px] py-5 px-6 flex flex-col gap-4 transition-all ${
+              openShare ? "opacity-100 visible" : "invisible opacity-0"
+            }`}
+          >
+            <Stack spacing={1}>
+              <Stack direction={"row"} className="">
+                <Typography className="flex flex-1 justify-center items-start text-base font-semibold">
+                  Share
+                </Typography>
+                <Close
+                  onClick={() => {
+                    setOpenShare(false);
+                  }}
+                  className="hover:bg-slate-200 rounded-full cursor-pointer transition-all "
+                />
+              </Stack>
+              <Divider />
+            </Stack>
+            <Typography className="text-sm">
+              Share the following link on your social media so that people can
+              submit complaints or suggestions.
+            </Typography>
+            <Stack
+              direction={"row"}
+              className="ring-1 ring-neutral-300 rounded-md"
+            >
+              <Box className="bg-slate-200 text-slate-800 p-3 ring-1 ring-slate-300 rounded-tl-md rounded-bl-md flex items-center">
+                <Link sx={{ width: 16 }} className="h-fit" />
+              </Box>
+              <Typography className="p-4 text-grey-800 tracking-wide text-sm max-w-[30ch] overflow-hidden text-ellipsis whitespace-nowrap flex items-center">
+                {link.substring(0, 30)}...
+              </Typography>
+              <Box className="relative">
+                <Button
+                  className="m-1 py-3 px-5 rounded-md font-medium tracking-wide"
+                  variant="contained"
+                  size="medium"
+                  color="primary"
+                  onClick={copyLink}
+                  // sx={{ borderRadius: "6px" }}
+                >
+                  Copy
+                </Button>
+                <Box
+                  className={`absolute py-1 px-4 -top-10 z-10 bg-white shadow-lg rounded-lg ring-1 ring-slate-300 font-medium text-sm transition-all ${
+                    showCopied ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  Copied!
+                </Box>
+              </Box>
+            </Stack>
+            <Divider />
+            <Stack direction={"row"} spacing={1} alignItems={"center"}>
+              <Public sx={{ width: 16 }} />
+              <Typography className="text-sm">
+                Everyone on the internet can access that link
+              </Typography>
+            </Stack>
+          </Box>
+        </Box>
       </Stack>
       <Stack
         direction={"column"}
@@ -83,12 +186,15 @@ const PublicReportContent = ({ platformId, sourceTrackerData }) => {
           </Typography>
         </Stack>
         {isLoading ? (
-          <Stack direction={"row"} justifyContent={"center"} spacing={2}>
+          <div className="w-full h-48 flex justify-center items-center">
             <LoadingSpinner />
             Loading Data...
-          </Stack>
+          </div>
         ) : (
-          <PublicReportTable initialData={data} />
+          <PublicReportTable
+            initialData={isSearching ? filteredData : data}
+            refresh={getPublicReportData}
+          />
         )}
       </Stack>
     </>

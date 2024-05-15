@@ -6,6 +6,7 @@ import {
   PlatformSlice,
   PopupSlice,
   FacebookPageSlice,
+  MediaBroadcastSlice,
 } from "./slices";
 
 export const Store = configureStore({
@@ -16,5 +17,6 @@ export const Store = configureStore({
     platformReducer: PlatformSlice,
     filterReducer: FilterSlice,
     facebookReducer: FacebookPageSlice,
+    mediaReducer: MediaBroadcastSlice,
   },
 });

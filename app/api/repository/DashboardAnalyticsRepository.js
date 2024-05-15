@@ -12,7 +12,7 @@ export const getCrimeStatisticByDate = async (startDate, endDate, token) => {
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
-  // let crimeData = generateCrimeData(7);
+  // let crimeData = [];
   let crimeData = getTypeOfCrime(data);
   return crimeData;
 };
@@ -26,56 +26,6 @@ const getTypeOfCrime = (data) => {
     });
   });
   return typeOfCrime;
-};
-
-const CRIME_VARIETIES = [
-  "Robbery",
-  "Assault",
-  "Fraud",
-  "Burglary",
-  "Vandalism",
-  "Arson",
-  "Shoplifting",
-  "Cybercrime",
-  "Homicide",
-  "Forgery",
-  "Drug Trafficking",
-  "Identity Theft",
-  "Kidnapping",
-  "Car Theft",
-  "Domestic Violence",
-  "Human Trafficking",
-  "Stalking",
-  "Terror",
-];
-
-const generateRandomCrimeVariety = () => {
-  const randomIndex = Math.floor(Math.random() * CRIME_VARIETIES.length);
-  return CRIME_VARIETIES[randomIndex];
-};
-
-const generateRandomCrimeData = (newData) => {
-  const type_of_crime = generateRandomCrimeVariety();
-
-  if (newData.some((data) => data.type_of_crime === type_of_crime)) {
-    return generateRandomCrimeData(newData);
-  }
-  const jumlah_laporan = Math.floor(Math.random() * 700) + 201;
-  const data = Math.floor(Math.random() * 700) + 201;
-
-  return {
-    type_of_crime,
-    "jumlah laporan": jumlah_laporan,
-    data,
-  };
-};
-
-const generateCrimeData = (count) => {
-  const newData = [];
-  for (let i = 0; i < count; i++) {
-    newData.push(generateRandomCrimeData(newData));
-  }
-  return newData;
 };
 
 export const getCriminalReportByType = async (type, token) => {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  platformId: "6a8bf110-ccbc-48c8-834e-d11ac581197a",
+  platformId: "2455d96c-71ff-48ee-8e18-62df8ad2f7c7",
 };
 
 export const PlatformSlice = createSlice({

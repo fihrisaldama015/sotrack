@@ -1,13 +1,15 @@
 "use client";
-import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { changeEmailSelected } from "@/app/redux/slices/MediaBroadcastSlice";
 
 const columns = [
   {
-    field: "created_at",
+    field: "createdAt",
     headerName: "Date",
     width: 150,
     renderCell: (params) => (
@@ -37,9 +39,9 @@ const columns = [
         {params.value.split(", ").map((item, id) => (
           <Box
             key={id}
-            className="text-sm first-letter:capitalize rounded-lg ring-1 ring-[#F0F0F0] shadow-md w-fit py-1 px-2 m-1"
+            className="text-sm first-letter:capitalize rounded-lg ring-1 ring-[#F0F0F0] bg-slate-100 shadow-md w-fit py-1 px-2 m-1"
           >
-            {item.substring(0, item.indexOf("@"))}...
+            {item.split("@")[0]}...
           </Box>
         ))}
       </Stack>
@@ -80,6 +82,18 @@ const MediaBroadcastHubTable = ({ initialData }) => {
     border: "transparent", // Customize border color
     borderRadius: ".5rem", // Customize border radius
   };
+  const [selectedIds, setSelectedIds] = useState([]);
+  const dispatch = useDispatch();
+
+  const handleSelectionChange = (newSelection) => {
+    setSelectedIds(newSelection);
+    dispatch(
+      changeEmailSelected({
+        emailSelected: newSelection,
+      })
+    );
+    console.log("Selected row IDs:", newSelection);
+  };
   return (
     <Box sx={{ height: initialData.length > 0 ? 500 : 150 }}>
       <DataGrid
@@ -99,7 +113,9 @@ const MediaBroadcastHubTable = ({ initialData }) => {
           includeHeaders: false,
         }}
         checkboxSelection
-        disableRowSelectionOnClick
+        onRowSelectionModelChange={(newSelection) =>
+          handleSelectionChange(newSelection)
+        }
         style={customStyles}
         className="customDataGrid max-lg:overflow-x-auto"
         localeText={{

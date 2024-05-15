@@ -20,7 +20,10 @@ const DatePickerComponent = ({ chartStartDate, chartEndDate, refreshData }) => {
       alert("Start date cannot be after end date");
       return;
     }
-    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
+    if (
+      startDate.isAfter(dayjs().add(1, "day")) ||
+      endDate.isAfter(dayjs().add(1, "day"))
+    ) {
       alert("Date cannot be in the future");
       return;
     }
@@ -52,7 +55,7 @@ const DatePickerComponent = ({ chartStartDate, chartEndDate, refreshData }) => {
       </Stack>
       <form
         onSubmit={validate}
-        className="absolute right-0 top-8 flex flex-col items-end gap-4 bg-slate-50 p-6 w-96 z-10 shadow-lg rounded-xl transition-all"
+        className="absolute right-0 top-16 flex flex-col items-end ring-1 ring-neutral-300 bg-white gap-4 p-6 w-96 z-10 shadow-lg rounded-xl transition-all"
         style={{
           visibility: showDatePicker ? "visible" : "hidden",
           opacity: showDatePicker ? 1 : 0,

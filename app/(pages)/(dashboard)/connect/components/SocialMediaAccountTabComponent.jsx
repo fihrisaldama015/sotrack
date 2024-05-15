@@ -18,12 +18,6 @@ const SocialMediaAccountTabComponent = () => {
         currentRoute={pathname}
       />
       <TabItemComponent
-        label={"Instagram Account"}
-        onClick={() => handlePlatformChange("instagram")}
-        href={`/connect/instagram`}
-        currentRoute={pathname}
-      />
-      <TabItemComponent
         label={"Facebook Account"}
         onClick={() => handlePlatformChange("facebook")}
         href={`/connect/facebook`}

@@ -7,35 +7,50 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import DatePickerComponent from "./DatePickerComponent";
+import dayjs from "dayjs";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
-const AddNewBroadcastForm = React.memo(({ recipient }) => {
-  console.log("🚀 ~ AddNewBroadcastForm ~ recipient:", recipient);
+const AddNewBroadcastForm = ({ recipient }) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+  const [date, setDate] = useState(dayjs());
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     console.log("🚀 ~ onSubmit ~ data:", data);
     const token = getCookie("accessToken");
-    const { title, city, broadcast, date, file } = data;
+    const { title, city, broadcast, file } = data;
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
     try {
       const res = await sendMediaBroadCastEmail(
         token,
         recipient,
         title,
         `<p>${broadcast}</p>`,
-        date,
+        formattedDate,
         city,
         [file]
       );
-      console.log("🚀 ~ onSubmit ~ res:", res);
-    } catch (e) {
-      console.log("🚀 ~ onSubmit ~ e:", e);
+      if (res) {
+        openPopUpSuccess(dispatch, `${res.message}`);
+        router.push("/dashboard/media-broadcast-hub");
+      }
+    } catch (error) {
+      openPopUpError(
+        dispatch,
+        error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
+      );
+      console.log("🚀 ~ onSubmit ~ e:", error);
     }
   };
   return (
@@ -82,6 +97,8 @@ const AddNewBroadcastForm = React.memo(({ recipient }) => {
             validationSchema={{
               required: "Date is required",
             }}
+            setDate={setDate}
+            date={date}
           />
         </FormControl>
       </Stack>
@@ -142,6 +159,6 @@ const AddNewBroadcastForm = React.memo(({ recipient }) => {
       </Stack>
     </form>
   );
-});
+};
 
 export default AddNewBroadcastForm;

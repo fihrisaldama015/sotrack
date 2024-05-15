@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { cookies } from "next/headers";
 import CrimeStatistic from "./components/CrimeStatisticComponent";
 import CriminalReport from "./components/CriminalReportComponent";
+import MentionAnalyticsCard from "./components/MentionAnalyticsCard";
 import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
 import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
 
@@ -77,6 +78,17 @@ const DashboardPage = async () => {
       className="max-w-[calc(100vw-350px)] "
     >
       <Stack className="lg:flex-row flex-col gap-3 w-full">
+        <MentionAnalyticsCard
+          title={"Social Media Mentions"}
+          data={SocialMediaMentionsData}
+        />
+        <MentionAnalyticsCard title={"News Mentions"} data={NewsMentionsData} />
+        <MentionAnalyticsCard
+          title={"Social Media Mentions Comment"}
+          data={SocialMediaMentionsCommentData}
+        />
+      </Stack>
+      <Stack className="lg:flex-row flex-col gap-3 w-full">
         <CrimeStatistic initialData={initialCrimeStatistic} />
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
@@ -89,3 +101,100 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
+
+export const SocialMediaMentionsData = [
+  {
+    id: "Mention",
+    color: "#2563EB",
+    data: [
+      {
+        x: "Jan",
+        y: 54,
+      },
+      {
+        x: "Feb",
+        y: 117,
+      },
+      {
+        x: "Mar",
+        y: 44,
+      },
+      {
+        x: "Apr",
+        y: 215,
+      },
+      {
+        x: "Mei",
+        y: 50,
+      },
+      {
+        x: "Jun",
+        y: 233,
+      },
+    ],
+  },
+];
+export const NewsMentionsData = [
+  {
+    id: "Mention",
+    color: "#2563EB",
+    data: [
+      {
+        x: "Jan",
+        y: 5029,
+      },
+      {
+        x: "Feb",
+        y: 4100,
+      },
+      {
+        x: "Mar",
+        y: 5400,
+      },
+      {
+        x: "Apr",
+        y: 4200,
+      },
+      {
+        x: "Mei",
+        y: 5200,
+      },
+      {
+        x: "Jun",
+        y: 4023,
+      },
+    ],
+  },
+];
+export const SocialMediaMentionsCommentData = [
+  {
+    id: "Mention",
+    color: "#2563EB",
+    data: [
+      {
+        x: "Jan",
+        y: 850,
+      },
+      {
+        x: "Feb",
+        y: 770,
+      },
+      {
+        x: "Mar",
+        y: 900,
+      },
+      {
+        x: "Apr",
+        y: 600,
+      },
+      {
+        x: "Mei",
+        y: 1200,
+      },
+      {
+        x: "Jun",
+        y: 1021,
+      },
+    ],
+  },
+];
