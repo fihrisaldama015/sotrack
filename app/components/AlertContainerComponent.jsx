@@ -1,12 +1,14 @@
 "use client";
 import CheckCircleOutline from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { changeIsPopUpOpen } from "../redux/slices/PopupSlice";
+import { useRouter } from "next/navigation";
 
 const AlertContainer = () => {
   const { isPopUpOpen, popUpMessage, popUpType } = useSelector(
@@ -28,6 +30,7 @@ export default AlertContainer;
 
 const Alert = ({ type, message }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const closePopUp = () => {
     dispatch(
       changeIsPopUpOpen({
@@ -50,15 +53,24 @@ const Alert = ({ type, message }) => {
               className="text-white scale-[2.5]"
               fontSize="large"
             />
-          ) : (
+          ) : type === "successs" ? (
             <CheckCircleOutline
               className="text-white scale-[2.5]"
+              fontSize="large"
+            />
+          ) : (
+            <ArrowCircleUpIcon
+              className="text-white scale-[2.5] rotate-90"
               fontSize="large"
             />
           )}
         </Box>
         <Typography className="font-semibold text-2xl text-white">
-          {type === "error" ? "ERROR" : "SUCCESS"}
+          {type === "error"
+            ? "ERROR"
+            : type === "success"
+            ? "SUCCESS"
+            : "WELCOME"}
         </Typography>
       </Box>
       <Stack
@@ -73,11 +85,22 @@ const Alert = ({ type, message }) => {
           variant="contained"
           color={type === "error" ? "error" : "success"}
           size="large"
-          onClick={() => closePopUp()}
+          onClick={() => {
+            if (type === "welcome") {
+              router.push("/connect/facebook");
+            }
+            closePopUp();
+          }}
           className="py-3 rounded-lg w-full text-white text-xl font-medium"
         >
-          Continue
+          {type === "welcome" ? "Connect Account" : "Continue"}
         </Button>
+        <Typography
+          className="text-sm text-center cursor-pointer hover:underline"
+          onClick={() => closePopUp()}
+        >
+          Continue without account
+        </Typography>
       </Stack>
     </Box>
   );

@@ -4,8 +4,9 @@ import {
   getPageList,
 } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeIsPopUpOpen } from "@/app/redux/slices/PopupSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
-import { openPopUpError } from "@/app/utils/extensions";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import CalendarToday from "@mui/icons-material/CalendarToday";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import PersonIcon from "@mui/icons-material/Person";
@@ -89,6 +90,14 @@ const SocialMentionTracker = () => {
       setParameter(pageId);
       setPageList(pageListResult);
     } catch (error) {
+      dispatch(
+        changeIsPopUpOpen({
+          isPopUpOpen: true,
+          popUpMessage:
+            "Congratulations, you are on the Socialens dashboard, next please connect your social media account!",
+          popUpType: "welcome",
+        })
+      );
       console.log("🚀 ~ error - Get Page List:", error);
     }
   };
