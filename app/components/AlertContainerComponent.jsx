@@ -53,7 +53,7 @@ const Alert = ({ type, message }) => {
               className="text-white scale-[2.5]"
               fontSize="large"
             />
-          ) : type === "successs" ? (
+          ) : type === "success" ? (
             <CheckCircleOutline
               className="text-white scale-[2.5]"
               fontSize="large"
@@ -95,12 +95,14 @@ const Alert = ({ type, message }) => {
         >
           {type === "welcome" ? "Connect Account" : "Continue"}
         </Button>
-        <Typography
-          className="text-sm text-center cursor-pointer hover:underline"
-          onClick={() => closePopUp()}
-        >
-          Continue without account
-        </Typography>
+        {type === "welcome" && (
+          <Typography
+            className="text-sm text-center cursor-pointer hover:underline"
+            onClick={() => closePopUp()}
+          >
+            Continue without account
+          </Typography>
+        )}
       </Stack>
     </Box>
   );
