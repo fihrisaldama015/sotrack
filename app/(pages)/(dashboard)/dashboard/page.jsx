@@ -14,6 +14,7 @@ import SentigraphCard from "./components/SentigraphCard";
 import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
 import { DOWNLOAD } from "@/app/utils/assets";
 import Image from "next/image";
+import PlatformSelect from "./components/PlatformSelectComponent";
 
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
@@ -59,7 +60,10 @@ const DashboardPage = async () => {
         alignItems={"center"}
         className="pb-1"
       >
-        <Typography className="text-2xl font-extrabold">Dashboard</Typography>
+        <Stack direction="row" alignItems={"center"} spacing={2}>
+          <Typography className="text-2xl font-extrabold">Dashboard</Typography>
+          <PlatformSelect />
+        </Stack>
         <Box
           display={"flex"}
           className="gap-2 hover:bg-slate-200 p-2 pr-3 rounded-lg cursor-pointer transition-all"
@@ -77,14 +81,7 @@ const DashboardPage = async () => {
           data={SocialMediaMentionsData}
         />
         <Stack className="flex-col gap-3 w-96">
-          {/* <MentionAnalyticsCard
-          title={"Social Media Mentions"}
-          data={SocialMediaMentionsData}
-        /> */}
-          <MentionAnalyticsCard
-            title={"News Mentions"}
-            data={NewsMentionsData}
-          />
+          <MentionAnalyticsCard />
           <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
         </Stack>
       </Stack>
@@ -94,7 +91,7 @@ const DashboardPage = async () => {
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
 
-      <Stack className="lg:flex-col flex-col gap-3 w-full">
+      <Stack className="lg:flex-row flex-col gap-3 w-full">
         <MostDiscusedLately initialData={[]} />
         <SocialMentionTracker />
       </Stack>
@@ -103,7 +100,6 @@ const DashboardPage = async () => {
 };
 
 export default DashboardPage;
-
 export const SocialMediaMentionsData = [
   {
     id: "Mention",
@@ -149,38 +145,38 @@ export const NewsMentionsData = [
     id: "Mention",
     color: "#2563EB",
     data: [
-      // {
-      //   x: "Jan",
-      //   y: 0.1,
-      // },
-      // {
-      //   x: "Feb",
-      //   y: 0.1,
-      // },
       {
         x: "Jan",
-        y: 5029,
+        y: 0.1,
       },
       {
         x: "Feb",
-        y: 4100,
+        y: 0.1,
       },
-      {
-        x: "Mar",
-        y: 5400,
-      },
-      {
-        x: "Apr",
-        y: 4200,
-      },
-      {
-        x: "Mei",
-        y: 5200,
-      },
-      {
-        x: "Jun",
-        y: 4023,
-      },
+      // {
+      //   x: "Jan",
+      //   y: 5029,
+      // },
+      // {
+      //   x: "Feb",
+      //   y: 4100,
+      // },
+      // {
+      //   x: "Mar",
+      //   y: 5400,
+      // },
+      // {
+      //   x: "Apr",
+      //   y: 4200,
+      // },
+      // {
+      //   x: "Mei",
+      //   y: 5200,
+      // },
+      // {
+      //   x: "Jun",
+      //   y: 4023,
+      // },
     ],
   },
 ];

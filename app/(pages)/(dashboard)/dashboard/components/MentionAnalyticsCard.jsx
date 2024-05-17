@@ -1,10 +1,24 @@
+"use client";
+import { useEffect, useState } from "react";
 import MentionAnalyticsChart from "./MentionAnalyticsChartComponent";
+import { useSelector } from "react-redux";
 
-const MentionAnalyticsCard = ({ title, data }) => {
+const MentionAnalyticsCard = () => {
+  const [data, setData] = useState(SocialMediaMentionsData);
+  const [title, setTitle] = useState("News Mentions");
   const dataLength = data[0].data.length;
   const latestValue = data[0].data[dataLength - 1].y;
   const firstValue = data[0].data[0].y;
   const growth = ((latestValue - firstValue) / firstValue) * 100;
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  console.log(
+    "🚀 ~ MentionAnalyticsCard ~ platformSelected:",
+    platformSelected
+  );
+
+  useEffect(() => {
+    setTitle(`${platformSelected} Mentions`);
+  }, [platformSelected]);
 
   return (
     <div className="bg-white rounded-2xl p-7 flex flex-col flex-1">
@@ -27,3 +41,44 @@ const MentionAnalyticsCard = ({ title, data }) => {
 };
 
 export default MentionAnalyticsCard;
+
+export const SocialMediaMentionsData = [
+  {
+    id: "Mention",
+    color: "#2563EB",
+    data: [
+      {
+        x: "Jan",
+        y: 0.1,
+      },
+      {
+        x: "Feb",
+        y: 0.1,
+      },
+      // {
+      //   x: "Jan",
+      //   y: 54,
+      // },
+      // {
+      //   x: "Feb",
+      //   y: 117,
+      // },
+      // {
+      //   x: "Mar",
+      //   y: 44,
+      // },
+      // {
+      //   x: "Apr",
+      //   y: 215,
+      // },
+      // {
+      //   x: "Mei",
+      //   y: 50,
+      // },
+      // {
+      //   x: "Jun",
+      //   y: 233,
+      // },
+    ],
+  },
+];

@@ -42,6 +42,7 @@ const MostDiscusedLately = ({ initialData }) => {
 
   const [platform, setPlatform] = useState("news");
   const [showPlatform, setShowPlatform] = useState(false);
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
 
   const [parameter, setParameter] = useState("");
   const [showParameter, setShowParameter] = useState(false);
@@ -118,6 +119,10 @@ const MostDiscusedLately = ({ initialData }) => {
     }
   }, []);
 
+  useEffect(() => {
+    setPlatform(platformSelected);
+  }, [platformSelected]);
+
   const refreshData = async () => {
     if (startDate.isAfter(endDate)) {
       alert("Start date cannot be after end date");
@@ -167,8 +172,8 @@ const MostDiscusedLately = ({ initialData }) => {
             >
               <Image
                 src={
-                  platform in PLATFORM_ICON
-                    ? PLATFORM_ICON[platform]
+                  platform.toLowerCase() in PLATFORM_ICON
+                    ? PLATFORM_ICON[platform.toLowerCase()]
                     : "/assets/icon/news.svg"
                 }
                 width={16}
@@ -221,7 +226,7 @@ const MostDiscusedLately = ({ initialData }) => {
               </Stack>
             </form>
           </Box>
-          {platform !== "news" && (
+          {platform.toLowerCase() !== "news" && (
             <Box className="relative">
               <Stack
                 direction={"row"}

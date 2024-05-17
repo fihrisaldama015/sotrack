@@ -22,6 +22,11 @@ const MentionStatisticsCard = ({ title, data }) => {
     // setData(data);
   };
 
+  const handleParameterChange = (type) => {
+    setParameter(type);
+    setShowParameter(false);
+  };
+
   useEffect(() => {
     getInitialSocialMentionData();
   }, []);
