@@ -163,6 +163,9 @@ const PlatformFilterTable = ({
           return <h3>{columnMeta.label}</h3>;
         },
         customBodyRender: (value, tableMeta, updateValue) => {
+          const category = tableMeta.rowData[3]; // Assuming "category" is the third column in your table (index 2)
+          const isDisabled = category === "Mention";
+
           return (
             <Stack
               direction={"row"}
@@ -170,7 +173,11 @@ const PlatformFilterTable = ({
               spacing={1}
             >
               <Stack
-                className="items-center p-1 rounded-lg bg-[#FFD8D8] cursor-pointer"
+                className={`items-center p-1 rounded-lg bg-[#FFD8D8] ${
+                  isDisabled
+                    ? "cursor-not-allowed opacity-50 pointer-events-none"
+                    : "cursor-pointer"
+                }`}
                 onClick={(event) => {
                   event.stopPropagation();
                   setFilterId(tableMeta.rowData[0]);
@@ -180,7 +187,11 @@ const PlatformFilterTable = ({
                 <DeleteOutlineIcon color="error" />
               </Stack>
               <Stack
-                className="items-center p-1 rounded-lg bg-[#FFF0B9] cursor-pointer"
+                className={`items-center p-1 rounded-lg bg-[#FFF0B9]  ${
+                  isDisabled
+                    ? "cursor-not-allowed opacity-50 pointer-events-none"
+                    : "cursor-pointer"
+                }`}
                 onClick={(event) => {
                   event.stopPropagation();
                   dispatch(
