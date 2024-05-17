@@ -27,6 +27,7 @@ const PlatformCategoryForm = ({
   edit,
   filterId,
   refreshPage,
+  platformName,
 }) => {
   const [categoryId, setCategoryId] = useState("");
   const [parameter, setParameter] = useState("");
@@ -176,7 +177,7 @@ const PlatformCategoryForm = ({
           Reset Filter
         </Button>
         <Button
-          disabled={isLoading}
+          disabled={isLoading || platformName == "facebook"}
           type="submit"
           variant="contained"
           className="rounded-lg"

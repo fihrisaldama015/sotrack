@@ -13,6 +13,7 @@ const PlatformFilterContent = ({ token, platformName, category }) => {
   const router = useRouter();
   const { platformId } = useSelector((state) => state.platformReducer);
   const [filterData, setFilterData] = useState([]);
+  const [categoryFiltered, setCategoryFiltered] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +26,24 @@ const PlatformFilterContent = ({ token, platformName, category }) => {
       setFilterData(data);
     };
     fetchData();
+    if (platformName == "instagram") {
+      const temp = category
+        ? category?.filter((item) => item.name !== "Keyword")
+        : [];
+      setCategoryFiltered(temp);
+    } else if (platformName == "facebook") {
+      const temp = category
+        ? category?.filter((item) => item.name == "Mention")
+        : [];
+      setCategoryFiltered(temp);
+    } else if (platformName == "news") {
+      const temp = category
+        ? category?.filter((item) => item.name == "Keyword")
+        : [];
+      setCategoryFiltered(temp);
+    } else {
+      setCategoryFiltered(category);
+    }
   }, []);
 
   const refreshPage = async () => {
@@ -47,7 +66,7 @@ const PlatformFilterContent = ({ token, platformName, category }) => {
         <PlatformCategoryForm
           token={token}
           platformName={platformName}
-          category={category}
+          category={categoryFiltered}
           refreshPage={refreshPage}
         />
       </Box>
