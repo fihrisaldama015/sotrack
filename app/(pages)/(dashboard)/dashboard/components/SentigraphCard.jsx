@@ -11,6 +11,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { useState } from "react";
 import SentigraphChart from "./SentigraphChartComponent";
+import { Divider } from "@mui/material";
 
 const SentigraphCard = ({ title, data }) => {
   const [initialData, setData] = useState(data);
@@ -39,11 +40,33 @@ const SentigraphCard = ({ title, data }) => {
       </Stack>
 
       <SentigraphChart data={data} />
-      <Stack>
-        <Stack direction={"column"}>
-          <Stack></Stack>
-          <Typography className="text-[#000000b2] text-xs font-normal">
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        spacing={2}
+        className="ring-1 ring-[#F0F0F0] py-3 px-14 rounded-2xl"
+      >
+        <Stack direction={"column"} alignItems={"center"}>
+          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+            <Box className="w-2 h-2 rounded-full bg-[#1B59F8]"></Box>
+            <Typography className="text-[#A3AED0] text-xs font-medium">
+              Positive
+            </Typography>
+          </Stack>
+          <Typography className="text-[#2B3674] text-lg font-extrabold">
             59%
+          </Typography>
+        </Stack>
+        <Box className="border-none w-[1px] bg-[#F0F0F0]" />
+        <Stack direction={"column"} alignItems={"center"}>
+          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+            <Box className="w-2 h-2 rounded-full bg-[#1B59F8]"></Box>
+            <Typography className="text-[#A3AED0] text-xs font-medium">
+              Negative
+            </Typography>
+          </Stack>
+          <Typography className="text-[#2B3674] text-lg font-extrabold">
+            41%
           </Typography>
         </Stack>
       </Stack>

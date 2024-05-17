@@ -2,7 +2,7 @@ import {
   getCrimeStatisticByDate,
   getCriminalReportByType,
 } from "@/app/api/repository/DashboardAnalyticsRepository";
-import { Stack } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { cookies } from "next/headers";
 import CrimeStatistic from "./components/CrimeStatisticComponent";
@@ -12,6 +12,8 @@ import MentionStatisticsCard from "./components/MentionStatisticsCard";
 import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
 import SentigraphCard from "./components/SentigraphCard";
 import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
+import { DOWNLOAD } from "@/app/utils/assets";
+import Image from "next/image";
 
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
@@ -41,62 +43,52 @@ const getInitialCrimeStatistic = async () => {
   }
 };
 
-// const getInitialMostDiscussed = async () => {
-//   const startDate = dayjs().day(0);
-//   const endDate = dayjs();
-//   const accessToken = cookies().get("accessToken")?.value;
-//   try {
-//     const res = await getMostDiscusedLatelyByDate(
-//       startDate.format("YYYY-MM-DD"),
-//       endDate.format("YYYY-MM-DD"),
-//       accessToken,
-//       "facebook"
-//     );
-//     return res;
-//   } catch (error) {
-//     console.log("🚀 ~ refreshChart ~ error:", error);
-//     return [];
-//   }
-// };
-
-// const getInitialPageList = async () => {
-//   try {
-//     const res = await getPageList();
-//     return res;
-//   } catch (error) {
-//     console.log("🚀 ~ getInitialPageList ~ error:", error.message);
-//   }
-// };
-
 const DashboardPage = async () => {
   const initialCrimeStatistic = await getInitialCrimeStatistic();
   const initialCriminalReport = await getInitialCriminalReport();
-  // const initialMostDiscussed = await getInitialMostDiscussed();
-  // const initialPageList = await getInitialPageList();
+
   return (
     <Stack
       direction={"column"}
       spacing={1.5}
       className="max-w-[calc(100vw-350px)] "
     >
-      <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <MentionAnalyticsCard
-          title={"Social Media Mentions"}
-          data={SocialMediaMentionsData}
-        />
-        <MentionAnalyticsCard title={"News Mentions"} data={NewsMentionsData} />
-        {/* <MentionAnalyticsCard
-          title={"Social Media Mentions Comment"}
-          data={SocialMediaMentionsCommentData}
-        /> */}
-      </Stack>
+      <Box
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        className="pb-1"
+      >
+        <Typography className="text-2xl font-extrabold">Dashboard</Typography>
+        <Box
+          display={"flex"}
+          className="gap-2 hover:bg-slate-200 p-2 pr-3 rounded-lg cursor-pointer transition-all"
+        >
+          <Image src={DOWNLOAD} alt="Download Logo" width={22} height={23} />
+          <Typography className="text-sm text-[#4D4D4D] font-medium">
+            Download Report
+          </Typography>
+        </Box>
+      </Box>
+      <Divider className="mb-1 border-none h-[2px] bg-neutral-300" />
       <Stack className="lg:flex-row flex-col gap-3 w-full">
         <MentionStatisticsCard
           title={"Mentions"}
           data={SocialMediaMentionsData}
         />
-        <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
+        <Stack className="flex-col gap-3 w-96">
+          {/* <MentionAnalyticsCard
+          title={"Social Media Mentions"}
+          data={SocialMediaMentionsData}
+        /> */}
+          <MentionAnalyticsCard
+            title={"News Mentions"}
+            data={NewsMentionsData}
+          />
+          <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
+        </Stack>
       </Stack>
+
       <Stack className="lg:flex-row flex-col gap-3 w-full">
         <CrimeStatistic initialData={initialCrimeStatistic} />
         <CriminalReport initialData={initialCriminalReport} />
@@ -157,78 +149,38 @@ export const NewsMentionsData = [
     id: "Mention",
     color: "#2563EB",
     data: [
-      {
-        x: "Jan",
-        y: 0.1,
-      },
-      {
-        x: "Feb",
-        y: 0.1,
-      },
       // {
       //   x: "Jan",
-      //   y: 5029,
+      //   y: 0.1,
       // },
       // {
       //   x: "Feb",
-      //   y: 4100,
+      //   y: 0.1,
       // },
-      // {
-      //   x: "Mar",
-      //   y: 5400,
-      // },
-      // {
-      //   x: "Apr",
-      //   y: 4200,
-      // },
-      // {
-      //   x: "Mei",
-      //   y: 5200,
-      // },
-      // {
-      //   x: "Jun",
-      //   y: 4023,
-      // },
-    ],
-  },
-];
-export const SocialMediaMentionsCommentData = [
-  {
-    id: "Mention",
-    color: "#2563EB",
-    data: [
       {
         x: "Jan",
-        y: 0.1,
+        y: 5029,
       },
       {
         x: "Feb",
-        y: 0.1,
+        y: 4100,
       },
-      // {
-      //   x: "Jan",
-      //   y: 850,
-      // },
-      // {
-      //   x: "Feb",
-      //   y: 770,
-      // },
-      // {
-      //   x: "Mar",
-      //   y: 900,
-      // },
-      // {
-      //   x: "Apr",
-      //   y: 600,
-      // },
-      // {
-      //   x: "Mei",
-      //   y: 1200,
-      // },
-      // {
-      //   x: "Jun",
-      //   y: 1021,
-      // },
+      {
+        x: "Mar",
+        y: 5400,
+      },
+      {
+        x: "Apr",
+        y: 4200,
+      },
+      {
+        x: "Mei",
+        y: 5200,
+      },
+      {
+        x: "Jun",
+        y: 4023,
+      },
     ],
   },
 ];

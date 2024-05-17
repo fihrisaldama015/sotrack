@@ -2,15 +2,17 @@
 import { ResponsiveLine } from "@nivo/line";
 
 const MentionAnalyticsChart = ({ data, trendUp }) => {
+  const min = Math.min(...data[0].data.map((d) => d.y));
+
   return (
-    <div className="h-16 w-full">
+    <div className="h-6 w-full">
       <ResponsiveLine
         data={data}
-        margin={{ top: 16, right: 0, bottom: 0, left: 0 }}
+        margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
         xScale={{ type: "point" }}
         yScale={{
           type: "linear",
-          min: "0",
+          min: min,
           max: "auto",
           stacked: true,
           reverse: false,
