@@ -43,14 +43,17 @@ export const getMentionSourceDetail = async (
   token,
   pageId = "",
   platform,
-  topic = "All"
+  topic = "All",
+  source = ""
 ) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
   try {
-    const { data } = await PROVIDER_GET(
-      `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}`,
-      token
-    );
+    let url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}`;
+    if (platform == "news") {
+      url = `mentionDetails?platform=${platform}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
+    }
+
+    const { data } = await PROVIDER_GET(url, token);
 
     if (currentDate < startDate || currentDate < endDate) {
       throw new Error("Invalid date");

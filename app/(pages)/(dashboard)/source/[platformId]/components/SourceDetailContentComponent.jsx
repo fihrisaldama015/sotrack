@@ -54,12 +54,18 @@ const SourceDetailContent = ({ platformId }) => {
 
   const getMentionDetailData = async () => {
     try {
+      let currentPlatform =
+        platformId !== "instagram" && platformId !== "facebook"
+          ? "news"
+          : platformId;
       setIsLoading(true);
       const res = await getMentionSourceDetail(
         chartStartDate.format("YYYY-MM-DD"),
         chartEndDate.format("YYYY-MM-DD"),
         accessToken,
         parameter,
+        currentPlatform,
+        "All",
         platformId
       );
       console.log("🚀 ~ getMentionDetailData ~ res:", res);
@@ -67,7 +73,7 @@ const SourceDetailContent = ({ platformId }) => {
       setIsLoading(false);
     } catch (error) {
       console.log("🚀 ~ getMentionDetailData ~ error:", error);
-      alert("Please Connect your Social Media account in Menu to view data");
+      // alert("Please Connect your Social Media account in Menu to view data");
     }
   };
 
@@ -93,6 +99,7 @@ const SourceDetailContent = ({ platformId }) => {
         setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
       }
     } else {
+      console.log("AWKOAKW");
       getMentionDetailData();
     }
   }, []);
@@ -125,14 +132,19 @@ const SourceDetailContent = ({ platformId }) => {
       setChartEndDate(endDate);
     }
     try {
+      let currentPlatform =
+        platformId !== "instagram" && platformId !== "facebook"
+          ? "news"
+          : platformId;
       setIsLoading(true);
       const res = await getMentionSourceDetail(
         chartStartDate.format("YYYY-MM-DD"),
         chartEndDate.format("YYYY-MM-DD"),
         accessToken,
         parameter,
-        platformId,
-        topic
+        currentPlatform,
+        topic,
+        platformId
       );
       console.log("🚀 ~ refreshData ~ res:", res);
       setData(res);
