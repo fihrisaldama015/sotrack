@@ -30,15 +30,25 @@ const VerifyOTPForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const myInterval = setInterval(() => {
-      if (timerCountDown > 0) {
-        setTimerCountdown((prev) => prev - 1);
-      }
+    let myInterval;
+    if (isResendingOTP) {
+      return;
+    }
+    myInterval = setInterval(() => {
+      setTimerCountdown((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          clearInterval(myInterval);
+          return prev;
+        }
+      });
     }, 1000);
+
     return () => {
       clearInterval(myInterval);
     };
-  }, []);
+  }, [isResendingOTP]);
 
   const onSubmit = async (data) => {
     const joinedOTP = `${data.first}${data.second}${data.third}${data.fourth}`;

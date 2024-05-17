@@ -43,13 +43,8 @@ export default function Home() {
           <Box height={10} />
           <Typography variant="h5">Dibuat oleh : Tim MSIB ADS</Typography>
           <Box height={20} />
-          <Link href="/dashboard">
-            <Button
-              className="text-white"
-              variant="contained"
-              size="large"
-              onClick={() => router.push("/book-list")}
-            >
+          <Link href="/login">
+            <Button className="text-white" variant="contained" size="large">
               Live Demo
             </Button>
           </Link>

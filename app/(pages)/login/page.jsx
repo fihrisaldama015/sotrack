@@ -4,7 +4,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import LoginFormComponent from "./components/LoginFormComponent";
-
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+const token = cookies().get("accessToken")?.value;
+if (token) {
+  redirect("/dashboard");
+}
 const LoginPage = () => {
   return (
     <Stack direction={"row"}>

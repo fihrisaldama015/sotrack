@@ -8,7 +8,9 @@ import { cookies } from "next/headers";
 import CrimeStatistic from "./components/CrimeStatisticComponent";
 import CriminalReport from "./components/CriminalReportComponent";
 import MentionAnalyticsCard from "./components/MentionAnalyticsCard";
+import MentionStatisticsCard from "./components/MentionStatisticsCard";
 import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
+import SentigraphCard from "./components/SentigraphCard";
 import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
 
 const getInitialCriminalReport = async () => {
@@ -83,15 +85,23 @@ const DashboardPage = async () => {
           data={SocialMediaMentionsData}
         />
         <MentionAnalyticsCard title={"News Mentions"} data={NewsMentionsData} />
-        <MentionAnalyticsCard
+        {/* <MentionAnalyticsCard
           title={"Social Media Mentions Comment"}
           data={SocialMediaMentionsCommentData}
+        /> */}
+      </Stack>
+      <Stack className="lg:flex-row flex-col gap-3 w-full">
+        <MentionStatisticsCard
+          title={"Mentions"}
+          data={SocialMediaMentionsData}
         />
+        <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
       </Stack>
       <Stack className="lg:flex-row flex-col gap-3 w-full">
         <CrimeStatistic initialData={initialCrimeStatistic} />
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
+
       <Stack className="lg:flex-row flex-col gap-3 w-full">
         <MostDiscusedLately initialData={[]} />
         <SocialMentionTracker />
@@ -109,28 +119,36 @@ export const SocialMediaMentionsData = [
     data: [
       {
         x: "Jan",
-        y: 54,
+        y: 0.1,
       },
       {
         x: "Feb",
-        y: 117,
+        y: 0.1,
       },
-      {
-        x: "Mar",
-        y: 44,
-      },
-      {
-        x: "Apr",
-        y: 215,
-      },
-      {
-        x: "Mei",
-        y: 50,
-      },
-      {
-        x: "Jun",
-        y: 233,
-      },
+      // {
+      //   x: "Jan",
+      //   y: 54,
+      // },
+      // {
+      //   x: "Feb",
+      //   y: 117,
+      // },
+      // {
+      //   x: "Mar",
+      //   y: 44,
+      // },
+      // {
+      //   x: "Apr",
+      //   y: 215,
+      // },
+      // {
+      //   x: "Mei",
+      //   y: 50,
+      // },
+      // {
+      //   x: "Jun",
+      //   y: 233,
+      // },
     ],
   },
 ];
@@ -141,28 +159,36 @@ export const NewsMentionsData = [
     data: [
       {
         x: "Jan",
-        y: 5029,
+        y: 0.1,
       },
       {
         x: "Feb",
-        y: 4100,
+        y: 0.1,
       },
-      {
-        x: "Mar",
-        y: 5400,
-      },
-      {
-        x: "Apr",
-        y: 4200,
-      },
-      {
-        x: "Mei",
-        y: 5200,
-      },
-      {
-        x: "Jun",
-        y: 4023,
-      },
+      // {
+      //   x: "Jan",
+      //   y: 5029,
+      // },
+      // {
+      //   x: "Feb",
+      //   y: 4100,
+      // },
+      // {
+      //   x: "Mar",
+      //   y: 5400,
+      // },
+      // {
+      //   x: "Apr",
+      //   y: 4200,
+      // },
+      // {
+      //   x: "Mei",
+      //   y: 5200,
+      // },
+      // {
+      //   x: "Jun",
+      //   y: 4023,
+      // },
     ],
   },
 ];
@@ -173,28 +199,36 @@ export const SocialMediaMentionsCommentData = [
     data: [
       {
         x: "Jan",
-        y: 850,
+        y: 0.1,
       },
       {
         x: "Feb",
-        y: 770,
+        y: 0.1,
       },
-      {
-        x: "Mar",
-        y: 900,
-      },
-      {
-        x: "Apr",
-        y: 600,
-      },
-      {
-        x: "Mei",
-        y: 1200,
-      },
-      {
-        x: "Jun",
-        y: 1021,
-      },
+      // {
+      //   x: "Jan",
+      //   y: 850,
+      // },
+      // {
+      //   x: "Feb",
+      //   y: 770,
+      // },
+      // {
+      //   x: "Mar",
+      //   y: 900,
+      // },
+      // {
+      //   x: "Apr",
+      //   y: 600,
+      // },
+      // {
+      //   x: "Mei",
+      //   y: 1200,
+      // },
+      // {
+      //   x: "Jun",
+      //   y: 1021,
+      // },
     ],
   },
 ];

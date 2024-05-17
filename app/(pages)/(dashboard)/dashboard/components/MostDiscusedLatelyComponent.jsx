@@ -221,58 +221,61 @@ const MostDiscusedLately = ({ initialData }) => {
               </Stack>
             </form>
           </Box>
-          <Box className="relative">
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              spacing={0.5}
-              onClick={() => setShowParameter(!showParameter)}
-              className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
-            >
-              <PersonIcon color="grey" sx={{ width: 16 }} />
-              <Typography className="text-xs font-normal first-letter:capitalize">
-                {parameter === ""
-                  ? "Choose Page"
-                  : pageList.find((page) => page.id === parameter)?.name}
-              </Typography>
-              <ExpandMore color="grey" sx={{ width: 16 }} />
-            </Stack>
-            <form
-              className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
-              style={{
-                visibility: showParameter ? "visible" : "hidden",
-                opacity: showParameter ? 1 : 0,
-              }}
-            >
-              <Stack direction={"column"} spacing={0}>
-                {pageList.length > 0 &&
-                  pageList.map((page, id) => (
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                      spacing={2}
-                      key={id}
-                      onClick={() => {
-                        setParameter(page.id);
-                        setShowParameter(false);
-                      }}
-                      className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                    >
-                      <Typography> {page.name}</Typography>
-                      {"instagram_business_account" in page && (
-                        <Image
-                          src="/assets/icon/instagram.svg"
-                          width={16}
-                          height={16}
-                          alt="instagram"
-                        />
-                      )}
-                    </Stack>
-                  ))}
+          {platform !== "news" && (
+            <Box className="relative">
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                spacing={0.5}
+                onClick={() => setShowParameter(!showParameter)}
+                className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
+              >
+                <PersonIcon color="grey" sx={{ width: 16 }} />
+                <Typography className="text-xs font-normal first-letter:capitalize">
+                  {parameter === ""
+                    ? "Choose Page"
+                    : pageList.find((page) => page.id === parameter)?.name}
+                </Typography>
+                <ExpandMore color="grey" sx={{ width: 16 }} />
               </Stack>
-            </form>
-          </Box>
+              <form
+                className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
+                style={{
+                  visibility: showParameter ? "visible" : "hidden",
+                  opacity: showParameter ? 1 : 0,
+                }}
+              >
+                <Stack direction={"column"} spacing={0}>
+                  {pageList.length > 0 &&
+                    pageList.map((page, id) => (
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        spacing={2}
+                        key={id}
+                        onClick={() => {
+                          setParameter(page.id);
+                          setShowParameter(false);
+                        }}
+                        className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
+                      >
+                        <Typography> {page.name}</Typography>
+                        {"instagram_business_account" in page && (
+                          <Image
+                            src="/assets/icon/instagram.svg"
+                            width={16}
+                            height={16}
+                            alt="instagram"
+                          />
+                        )}
+                      </Stack>
+                    ))}
+                </Stack>
+              </form>
+            </Box>
+          )}
+
           <Box className="relative">
             <Stack
               direction={"row"}
