@@ -335,7 +335,7 @@ const MostDiscusedLately = ({ initialData }) => {
           </Box>
         </Stack>
       </Stack>
-      <Stack direction={"column"} className="">
+      <Stack direction={"column"} className="h-[400px] overflow-auto">
         {!data && <LoadingSpinner />}
         {isLoading ? (
           <div className="w-full h-48 flex justify-center items-center">

@@ -60,12 +60,12 @@ const SocialMentionTracker = () => {
   const accessToken = getCookie("accessToken");
   const dispatch = useDispatch();
 
-  const getMentionSourceData = async () => {
+  const getMentionSourceData = async (start, end) => {
     try {
       setIsLoading(true);
       const mentionSourceResult = await getMentionSource(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
+        start.format("YYYY-MM-DD"),
+        end.format("YYYY-MM-DD"),
         accessToken,
         parameter
       );
@@ -104,7 +104,7 @@ const SocialMentionTracker = () => {
 
   useEffect(() => {
     if (parameter !== "") {
-      getMentionSourceData();
+      getMentionSourceData(chartStartDate, chartEndDate);
     }
   }, [parameter]);
 
@@ -127,13 +127,13 @@ const SocialMentionTracker = () => {
       return;
     }
     setShowDatePicker(false);
-    getMentionSourceData();
+    getMentionSourceData(startDate, endDate);
 
     setChartStartDate(startDate);
     setChartEndDate(endDate);
   };
   return (
-    <Box className="p-6 bg-white flex flex-col gap-6 lg:max-w-[400px] rounded-xl shadow-lg shadow-slate-100">
+    <Box className="p-6 bg-white flex flex-col gap-6 rounded-xl shadow-lg shadow-slate-100">
       <Stack direction={"row"} justifyContent={"space-between"}>
         <Stack direction={"column"} gap={1}>
           <Typography className="text-xs text-grey-800">
@@ -272,54 +272,55 @@ const SocialMentionTracker = () => {
           </div>
         )
       )}
-
-      <Table sx={{ display: isLoading ? "none" : "" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell className="text-xs text-[#636669] font-medium">
-              Source
-            </TableCell>
-            <TableCell className="text-xs text-[#636669] font-medium">
-              Mentions
-            </TableCell>
-            <TableCell className="text-xs text-[#636669] font-medium">
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((data, id) => (
-            <TableRow key={id}>
-              <TableCell className="text-xs text-[#64748B]">
-                <Stack direction={"row"} gap={1}>
-                  <Image
-                    src={
-                      data.source in PLATFORM_ICON
-                        ? PLATFORM_ICON[data.source]
-                        : "/assets/icon/news.svg"
-                    }
-                    width={16}
-                    height={16}
-                    alt="twitter"
-                  />
-                  {data.source}
-                </Stack>
+      <Box className="h-[300px] overflow-auto">
+        <Table sx={{ display: isLoading ? "none" : "" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell className="text-xs text-[#636669] font-medium">
+                Source
               </TableCell>
-              <TableCell className="text-xs text[#64748b]">
-                {data.mentions}
+              <TableCell className="text-xs text-[#636669] font-medium">
+                Mentions
               </TableCell>
-              <TableCell>
-                <Link
-                  href={`/source/${data.source}`}
-                  className="no-underline text-xs"
-                >
-                  See Details
-                </Link>
+              <TableCell className="text-xs text-[#636669] font-medium">
+                Actions
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {data.map((data, id) => (
+              <TableRow key={id}>
+                <TableCell className="text-xs text-[#64748B]">
+                  <Stack direction={"row"} gap={1}>
+                    <Image
+                      src={
+                        data.source in PLATFORM_ICON
+                          ? PLATFORM_ICON[data.source]
+                          : "/assets/icon/news.svg"
+                      }
+                      width={16}
+                      height={16}
+                      alt="twitter"
+                    />
+                    {data.source}
+                  </Stack>
+                </TableCell>
+                <TableCell className="text-xs text[#64748b]">
+                  {data.mentions}
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={`/source/${data.source}`}
+                    className="no-underline text-xs"
+                  >
+                    See Details
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
     </Box>
   );
 };

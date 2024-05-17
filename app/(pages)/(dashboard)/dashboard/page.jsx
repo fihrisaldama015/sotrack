@@ -102,7 +102,7 @@ const DashboardPage = async () => {
         <CriminalReport initialData={initialCriminalReport} />
       </Stack>
 
-      <Stack className="lg:flex-row flex-col gap-3 w-full">
+      <Stack className="lg:flex-col flex-col gap-3 w-full">
         <MostDiscusedLately initialData={[]} />
         <SocialMentionTracker />
       </Stack>
