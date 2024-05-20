@@ -90,14 +90,6 @@ const SocialMentionTracker = () => {
       setParameter(pageId);
       setPageList(pageListResult);
     } catch (error) {
-      dispatch(
-        changeIsPopUpOpen({
-          isPopUpOpen: true,
-          popUpMessage:
-            "Congratulations, you are on the Socialens dashboard, next please connect your social media account!",
-          popUpType: "welcome",
-        })
-      );
       console.log("🚀 ~ error - Get Page List:", error);
     }
   };
@@ -265,15 +257,20 @@ const SocialMentionTracker = () => {
         </div>
       ) : (
         data.length == 0 && (
-          <div className="w-full h-48 flex justify-center items-center">
-            {pageList.length == 0
-              ? "No Connected Facebook Account, go to Connect Account Menu"
-              : "No Data, Please select another date range or platform"}
+          <div className="w-full h-full px-6 flex justify-center items-center text-center">
+            <p className="max-w-[27ch]">
+              {pageList.length == 0
+                ? "No Connected Facebook Account, go to Connect Account Menu"
+                : "No Data, Please select another date range or platform"}
+            </p>
           </div>
         )
       )}
-      <Box className="h-[300px] overflow-auto">
-        <Table sx={{ display: isLoading ? "none" : "" }}>
+      <Box
+        className="h-[300px] overflow-auto"
+        sx={{ display: isLoading || pageList.length == 0 ? "none" : "" }}
+      >
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell className="text-xs text-[#636669] font-medium">

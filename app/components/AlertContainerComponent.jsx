@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { changeIsPopUpOpen } from "../redux/slices/PopupSlice";
 import { useRouter } from "next/navigation";
+import { changePlatformId } from "../redux/slices/PlatformSlice";
 
 const AlertContainer = () => {
   const { isPopUpOpen, popUpMessage, popUpType } = useSelector(
@@ -17,9 +18,9 @@ const AlertContainer = () => {
 
   return (
     <div
-      className={`fixed h-[100svh] w-screen z-20 top-0 left-0 ${
-        isPopUpOpen ? "bg-[#3333334c]" : "bg-transparent invisible"
-      } transition-all`}
+      className={`fixed h-[100svh] w-screen z-20 top-0 left-0 transition-all ${
+        popUpType != "success" && popUpType != "error" && "pointer-events-none"
+      } ${isPopUpOpen ? "bg-[#3333334c]" : "bg-transparent invisible"} `}
     >
       {isPopUpOpen && <Alert type={popUpType} message={popUpMessage} />}
     </div>
@@ -31,6 +32,7 @@ export default AlertContainer;
 const Alert = ({ type, message }) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { platformSelectedId } = useSelector((state) => state.dashboardReducer);
   const closePopUp = () => {
     dispatch(
       changeIsPopUpOpen({
@@ -41,7 +43,7 @@ const Alert = ({ type, message }) => {
     );
   };
   return (
-    <Box className="fixed w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
+    <Box className="fixed w-96 z-30 pointer-events-auto flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
       <Box
         className={`p-12 pb-7 flex flex-col gap-2 justify-center items-center w-full rounded-t-xl ${
           type == "error" ? "bg-[#FF7575]" : "bg-[#34D399]"
@@ -70,7 +72,9 @@ const Alert = ({ type, message }) => {
             ? "ERROR"
             : type === "success"
             ? "SUCCESS"
-            : "WELCOME"}
+            : type === "FACEBOOK_NOT_CONNECTED"
+            ? "NEXT STEP !!"
+            : "WELCOME !!"}
         </Typography>
       </Box>
       <Stack
@@ -86,23 +90,32 @@ const Alert = ({ type, message }) => {
           color={type === "error" ? "error" : "success"}
           size="large"
           onClick={() => {
-            if (type === "welcome") {
+            if (type === "FACEBOOK_NOT_CONNECTED") {
               router.push("/connect/facebook");
+            } else if (type === "NEWS_FILTER_NOT_SET") {
+              dispatch(changePlatformId({ platformId: platformSelectedId }));
+              router.push("/settings/filter/news");
             }
             closePopUp();
           }}
           className="py-3 rounded-lg w-full text-white text-xl font-medium"
         >
-          {type === "welcome" ? "Connect Account" : "Continue"}
+          {type === "FACEBOOK_NOT_CONNECTED"
+            ? "Connect Account"
+            : type === "NEWS_FILTER_NOT_SET"
+            ? "Filter Settings"
+            : "Continue"}
         </Button>
-        {type === "welcome" && (
+        {/* this is for development only to close the popup */}
+        {/* {(type === "NEWS_FILTER_NOT_SET" ||
+          type === "FACEBOOK_NOT_CONNECTED") && (
           <Typography
             className="text-sm text-center cursor-pointer hover:underline"
             onClick={() => closePopUp()}
           >
             Continue without account
           </Typography>
-        )}
+        )} */}
       </Stack>
     </Box>
   );

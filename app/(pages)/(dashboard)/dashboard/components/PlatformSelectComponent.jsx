@@ -1,6 +1,8 @@
 "use client";
+import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
 import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
 import { changeDashboardPlatform } from "@/app/redux/slices/DashboardPlatformSlice";
+import { changeIsPopUpOpen } from "@/app/redux/slices/PopupSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
@@ -8,26 +10,73 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 
 const PlatformSelect = () => {
   const [showParameter, setShowParameter] = useState(false);
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected, platformSelectedId } = useSelector(
+    (state) => state.dashboardReducer
+  );
+  const { facebookPageList } = useSelector((state) => state.facebookReducer);
   const [parameter, setParameter] = useState(platformSelected);
   const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
-  const handleParameterChange = async (type) => {
+  const handleParameterChange = async (type, platformId) => {
     setParameter(type);
     setShowParameter(false);
     dispatch(
       changeDashboardPlatform({
         platformSelected: type,
+        platformSelectedId: platformId,
       })
     );
   };
+
+  const getFilterData = async () => {
+    const platformFilterData = await getUserFilterByPlatformId(
+      platformSelectedId,
+      accessToken
+    );
+    if (platformFilterData.length === 0) {
+      dispatch(
+        changeIsPopUpOpen({
+          isPopUpOpen: true,
+          popUpMessage:
+            "Congratulations, please go to filter settings before you can see social media dashboard",
+          popUpType: "NEWS_FILTER_NOT_SET",
+        })
+      );
+    } else {
+      dispatch(changeIsPopUpOpen({ isPopUpOpen: false }));
+    }
+
+    return platformFilterData;
+  };
+
+  useEffect(() => {
+    // if user selected Facebook or instagram, check if user has connected Facebook account
+    if (platformSelected == "Facebook" || platformSelected == "Instagram") {
+      if (facebookPageList.length === 0) {
+        dispatch(
+          changeIsPopUpOpen({
+            isPopUpOpen: true,
+            popUpMessage:
+              "Please go to connect account before you can see social media dashboard",
+            popUpType: "FACEBOOK_NOT_CONNECTED",
+          })
+        );
+      } else {
+        dispatch(changeIsPopUpOpen({ isPopUpOpen: false }));
+      }
+    }
+    // if user selected News, check if user has set the filter settings for News
+    if (platformSelected == "News") {
+      getFilterData();
+    }
+  }, [platformSelectedId]);
 
   const { data: platforms, error } = useSWR(
     "/api/platform",
@@ -83,7 +132,7 @@ const PlatformSelect = () => {
           {platforms?.map((platform) => (
             <Box
               key={platform.id}
-              onClick={() => handleParameterChange(platform.name)}
+              onClick={() => handleParameterChange(platform.name, platform.id)}
               className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
             >
               {platform.name}

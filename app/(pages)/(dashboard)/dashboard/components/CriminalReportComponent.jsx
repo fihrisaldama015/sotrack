@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CriminalReportChart from "./CriminalReportChartComponent";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -28,6 +28,12 @@ const CriminalReport = ({ initialData }) => {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (initialData.length === 0) {
+      handleParameterChange("monthly");
+    }
+  }, []);
 
   return (
     <Box className="bg-white rounded-xl flex flex-col flex-1 py-6 px-3 shadow-lg shadow-slate-100">

@@ -11,10 +11,6 @@ const MentionAnalyticsCard = () => {
   const firstValue = data[0].data[0].y;
   const growth = ((latestValue - firstValue) / firstValue) * 100;
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
-  console.log(
-    "🚀 ~ MentionAnalyticsCard ~ platformSelected:",
-    platformSelected
-  );
 
   useEffect(() => {
     setTitle(`${platformSelected} Mentions`);

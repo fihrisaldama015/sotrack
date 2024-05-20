@@ -104,12 +104,10 @@ const MostDiscusedLately = ({ initialData }) => {
       fallbackData: [],
     }
   );
-  console.log("🚀 ~ useEffect ~ data:", data);
   useEffect(() => {
     setIsLoading(loadingCache);
-
-    console.log("🚀 ~ useEffect ~ loadingCache EFFECT:", loadingCache);
   }, [loadingCache]);
+
   useEffect(() => {
     if (facebookPageList.length === 0) {
       getPageListData();
