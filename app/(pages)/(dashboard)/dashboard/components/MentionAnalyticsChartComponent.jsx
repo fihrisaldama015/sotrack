@@ -5,14 +5,14 @@ const MentionAnalyticsChart = ({ data, trendUp }) => {
   const min = Math.min(...data[0].data.map((d) => d.y));
 
   return (
-    <div className="h-6 w-full">
+    <div className="h-12 w-full">
       <ResponsiveLine
         data={data}
         margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
         xScale={{ type: "point" }}
         yScale={{
           type: "linear",
-          min: min,
+          min: "0",
           max: "auto",
           stacked: true,
           reverse: false,
@@ -36,7 +36,7 @@ const MentionAnalyticsChart = ({ data, trendUp }) => {
         // pointBorderColor={{ from: "serieColor" }}
         pointLabelYOffset={-12}
         enableArea={true}
-        areaBaselineValue={20}
+        areaBaselineValue={0}
         areaOpacity={0.05}
         enableSlices="x"
         useMesh={true}

@@ -11,9 +11,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TypeOfCrimeChart from "./TypeOfCrimeChartComponent";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { useSelector } from "react-redux";
 
 const CrimeStatistic = ({ initialData }) => {
   const [chartData, setChartData] = useState(initialData);
@@ -25,6 +26,37 @@ const CrimeStatistic = ({ initialData }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = getCookie("accessToken");
+
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+
+  const getTypeOfCrimeData = async () => {
+    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      const CrimeStatisticResult = await getCrimeStatisticByDate(
+        startDate.format("YYYY-MM-DD"),
+        endDate.format("YYYY-MM-DD"),
+        platformSelected.toLowerCase(),
+        accessToken
+      );
+
+      setChartData(CrimeStatisticResult);
+    } catch (error) {
+      console.log("🚀 ~ refreshChart ~ error:", error);
+      setChartData([]);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getTypeOfCrimeData();
+  }, [platformSelected]);
+
+  useEffect(() => {
+    if (initialData.length === 0) {
+      getTypeOfCrimeData();
+    }
+  }, []);
 
   const refreshChart = async (e) => {
     e.preventDefault();
@@ -44,18 +76,11 @@ const CrimeStatistic = ({ initialData }) => {
       const CrimeStatisticResult = await getCrimeStatisticByDate(
         startDate.format("YYYY-MM-DD"),
         endDate.format("YYYY-MM-DD"),
+        platformSelected.toLowerCase(),
         accessToken
       );
-      console.log(
-        "🚀 ~ refreshChart ~ startDate:",
-        startDate.format("YYYY-MM-DD")
-      );
-      console.log(
-        "🚀 ~ refreshChart ~ CrimeStatisticResult FROM CLIENT:",
-        CrimeStatisticResult
-      );
 
-      // setChartData(CrimeStatisticResult);
+      setChartData(CrimeStatisticResult);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
     }

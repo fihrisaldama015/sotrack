@@ -3,15 +3,11 @@
 import { Close } from "@mui/icons-material";
 import { Divider, Stack, Typography } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddNewBroadcastForm from "./components/AddNewBroadcastFormComponent";
 
 const page = () => {
-  const [recipient, setRecipient] = useState([
-    "detikcom@gmail.com",
-    "liputan6.com",
-    "kompastv@gmail.com",
-  ]);
+  const [recipient, setRecipient] = useState([]);
   const [email, setEmail] = useState("");
 
   const emailListener = (email) => {
@@ -21,9 +17,19 @@ const page = () => {
       setEmail("");
       return;
     }
-    console.log("🚀 ~ emailListener ~ splitEmail:", splitEmail);
     setEmail(email);
   };
+
+  useEffect(() => {
+    let countdown;
+    if (email != "" && recipient.length == 0) {
+      countdown = setTimeout(() => {
+        setRecipient([email]);
+        setEmail("");
+      }, 2000);
+    }
+    return () => clearTimeout(countdown);
+  }, [email]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -94,7 +100,9 @@ const page = () => {
       <Typography className="font-semibold text-base text-[#343A40]">
         Broadcast
       </Typography>
-      <AddNewBroadcastForm recipient={recipient.join(", ")} />
+      <AddNewBroadcastForm
+        recipient={recipient.length == 0 ? recipient[0] : recipient.join(",")}
+      />
     </Stack>
   );
 };

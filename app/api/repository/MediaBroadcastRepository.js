@@ -39,8 +39,13 @@ export const sendMediaBroadCastEmail = async (
     form.append("date", date);
     form.append("city", city);
     files.forEach((file) => {
-      form.append("files", file);
+      const file_upload = file;
+      form.append("files", file_upload);
+      console.log("file => ", file_upload);
     });
+    for (var pair of form.entries()) {
+      console.log(pair[0] + " - " + pair[1]);
+    }
     const res = await PROVIDER_POST("sendEmail", form, token, true);
 
     return res;

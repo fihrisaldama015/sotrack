@@ -1,27 +1,39 @@
 import dayjs from "dayjs";
 import { PROVIDER_GET } from "../provider";
 
-export const getMentionSource = async (startDate, endDate, token, pageId) => {
+export const getMentionSource = async (
+  startDate,
+  endDate,
+  token,
+  platform,
+  pageId
+) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 
   const { data } = await PROVIDER_GET(
-    `mentionSource?pageId=${pageId}&since=${startDate}&until=${endDate}`,
+    `mentionSource?platform=${platform}&since=${startDate}&until=${endDate}`,
     token
   );
 
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
-  let sourceTrackerData = getFormattedMentionSource(data);
+  let mentionSource = getFormattedMentionSource(data);
 
-  return sourceTrackerData;
+  return mentionSource;
 };
 
 const getFormattedMentionSource = (data) => {
-  const formattedData = Object.keys(data).map((key) => {
+  let joinedData = {};
+
+  Object.keys(data).map((source) => {
+    joinedData = { ...joinedData, ...data[source] };
+  });
+
+  const formattedData = Object.keys(joinedData).map((key) => {
     return {
       source: key,
-      mentions: data[key],
+      mentions: joinedData[key].totalPosts,
     };
   });
 

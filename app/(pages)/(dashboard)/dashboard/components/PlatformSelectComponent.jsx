@@ -1,7 +1,9 @@
 "use client";
 import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
 import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
+import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 import { changeDashboardPlatform } from "@/app/redux/slices/DashboardPlatformSlice";
+import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 import { changeIsPopUpOpen } from "@/app/redux/slices/PopupSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -56,18 +58,32 @@ const PlatformSelect = () => {
     return platformFilterData;
   };
 
+  const getPageListData = async () => {
+    try {
+      const pageListResult = await getPageList();
+      dispatch(
+        changeFacebookPageList({
+          facebookPageList: pageListResult,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        changeIsPopUpOpen({
+          isPopUpOpen: true,
+          popUpMessage:
+            "Please go to connect account before you can see social media dashboard",
+          popUpType: "FACEBOOK_NOT_CONNECTED",
+        })
+      );
+      console.log("🚀 ~ error - Get Page List:", error);
+    }
+  };
+
   useEffect(() => {
     // if user selected Facebook or instagram, check if user has connected Facebook account
     if (platformSelected == "Facebook" || platformSelected == "Instagram") {
       if (facebookPageList.length === 0) {
-        dispatch(
-          changeIsPopUpOpen({
-            isPopUpOpen: true,
-            popUpMessage:
-              "Please go to connect account before you can see social media dashboard",
-            popUpType: "FACEBOOK_NOT_CONNECTED",
-          })
-        );
+        getPageListData();
       } else {
         dispatch(changeIsPopUpOpen({ isPopUpOpen: false }));
       }

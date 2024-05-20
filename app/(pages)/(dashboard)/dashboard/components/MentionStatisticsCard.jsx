@@ -5,30 +5,59 @@ import { getCookie } from "cookies-next";
 import { getSocialMediaMention } from "@/app/api/repository/SocialMediaMentionRepository";
 import { Box, Stack, Typography } from "@mui/material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { getMentionAnalyticsByPlatform } from "@/app/api/repository/MentionAnalyticsRepository";
+import { useSelector } from "react-redux";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
-const MentionStatisticsCard = ({ title, data }) => {
+const MentionStatisticsCard = ({ title }) => {
   const [showParameter, setShowParameter] = useState(false);
   const [parameter, setParameter] = useState("monthly");
-  const [initialData, setData] = useState(data);
-  const dataLength = data[0].data.length;
-  const latestValue = data[0].data[dataLength - 1].y;
-  const firstValue = data[0].data[0].y;
-  const growth = ((latestValue - firstValue) / firstValue) * 100;
+  const [isLoading, setIsLoading] = useState(false);
+  const [chartData, setChartData] = useState(SocialMediaMentionsData);
 
-  const getInitialSocialMentionData = async () => {
-    const token = getCookie("accessToken");
-    const data = await getSocialMediaMention(token);
-    console.log("🚀 ~ getInitialSocialMentionData ~ data:", data);
-    // setData(data);
-  };
+  const dataLength = chartData.length;
+  const firstValue = dataLength == 0 ? 0 : chartData[0].y;
+  const latestValue =
+    dataLength == 1 ? firstValue : chartData[dataLength - 1].y;
 
-  const handleParameterChange = (type) => {
+  const growth =
+    dataLength == 1 ? 0 : ((latestValue - firstValue) / firstValue) * 100;
+
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const accessToken = getCookie("accessToken");
+
+  const handleParameterChange = async (type) => {
     setParameter(type);
     setShowParameter(false);
+    setIsLoading(true);
+    try {
+      const socialMentionData = await getMentionAnalyticsByPlatform(
+        platformSelected.toLowerCase(),
+        type,
+        accessToken
+      );
+
+      if (socialMentionData.length == 1) {
+        socialMentionData.push({
+          x: socialMentionData[0].x + ".",
+          y: socialMentionData[0].y,
+        });
+      }
+      setChartData(socialMentionData);
+    } catch (error) {
+      console.log("🚀 ~ refreshChart ~ error:", error);
+      setChartData([]);
+    }
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    getInitialSocialMentionData();
+    // if (platformSelected != "News") return;
+    handleParameterChange("monthly");
+  }, [platformSelected]);
+
+  useEffect(() => {
+    handleParameterChange("monthly");
   }, []);
 
   return (
@@ -94,10 +123,35 @@ const MentionStatisticsCard = ({ title, data }) => {
           </form>
         </Box>
       </Stack>
-
-      <MentionStatisticsChart data={data} trendUp={latestValue >= firstValue} />
+      {isLoading && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8 flex items-center gap-2 w-48">
+          <LoadingSpinner />
+          Loading Chart Data
+        </div>
+      )}
+      <MentionStatisticsChart
+        data={[
+          {
+            id: "Mention",
+            color: "#2563EB",
+            data: isLoading ? [] : chartData,
+          },
+        ]}
+        trendUp={latestValue >= firstValue}
+      />
     </div>
   );
 };
 
 export default MentionStatisticsCard;
+
+export const SocialMediaMentionsData = [
+  {
+    x: "Jan",
+    y: 0.1,
+  },
+  {
+    x: "Feb",
+    y: 0.1,
+  },
+];

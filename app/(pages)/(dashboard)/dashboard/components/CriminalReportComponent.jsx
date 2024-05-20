@@ -8,12 +8,14 @@ import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import CriminalReportChart from "./CriminalReportChartComponent";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { useSelector } from "react-redux";
 
 const CriminalReport = ({ initialData }) => {
   const [showParameter, setShowParameter] = useState(false);
   const [parameter, setParameter] = useState("monthly");
   const [chartData, setChartData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
   const accessToken = getCookie("accessToken");
 
   const handleParameterChange = async (type) => {
@@ -21,10 +23,15 @@ const CriminalReport = ({ initialData }) => {
     setShowParameter(false);
     setIsLoading(true);
     try {
-      const res = await getCriminalReportByType(type, accessToken);
+      const res = await getCriminalReportByType(
+        type,
+        platformSelected.toLowerCase(),
+        accessToken
+      );
       setChartData(res);
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
+      setChartData([]);
     }
     setIsLoading(false);
   };
@@ -34,6 +41,10 @@ const CriminalReport = ({ initialData }) => {
       handleParameterChange("monthly");
     }
   }, []);
+
+  useEffect(() => {
+    handleParameterChange("monthly");
+  }, [platformSelected]);
 
   return (
     <Box className="bg-white rounded-xl flex flex-col flex-1 py-6 px-3 shadow-lg shadow-slate-100">

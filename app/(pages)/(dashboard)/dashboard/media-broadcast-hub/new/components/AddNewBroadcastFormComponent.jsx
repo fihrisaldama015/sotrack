@@ -22,8 +22,17 @@ const AddNewBroadcastForm = ({ recipient }) => {
     formState: { errors, isSubmitting },
   } = useForm();
   const [date, setDate] = useState(dayjs());
+  const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const handleFile = (e) => {
+    const newFiles = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      newFiles.push(e.target.files[i]);
+    }
+    setFiles(newFiles);
+  };
 
   const onSubmit = async (data) => {
     console.log("🚀 ~ onSubmit ~ data:", data);
@@ -39,7 +48,7 @@ const AddNewBroadcastForm = ({ recipient }) => {
         `<p>${broadcast}</p>`,
         formattedDate,
         city,
-        [file]
+        files
       );
       if (res) {
         openPopUpSuccess(dispatch, `${res.message}`);
@@ -121,7 +130,8 @@ const AddNewBroadcastForm = ({ recipient }) => {
           type="file"
           name="file"
           id="file"
-          {...register("file")}
+          onChange={(e) => handleFile(e)}
+          // {...register("file")}
           multiple
         />
       </FormControl>

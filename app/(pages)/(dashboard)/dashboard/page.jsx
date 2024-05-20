@@ -19,7 +19,7 @@ import PlatformSelect from "./components/PlatformSelectComponent";
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
   try {
-    const res = await getCriminalReportByType("monthly", accessToken);
+    const res = await getCriminalReportByType("monthly", "news", accessToken);
     return res;
   } catch (error) {
     console.log("🚀 ~ refreshChart ~ error:", error);
@@ -35,6 +35,7 @@ const getInitialCrimeStatistic = async () => {
     const res = await getCrimeStatisticByDate(
       startDate.format("YYYY-MM-DD"),
       endDate.format("YYYY-MM-DD"),
+      "news",
       accessToken
     );
     return res;
@@ -76,10 +77,7 @@ const DashboardPage = async () => {
       </Box>
       <Divider className="mb-1 border-none h-[2px] bg-neutral-300" />
       <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <MentionStatisticsCard
-          title={"Mentions"}
-          data={SocialMediaMentionsData}
-        />
+        <MentionStatisticsCard title={"Mentions"} />
         <Stack className="flex-col gap-3 w-96">
           <MentionAnalyticsCard />
           <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
@@ -87,8 +85,8 @@ const DashboardPage = async () => {
       </Stack>
 
       <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <CrimeStatistic initialData={initialCrimeStatistic} />
-        <CriminalReport initialData={initialCriminalReport} />
+        <CrimeStatistic initialData={[]} />
+        <CriminalReport initialData={[]} />
       </Stack>
 
       <Stack className="lg:flex-row flex-col gap-3 w-full">
@@ -105,38 +103,38 @@ export const SocialMediaMentionsData = [
     id: "Mention",
     color: "#2563EB",
     data: [
-      {
-        x: "Jan",
-        y: 0.1,
-      },
-      {
-        x: "Feb",
-        y: 0.1,
-      },
       // {
       //   x: "Jan",
-      //   y: 54,
+      //   y: 0.1,
       // },
       // {
       //   x: "Feb",
-      //   y: 117,
+      //   y: 0.1,
       // },
-      // {
-      //   x: "Mar",
-      //   y: 44,
-      // },
-      // {
-      //   x: "Apr",
-      //   y: 215,
-      // },
-      // {
-      //   x: "Mei",
-      //   y: 50,
-      // },
-      // {
-      //   x: "Jun",
-      //   y: 233,
-      // },
+      {
+        x: "Jan",
+        y: 54,
+      },
+      {
+        x: "Feb",
+        y: 117,
+      },
+      {
+        x: "Mar",
+        y: 44,
+      },
+      {
+        x: "Apr",
+        y: 215,
+      },
+      {
+        x: "Mei",
+        y: 50,
+      },
+      {
+        x: "Jun",
+        y: 233,
+      },
     ],
   },
 ];

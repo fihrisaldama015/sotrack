@@ -107,7 +107,7 @@ const Alert = ({ type, message }) => {
             : "Continue"}
         </Button>
         {/* this is for development only to close the popup */}
-        {/* {(type === "NEWS_FILTER_NOT_SET" ||
+        {(type === "NEWS_FILTER_NOT_SET" ||
           type === "FACEBOOK_NOT_CONNECTED") && (
           <Typography
             className="text-sm text-center cursor-pointer hover:underline"
@@ -115,7 +115,7 @@ const Alert = ({ type, message }) => {
           >
             Continue without account
           </Typography>
-        )} */}
+        )}
       </Stack>
     </Box>
   );

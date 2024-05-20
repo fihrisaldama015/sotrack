@@ -63,6 +63,9 @@ const SignUpFormComponent = () => {
             required: "Email is required",
           }}
         />
+        <Typography className="mt-2 text-[#494A50] text-sm font-bold">
+          *Please use your institution's email!
+        </Typography>
       </FormControl>
       <FormControl>
         <Typography className="mb-3 font-medium text-base">Password</Typography>

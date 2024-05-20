@@ -1,58 +1,40 @@
-import dayjs from "dayjs";
 import { PROVIDER_GET } from "../provider";
 
-export const getCrimeStatisticByDate = async (
-  startDate,
-  endDate,
+export const getMentionAnalyticsByPlatform = async (
   platform,
+  period,
   token
 ) => {
-  const currentDate = dayjs().format("YYYY-MM-DD");
+  try {
+    let url = `mentionAnalytic?platform=${platform}&period=${period}`;
+    const { data } = await PROVIDER_GET(url, token);
+    if (!data) throw "No Response Data";
+    let chartData = [];
+    if (period == "monthly") {
+      chartData = getMonthlyMentionAnalytics(data);
+    } else if (period == "yearly") {
+      chartData = getYearlyCMentionAnalytics(data);
+    } else if (period == "weekly") {
+      chartData = getWeeklyCMentionAnalytics(data);
+    }
 
-  const { data } = await PROVIDER_GET(
-    `criminalType?platform=${platform}&from=${startDate}&to=${endDate}`,
-    token
-  );
-
-  if (currentDate < startDate || currentDate < endDate) {
-    throw new Error("Invalid date");
+    return chartData;
+  } catch (error) {
+    console.log("🚀 ~ getMentionAnalyticsByPlatform:", error);
+    return [
+      {
+        x: "first",
+        y: 0.1,
+      },
+      {
+        x: "second",
+        y: 0.1,
+      },
+    ];
   }
-  // let crimeData = [];
-  let crimeData = getTypeOfCrime(data);
-  return crimeData;
 };
 
-const getTypeOfCrime = (data) => {
-  const typeOfCrime = [];
-  Object.keys(data).map((type) => {
-    typeOfCrime.push({
-      type_of_crime: type,
-      data: data[type],
-    });
-  });
-  return typeOfCrime;
-};
-
-export const getCriminalReportByType = async (type, platform, token) => {
-  const res = await PROVIDER_GET(
-    `criminalReports?platform=${platform}&period=${type}`,
-    token
-  );
-  const data = platform == "facebook" ? res.data.countsByYear : res.data;
-  let chartData = [];
-
-  if (type === "monthly") {
-    chartData = getMonthlyCriminalReport(data);
-  } else if (type === "yearly") {
-    chartData = getYearlyCriminalReport(data);
-  } else if (type === "weekly") {
-    chartData = getWeeklyCriminalReport(data);
-  }
-
-  return chartData;
-};
-
-const getYearlyCriminalReport = (data) => {
+const getYearlyCMentionAnalytics = (data) => {
   const yearData = [];
 
   Object.keys(data).map((key) => {
@@ -67,14 +49,14 @@ const getYearlyCriminalReport = (data) => {
       totalCountPerYear += totalCountPerMonth;
     });
     yearData.push({
-      index: key,
-      data: totalCountPerYear,
+      x: key,
+      y: totalCountPerYear,
     });
   });
   return yearData;
 };
 
-const getMonthlyCriminalReport = (data) => {
+const getMonthlyMentionAnalytics = (data) => {
   const monthlyData = [];
   const month = {
     1: "Jan",
@@ -101,8 +83,8 @@ const getMonthlyCriminalReport = (data) => {
         totalCount += temp_month[key];
       });
       monthlyData.push({
-        index: `${month[key]} ${current_year}`,
-        data: totalCount,
+        x: `${month[key]} ${current_year}`,
+        y: totalCount,
       });
     });
   });
@@ -110,7 +92,7 @@ const getMonthlyCriminalReport = (data) => {
   return monthlyData;
 };
 
-const getWeeklyCriminalReport = (data) => {
+const getWeeklyCMentionAnalytics = (data) => {
   let weeklyData = [];
   let temp_week_index = 0;
 
@@ -127,8 +109,8 @@ const getWeeklyCriminalReport = (data) => {
           weeklyData[weeklyData.length - 1].data += temp_week;
         } else {
           weeklyData.push({
-            index: `Week ${key} (${current_year})`,
-            data: temp_week,
+            x: `Week ${key} (${current_year})`,
+            y: temp_week,
           });
         }
         temp_week_index = key;

@@ -40,9 +40,9 @@ const MostDiscusedLately = ({ initialData }) => {
   // const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [platform, setPlatform] = useState("news");
   const [showPlatform, setShowPlatform] = useState(false);
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const [platform, setPlatform] = useState(platformSelected);
 
   const [parameter, setParameter] = useState("");
   const [showParameter, setShowParameter] = useState(false);
@@ -80,6 +80,7 @@ const MostDiscusedLately = ({ initialData }) => {
       console.log("🚀 ~ error - Get Page List:", error);
     }
   };
+
   const {
     data,
     error,
@@ -109,16 +110,26 @@ const MostDiscusedLately = ({ initialData }) => {
   }, [loadingCache]);
 
   useEffect(() => {
-    if (facebookPageList.length === 0) {
-      getPageListData();
-    } else {
-      setPageList(facebookPageList);
-      setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+    if (platformSelected == "Facebook" || platformSelected == "Instagram") {
+      if (facebookPageList.length === 0) {
+        getPageListData();
+      } else {
+        setPageList(facebookPageList);
+        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+      }
     }
   }, []);
 
   useEffect(() => {
     setPlatform(platformSelected);
+    if (platformSelected == "Facebook" || platformSelected == "Instagram") {
+      if (facebookPageList.length === 0) {
+        getPageListData();
+      } else {
+        setPageList(facebookPageList);
+        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+      }
+    }
   }, [platformSelected]);
 
   const refreshData = async () => {
@@ -142,6 +153,7 @@ const MostDiscusedLately = ({ initialData }) => {
 
     setIsLoading(false);
   };
+
   return (
     <Box className="p-6 bg-white flex flex-col gap-6 flex-1 rounded-xl shadow-lg shadow-slate-100">
       <Stack direction={"row"} justifyContent={"space-between"}>
@@ -160,7 +172,7 @@ const MostDiscusedLately = ({ initialData }) => {
           alignItems={"center"}
           justifyContent={"flex-end"}
         >
-          <Box className="relative">
+          {/* <Box className="relative">
             <Stack
               direction={"row"}
               alignItems={"center"}
@@ -223,7 +235,7 @@ const MostDiscusedLately = ({ initialData }) => {
                 </Box>
               </Stack>
             </form>
-          </Box>
+          </Box> */}
           {platform.toLowerCase() !== "news" && (
             <Box className="relative">
               <Stack

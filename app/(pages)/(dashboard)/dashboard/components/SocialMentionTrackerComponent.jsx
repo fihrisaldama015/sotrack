@@ -4,12 +4,9 @@ import {
   getPageList,
 } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { changeIsPopUpOpen } from "@/app/redux/slices/PopupSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
-import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
+import { openPopUpError } from "@/app/utils/extensions";
 import CalendarToday from "@mui/icons-material/CalendarToday";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import PersonIcon from "@mui/icons-material/Person";
 import {
   Table,
   TableBody,
@@ -30,24 +27,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const checkConnectedInstagramFromFacebook = (pageList) => {
-  const connectedPage = pageList.find(
-    (page) => "instagram_business_account" in page
-  );
-  if (connectedPage) {
-    return connectedPage.id;
-  }
-  return "";
-};
-
 const SocialMentionTracker = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [parameter, setParameter] = useState("");
-  const [showParameter, setShowParameter] = useState(false);
-
-  const [pageList, setPageList] = useState([]);
 
   const [startDate, setStartDate] = useState(dayjs().date(1));
   const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
@@ -55,7 +37,7 @@ const SocialMentionTracker = () => {
   const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const { facebookPageList } = useSelector((state) => state.facebookReducer);
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
 
   const accessToken = getCookie("accessToken");
   const dispatch = useDispatch();
@@ -67,47 +49,19 @@ const SocialMentionTracker = () => {
         start.format("YYYY-MM-DD"),
         end.format("YYYY-MM-DD"),
         accessToken,
-        parameter
+        platformSelected.toLowerCase()
       );
       setData(mentionSourceResult);
     } catch (error) {
-      openPopUpError(
-        dispatch,
-        error?.response?.data?.message
-          ? error.response.data.message
-          : "Terjadi kesalahan dari server, coba lagi"
-      );
       setData([]);
       console.log("🚀 ~ error:", error);
     }
     setIsLoading(false);
   };
 
-  const getPageListData = async () => {
-    try {
-      const pageListResult = await getPageList();
-      const pageId = checkConnectedInstagramFromFacebook(pageListResult);
-      setParameter(pageId);
-      setPageList(pageListResult);
-    } catch (error) {
-      console.log("🚀 ~ error - Get Page List:", error);
-    }
-  };
-
   useEffect(() => {
-    if (parameter !== "") {
-      getMentionSourceData(chartStartDate, chartEndDate);
-    }
-  }, [parameter]);
-
-  useEffect(() => {
-    if (facebookPageList.length === 0) {
-      getPageListData();
-    } else {
-      setPageList(facebookPageList);
-      setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-    }
-  }, []);
+    getMentionSourceData(chartStartDate, chartEndDate);
+  }, [platformSelected]);
 
   const refreshData = async () => {
     if (startDate.isAfter(endDate)) {
@@ -126,7 +80,7 @@ const SocialMentionTracker = () => {
   };
   return (
     <Box className="p-6 bg-white flex flex-col gap-6 rounded-xl shadow-lg shadow-slate-100">
-      <Stack direction={"row"} justifyContent={"space-between"}>
+      <Stack direction={"row"} gap={2} justifyContent={"space-between"}>
         <Stack direction={"column"} gap={1}>
           <Typography className="text-xs text-grey-800">
             Overall Mentions Source
@@ -136,58 +90,6 @@ const SocialMentionTracker = () => {
           </Typography>
         </Stack>
         <Stack direction={"column"} spacing={1} alignItems={"center"}>
-          <Box className="relative">
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              spacing={0.5}
-              onClick={() => setShowParameter(!showParameter)}
-              className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
-            >
-              <PersonIcon color="grey" sx={{ width: 16 }} />
-              <Typography className="text-xs font-normal first-letter:capitalize">
-                {parameter === ""
-                  ? "Choose Page"
-                  : pageList.find((page) => page.id === parameter)?.name}
-              </Typography>
-              <ExpandMore color="grey" sx={{ width: 16 }} />
-            </Stack>
-            <form
-              className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
-              style={{
-                visibility: showParameter ? "visible" : "hidden",
-                opacity: showParameter ? 1 : 0,
-              }}
-            >
-              <Stack direction={"column"} spacing={0}>
-                {pageList.length > 0 &&
-                  pageList.map((page, id) => (
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                      spacing={2}
-                      key={id}
-                      onClick={() => {
-                        setParameter(page.id);
-                        setShowParameter(false);
-                      }}
-                      className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                    >
-                      <Typography> {page.name}</Typography>
-                      {"instagram_business_account" in page && (
-                        <Image
-                          src="/assets/icon/instagram.svg"
-                          width={16}
-                          height={16}
-                          alt="instagram"
-                        />
-                      )}
-                    </Stack>
-                  ))}
-              </Stack>
-            </form>
-          </Box>
           <Box className="relative">
             <Stack
               direction={"row"}
@@ -251,24 +153,20 @@ const SocialMentionTracker = () => {
       {isLoading ? (
         <div className="w-full h-48 flex justify-center items-center">
           <LoadingSpinner />
-          {pageList.length == 0
-            ? "Loading Facebook Page List"
-            : "Loading Social Mention Data"}
+          Loading Social Mention Data
         </div>
       ) : (
         data.length == 0 && (
           <div className="w-full h-full px-6 flex justify-center items-center text-center">
             <p className="max-w-[27ch]">
-              {pageList.length == 0
-                ? "No Connected Facebook Account, go to Connect Account Menu"
-                : "No Data, Please select another date range or platform"}
+              No Data, Please select another date range or platform
             </p>
           </div>
         )
       )}
       <Box
         className="h-[300px] overflow-auto"
-        sx={{ display: isLoading || pageList.length == 0 ? "none" : "" }}
+        sx={{ display: isLoading ? "none" : "" }}
       >
         <Table>
           <TableHead>

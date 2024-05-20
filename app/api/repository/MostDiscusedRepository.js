@@ -12,10 +12,8 @@ export const getMostDiscusedLatelyByDate = async (
 
   const { data: mostData } = await PROVIDER_GET(
     `mostDiscussed?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}`,
-    // `mostDiscussed?platform=${platform}&pageId=290758567444646&since=${startDate}&until=${endDate}`,
     token
   );
-  console.log("🚀 ~ mostData:", mostData);
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }

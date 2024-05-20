@@ -6,7 +6,7 @@ const MentionStatisticsChart = ({ data, trendUp }) => {
     <div className="h-72 w-full">
       <ResponsiveLine
         data={data}
-        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        margin={{ top: 20, right: 30, bottom: 30, left: 50 }}
         xScale={{ type: "point" }}
         yScale={{
           type: "linear",
@@ -19,23 +19,38 @@ const MentionStatisticsChart = ({ data, trendUp }) => {
         curve="monotoneX"
         axisTop={null}
         axisRight={null}
-        axisBottom={null}
-        axisLeft={null}
+        axisBottom={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "transportation",
+          legendOffset: 36,
+          legendPosition: "middle",
+          truncateTickAt: 0,
+        }}
+        axisLeft={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "count",
+          legendOffset: -40,
+          legendPosition: "middle",
+          truncateTickAt: 0,
+        }}
         enableGridX={false}
-        enableGridY={false}
+        enableGridY={true}
         gridYValues={5}
         lineWidth={3}
-        pointSize={0}
-        // pointColor="#2563EB"
-        // pointBorderWidth={4}
-        // pointBorderColor="#ffffff"
+        pointSize={12}
+        pointColor="#2563EB"
+        pointBorderWidth={5}
+        pointBorderColor="#ffffff"
         colors={{ scheme: trendUp ? "category10" : "set1" }}
         // pointColor={{ theme: "background" }}
         // pointBorderColor={{ from: "serieColor" }}
-        pointLabelYOffset={-12}
         enableArea={true}
-        areaBaselineValue={20}
-        areaOpacity={0.05}
+        areaBaselineValue={0}
+        areaOpacity={0.1}
         enableSlices="x"
         useMesh={true}
         legends={[]}
