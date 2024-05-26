@@ -123,7 +123,7 @@ const SentigraphCard = ({ title }) => {
         <Box className="border-none w-[1px] bg-[#F0F0F0]" />
         <Stack direction={"column"} alignItems={"center"}>
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
-            <Box className="w-2 h-2 rounded-full bg-[#1B59F8]"></Box>
+            <Box className="w-2 h-2 rounded-full bg-[#6AD2FF]"></Box>
             <Typography className="text-[#A3AED0] text-xs font-medium">
               Negative
             </Typography>
