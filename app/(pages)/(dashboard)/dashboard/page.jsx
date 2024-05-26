@@ -15,6 +15,7 @@ import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
 import { DOWNLOAD } from "@/app/utils/assets";
 import Image from "next/image";
 import PlatformSelect from "./components/PlatformSelectComponent";
+import { redirect } from "next/navigation";
 
 const getInitialCriminalReport = async () => {
   const accessToken = cookies().get("accessToken")?.value;
@@ -48,7 +49,11 @@ const getInitialCrimeStatistic = async () => {
 const DashboardPage = async () => {
   const initialCrimeStatistic = await getInitialCrimeStatistic();
   const initialCriminalReport = await getInitialCriminalReport();
+  const token = cookies().get("accessToken")?.value;
 
+  if (!token) {
+    redirect("/login");
+  }
   return (
     <Stack
       direction={"column"}

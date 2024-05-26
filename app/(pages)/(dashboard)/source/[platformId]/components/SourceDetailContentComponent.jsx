@@ -35,9 +35,9 @@ const SourceDetailContent = ({ platformId }) => {
   const [topic, setTopic] = useState("All");
 
   const [parameter, setParameter] = useState("");
-  const [showParameter, setShowParameter] = useState(false);
+  // const [showParameter, setShowParameter] = useState(false);
 
-  const [pageList, setPageList] = useState([]);
+  // const [pageList, setPageList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
@@ -46,27 +46,30 @@ const SourceDetailContent = ({ platformId }) => {
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
 
-  const { facebookPageList } = useSelector((state) => state.facebookReducer);
+  // const { facebookPageList } = useSelector((state) => state.facebookReducer);
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
+  const pageId = searchParams.get("pageId");
+  const sourceType = searchParams.get("sourceType");
+  const instagram_id = searchParams.get("instagram_id");
   const accessToken = getCookie("accessToken");
 
   const getMentionDetailData = async () => {
     try {
-      let currentPlatform =
-        platformId !== "instagram" && platformId !== "facebook"
-          ? "news"
-          : platformId;
+      const source = platformSelected == "News" ? platformId : sourceType;
+      console.log("🚀 ~ getMentionDetailData ~ source:", source);
       setIsLoading(true);
       const res = await getMentionSourceDetail(
         chartStartDate.format("YYYY-MM-DD"),
         chartEndDate.format("YYYY-MM-DD"),
         accessToken,
-        parameter,
-        currentPlatform,
+        pageId,
+        platformSelected.toLowerCase(),
         "All",
-        platformId
+        source,
+        instagram_id
       );
       console.log("🚀 ~ getMentionDetailData ~ res:", res);
       setData(res);
@@ -77,42 +80,42 @@ const SourceDetailContent = ({ platformId }) => {
     }
   };
 
-  const getPageListData = async () => {
-    try {
-      setIsLoading(true);
-      const pageListResult = await getPageList();
-      const pageId = checkConnectedInstagramFromFacebook(pageListResult);
-      setParameter(pageId);
-      setPageList(pageListResult);
-      setIsLoading(false);
-    } catch (error) {
-      console.log("🚀 ~ error - Get Page List:", error);
-    }
-  };
+  // const getPageListData = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const pageListResult = await getPageList();
+  //     const pageId = checkConnectedInstagramFromFacebook(pageListResult);
+  //     setParameter(pageId);
+  //     setPageList(pageListResult);
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.log("🚀 ~ error - Get Page List:", error);
+  //   }
+  // };
 
   useEffect(() => {
-    if (platformId === "facebook" || platformId === "instagram") {
-      if (facebookPageList.length === 0) {
-        getPageListData();
-      } else {
-        setPageList(facebookPageList);
-        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-      }
-    } else {
-      console.log("AWKOAKW");
-      getMentionDetailData();
-    }
+    // if (platformId === "facebook" || platformId === "instagram") {
+    //   if (facebookPageList.length === 0) {
+    //     getPageListData();
+    //   } else {
+    //     setPageList(facebookPageList);
+    //     setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
+    //   }
+    // } else {
+    getMentionDetailData();
+    // }
   }, []);
 
-  useEffect(() => {
-    if (parameter !== "") {
-      getMentionDetailData();
-    }
-  }, [parameter]);
+  // useEffect(() => {
+  //   if (parameter !== "") {
+  //     getMentionDetailData();
+  //   }
+  // }, [parameter]);
 
   useEffect(() => {
     if (search) {
       const filteredData = data.filter((item) => {
+        if (!item.mention) return false;
         return item.mention.toLowerCase().includes(search.toLowerCase());
       });
       setIsSearching(true);
@@ -132,19 +135,18 @@ const SourceDetailContent = ({ platformId }) => {
       setChartEndDate(endDate);
     }
     try {
-      let currentPlatform =
-        platformId !== "instagram" && platformId !== "facebook"
-          ? "news"
-          : platformId;
+      let currentPlatform = platformSelected.toLowerCase();
+      const source = platformSelected == "News" ? platformId : sourceType;
       setIsLoading(true);
       const res = await getMentionSourceDetail(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
+        startDate.format("YYYY-MM-DD"),
+        endDate.add(1, "day").format("YYYY-MM-DD"),
         accessToken,
-        parameter,
+        pageId,
         currentPlatform,
         topic,
-        platformId
+        source,
+        instagram_id
       );
       console.log("🚀 ~ refreshData ~ res:", res);
       setData(res);
@@ -193,7 +195,7 @@ const SourceDetailContent = ({ platformId }) => {
           <Typography className="text-base font-bold text-primary-800 first-letter:capitalize">
             {platformId} Mention Details
           </Typography>
-          <Box
+          {/* <Box
             className="relative"
             sx={{
               display:
@@ -252,7 +254,7 @@ const SourceDetailContent = ({ platformId }) => {
                   ))}
               </Stack>
             </form>
-          </Box>
+          </Box> */}
         </Stack>
         {isLoading ? (
           <Stack direction={"row"} justifyContent={"center"} spacing={2}>

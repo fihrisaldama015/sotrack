@@ -18,25 +18,43 @@ export const getMentionSource = async (
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
-  let mentionSource = getFormattedMentionSource(data);
+  let mentionSource = getFormattedMentionSource(data, platform);
 
   return mentionSource;
 };
 
-const getFormattedMentionSource = (data) => {
+const getFormattedMentionSource = (data, platform) => {
   let joinedData = {};
+  let formattedData = [];
 
-  Object.keys(data).map((source) => {
-    joinedData = { ...joinedData, ...data[source] };
-  });
-
-  const formattedData = Object.keys(joinedData).map((key) => {
-    return {
-      source: key,
-      mentions: joinedData[key].totalPosts,
-    };
-  });
-
+  if (platform == "news") {
+    Object.keys(data).map((source) => {
+      joinedData = { ...joinedData, ...data[source] };
+    });
+    formattedData = Object.keys(joinedData).map((key) => {
+      return {
+        source: key,
+        mentions: joinedData[key].totalPosts,
+      };
+    });
+  } else if (platform == "facebook" || platform == "instagram") {
+    Object.keys(data).map((sourceType) => {
+      const result = data[sourceType];
+      const temp = Object.keys(result).map((username) => {
+        return {
+          source: username,
+          mentions: result[username].totalPosts,
+          id:
+            platform == "facebook"
+              ? result[username].page_id
+              : result[username].id,
+          sourceType: sourceType,
+        };
+      });
+      formattedData = [...formattedData, ...temp];
+    });
+  }
+  console.log("🚀 ~ getFormattedMentionSource ~ formattedData:", formattedData);
   return formattedData;
 };
 
@@ -56,13 +74,16 @@ export const getMentionSourceDetail = async (
   pageId = "",
   platform,
   topic = "All",
-  source = ""
+  source = "",
+  instagram_id = ""
 ) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
   try {
-    let url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}`;
+    let url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
     if (platform == "news") {
       url = `mentionDetails?platform=${platform}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
+    } else if (platform == "instagram") {
+      url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}&instagram_id=${instagram_id}`;
     }
 
     const { data } = await PROVIDER_GET(url, token);

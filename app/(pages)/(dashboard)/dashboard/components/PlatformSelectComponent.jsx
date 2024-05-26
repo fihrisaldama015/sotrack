@@ -42,7 +42,8 @@ const PlatformSelect = () => {
       platformSelectedId,
       accessToken
     );
-    if (platformFilterData.length === 0) {
+    if (!platformFilterData) return;
+    if (platformFilterData?.length === 0) {
       dispatch(
         changeIsPopUpOpen({
           isPopUpOpen: true,

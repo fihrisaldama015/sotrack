@@ -40,7 +40,6 @@ const SocialMentionTracker = () => {
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
 
   const accessToken = getCookie("accessToken");
-  const dispatch = useDispatch();
 
   const getMentionSourceData = async (start, end) => {
     try {
@@ -205,7 +204,18 @@ const SocialMentionTracker = () => {
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/source/${data.source}`}
+                    href={`/source/${data.source}${
+                      platformSelected != "News"
+                        ? "?pageId=" +
+                          data.id +
+                          "&sourceType=" +
+                          data.sourceType
+                        : ""
+                    }${
+                      platformSelected == "Instagram"
+                        ? "&instagram_id=" + data.id
+                        : ""
+                    }`}
                     className="no-underline text-xs"
                   >
                     See Details
