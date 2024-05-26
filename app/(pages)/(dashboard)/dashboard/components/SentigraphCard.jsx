@@ -9,21 +9,65 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SentigraphChart from "./SentigraphChartComponent";
-import { Divider } from "@mui/material";
+import { useSelector } from "react-redux";
+import { getCookie } from "cookies-next";
+import { getSentimentAnalysisByDate } from "@/app/api/repository/DashboardAnalyticsRepository";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
-const SentigraphCard = ({ title, data }) => {
-  const [initialData, setData] = useState(data);
+const SentigraphCard = ({ title }) => {
+  const [chartData, setChartData] = useState({ negative: "0", positive: "0" });
   const [startDate, setStartDate] = useState(dayjs().date(0));
   const [endDate, setEndDate] = useState(dayjs());
+  const [isLoading, setIsLoading] = useState(false);
 
-  const refreshData = (start, end) => {
+  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const accessToken = getCookie("accessToken");
+
+  // TES
+  const getData = async () => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(1000);
+    return {
+      negative: "80.77",
+      positive: "19.23",
+    };
+  };
+
+  const handleDatePickerChange = async (start, end) => {
     setStartDate(start);
     setEndDate(end);
-    console.log("start", start.format("YYYY-MM-DD"));
-    console.log("end", end.format("YYYY-MM-DD"));
+    setIsLoading(true);
+    try {
+      // REAL
+      // const sentigraphData = await getSentimentAnalysisByDate(
+      //   startDate.format("YYYY-MM-DD"),
+      //   end.add(1, "day").format("YYYY-MM-DD"),
+      //   platformSelected.toLowerCase(),
+      //   accessToken
+      // );
+      // setChartData(sentigraphData);
+      // TEST
+      const data = await getData();
+      setChartData({
+        negative: data.negative,
+        positive: data.positive,
+      });
+    } catch (error) {
+      console.log("🚀 ~ refreshChart ~ error:", error);
+      setChartData([]);
+    }
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    handleDatePickerChange(startDate, endDate);
+  }, [platformSelected]);
+
+  useEffect(() => {
+    handleDatePickerChange(dayjs().date(0), dayjs());
+  }, []);
 
   return (
     <div className="bg-white rounded-2xl p-7 flex flex-col w-96">
@@ -34,12 +78,31 @@ const SentigraphCard = ({ title, data }) => {
         <DatePickerComponent
           start={startDate}
           end={endDate}
-          r
-          refresh={refreshData}
+          refresh={handleDatePickerChange}
         />
       </Stack>
+      {isLoading ? (
+        <div className="w-full h-48 flex justify-center items-center">
+          <LoadingSpinner />
+          Loading Chart Data
+        </div>
+      ) : (
+        <SentigraphChart
+          data={[
+            {
+              id: "Negative",
+              label: "Negative",
+              value: isLoading ? "0" : chartData.negative,
+            },
+            {
+              id: "Positive",
+              label: "Positive",
+              value: isLoading ? "0" : chartData.positive,
+            },
+          ]}
+        />
+      )}
 
-      <SentigraphChart data={data} />
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
@@ -54,7 +117,7 @@ const SentigraphCard = ({ title, data }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            59%
+            {isLoading ? "0" : chartData.positive}%
           </Typography>
         </Stack>
         <Box className="border-none w-[1px] bg-[#F0F0F0]" />
@@ -66,7 +129,7 @@ const SentigraphCard = ({ title, data }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            41%
+            {isLoading ? "0" : chartData.negative}%
           </Typography>
         </Stack>
       </Stack>
@@ -87,10 +150,7 @@ const DatePickerComponent = ({ start, end, refresh }) => {
       alert("Start date cannot be after end date");
       return;
     }
-    if (
-      startDate.isAfter(dayjs().add(1, "day")) ||
-      endDate.isAfter(dayjs().add(1, "day"))
-    ) {
+    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
       alert("Date cannot be in the future");
       return;
     }

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { PROVIDER_GET } from "../provider";
 
+// CRIME STATISTICS
 export const getCrimeStatisticByDate = async (
   startDate,
   endDate,
@@ -33,6 +34,7 @@ const getTypeOfCrime = (data) => {
   return typeOfCrime;
 };
 
+// CRIMINAL REPORT
 export const getCriminalReportByType = async (type, platform, token) => {
   const res = await PROVIDER_GET(
     `criminalReports?platform=${platform}&period=${type}`,
@@ -137,4 +139,33 @@ const getWeeklyCriminalReport = (data) => {
   });
 
   return weeklyData;
+};
+
+// SENTIMENT ANALYSIS
+export const getSentimentAnalysisByDate = async (
+  startDate,
+  endDate,
+  platform,
+  token
+) => {
+  const { data } = await PROVIDER_GET(
+    `sentimentAnalysis?platform=${platform}&from=${startDate}&to=${endDate}`,
+    token
+  );
+
+  if (currentDate < startDate || currentDate < endDate) {
+    throw new Error("Invalid date");
+  }
+
+  let sentimentData = {};
+  sentimentData = getSentimentData(data);
+  return sentimentData;
+};
+
+const getSentimentData = (data) => {
+  const sentimentData = {};
+  Object.keys(data).map((key) => {
+    sentimentData[key] = data[key].split("%")[1];
+  });
+  return sentimentData;
 };

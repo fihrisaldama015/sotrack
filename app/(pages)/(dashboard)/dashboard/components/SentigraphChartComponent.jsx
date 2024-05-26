@@ -5,20 +5,7 @@ const SentigraphChart = ({ data }) => {
   return (
     <div className="h-48 w-full">
       <ResponsivePie
-        data={[
-          {
-            id: "negative",
-            label: "Negative",
-            value: 41,
-            color: "hsl(24, 70%, 50%)",
-          },
-          {
-            id: "positive",
-            label: "Positive",
-            value: 59,
-            color: "hsl(212, 70%, 50%)",
-          },
-        ]}
+        data={data}
         margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
         startAngle={0}
         innerRadius={0.1}

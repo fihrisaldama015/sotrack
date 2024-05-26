@@ -80,7 +80,7 @@ const DashboardPage = async () => {
         <MentionStatisticsCard title={"Mentions"} />
         <Stack className="flex-col gap-3 w-96">
           <MentionAnalyticsCard />
-          <SentigraphCard title={"Sentiment"} data={SocialMediaMentionsData} />
+          <SentigraphCard title={"Sentiment"} />
         </Stack>
       </Stack>
 
