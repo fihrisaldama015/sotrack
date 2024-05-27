@@ -22,6 +22,16 @@ export const getMediaBroadcastEmailList = async (
   }
 };
 
+export const getMediaBroadcastEmailDetail = async (id, token) => {
+  try {
+    const { data } = await PROVIDER_GET(`getEmail/${id}`, token);
+    return data;
+  } catch (e) {
+    console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);
+    return [];
+  }
+};
+
 export const sendMediaBroadCastEmail = async (
   token,
   email,

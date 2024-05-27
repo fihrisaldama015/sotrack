@@ -15,10 +15,11 @@ import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
-const AddNewBroadcastForm = ({ recipient }) => {
+const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
   const [date, setDate] = useState(dayjs());
@@ -131,7 +132,6 @@ const AddNewBroadcastForm = ({ recipient }) => {
           name="file"
           id="file"
           onChange={(e) => handleFile(e)}
-          // {...register("file")}
           multiple
         />
       </FormControl>
@@ -143,6 +143,11 @@ const AddNewBroadcastForm = ({ recipient }) => {
       >
         <Button
           type="button"
+          onClick={() => {
+            setFiles([]);
+            reset();
+            resetRecipient();
+          }}
           variant="contained"
           size="large"
           color="error"

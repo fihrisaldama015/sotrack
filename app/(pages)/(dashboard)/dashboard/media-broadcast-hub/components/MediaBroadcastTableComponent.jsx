@@ -6,6 +6,11 @@ import dayjs from "dayjs";
 import { Stack, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { changeEmailSelected } from "@/app/redux/slices/MediaBroadcastSlice";
+import { useRouter } from "next/navigation";
+
+const getRowId = (row) => {
+  return row.id;
+};
 
 const columns = [
   {
@@ -78,9 +83,11 @@ const columns = [
 ];
 
 const MediaBroadcastHubTable = ({ initialData }) => {
+  const router = useRouter();
   const customStyles = {
     border: "transparent", // Customize border color
     borderRadius: ".5rem", // Customize border radius
+    cursor: "pointer",
   };
   const [selectedIds, setSelectedIds] = useState([]);
   const dispatch = useDispatch();
@@ -94,11 +101,22 @@ const MediaBroadcastHubTable = ({ initialData }) => {
     );
     console.log("Selected row IDs:", newSelection);
   };
+  const handleRowClick = (row) => {
+    const rowId = row.id;
+    router.push(`media-broadcast-hub/${rowId}`);
+  };
   return (
     <Box sx={{ height: initialData.length > 0 ? 500 : 150 }}>
       <DataGrid
         rows={initialData ? initialData : []}
         columns={columns}
+        getRowId={getRowId}
+        onRowClick={handleRowClick}
+        componentsProps={{
+          row: {
+            className: "data-grid-row",
+          },
+        }}
         initialState={{
           pagination: {
             paginationModel: {

@@ -102,6 +102,7 @@ const page = () => {
       </Typography>
       <AddNewBroadcastForm
         recipient={recipient.length == 0 ? recipient[0] : recipient.join(",")}
+        resetRecipient={() => setRecipient([])}
       />
     </Stack>
   );
