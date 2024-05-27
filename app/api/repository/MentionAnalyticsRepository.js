@@ -7,8 +7,10 @@ export const getMentionAnalyticsByPlatform = async (
 ) => {
   try {
     let url = `mentionAnalytic?platform=${platform}&period=${period}`;
-    const { data } = await PROVIDER_GET(url, token);
-    if (!data) throw "No Response Data";
+    const response = await PROVIDER_GET(url, token);
+    console.log("🚀 ~ response:", response);
+    const data = response.data;
+    if (!data || Object.keys(data).length === 0) throw "No Response Data";
     let chartData = [];
     if (period == "monthly") {
       chartData = getMonthlyMentionAnalytics(data);

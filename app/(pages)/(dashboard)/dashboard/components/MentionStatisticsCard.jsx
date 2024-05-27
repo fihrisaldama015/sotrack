@@ -17,11 +17,12 @@ const MentionStatisticsCard = ({ title }) => {
 
   const dataLength = chartData.length;
   const firstValue = dataLength == 0 ? 0 : chartData[0].y;
-  const latestValue =
-    dataLength == 1 ? firstValue : chartData[dataLength - 1].y;
+  console.log("AOWKOWAK");
+  console.log("🚀s ~ MentionStatisticsCard ~ chartData:", chartData);
+  const latestValue = dataLength < 1 ? firstValue : chartData[dataLength - 1].y;
 
   const growth =
-    dataLength == 1 ? 0 : ((latestValue - firstValue) / firstValue) * 100;
+    dataLength < 1 ? 0 : ((latestValue - firstValue) / firstValue) * 100;
 
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
   const accessToken = getCookie("accessToken");
@@ -35,6 +36,10 @@ const MentionStatisticsCard = ({ title }) => {
         platformSelected.toLowerCase(),
         type,
         accessToken
+      );
+      console.log(
+        "🚀 ~ handleParameterChange ~ socialMentionData:",
+        socialMentionData
       );
 
       if (socialMentionData.length == 1) {

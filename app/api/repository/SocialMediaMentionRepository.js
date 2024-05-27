@@ -8,8 +8,9 @@ export const getSocialMediaMention = async (platform, token) => {
     } else {
       url = "socialMediaMention";
     }
-    const { data } = await PROVIDER_GET(url, token);
-    if (!data) throw "No Response Data";
+    const responseAPI = await PROVIDER_GET(url, token);
+    const data = responseAPI.data;
+    if (!data || data == 429) throw "No Response Data";
     const response = {
       total: data.total,
       chartData:
@@ -40,6 +41,13 @@ export const getSocialMediaMention = async (platform, token) => {
 const formatDataToChart = (data) => {
   let weeklyData = [];
   let temp_week_index = 0;
+
+  console.log("data => ", data);
+  if (data == undefined)
+    return weeklyData.push({
+      x: `Week 1 (2021)`,
+      y: 0,
+    });
 
   Object.keys(data).map((key) => {
     const temp_year = data[key];

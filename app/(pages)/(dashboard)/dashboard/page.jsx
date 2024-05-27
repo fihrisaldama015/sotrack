@@ -47,8 +47,8 @@ const getInitialCrimeStatistic = async () => {
 };
 
 const DashboardPage = async () => {
-  const initialCrimeStatistic = await getInitialCrimeStatistic();
-  const initialCriminalReport = await getInitialCriminalReport();
+  // const initialCrimeStatistic = await getInitialCrimeStatistic();
+  // const initialCriminalReport = await getInitialCriminalReport();
   const token = cookies().get("accessToken")?.value;
 
   if (!token) {
