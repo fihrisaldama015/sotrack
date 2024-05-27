@@ -41,19 +41,23 @@ const SentigraphCard = ({ title }) => {
     setIsLoading(true);
     try {
       // REAL
-      // const sentigraphData = await getSentimentAnalysisByDate(
-      //   startDate.format("YYYY-MM-DD"),
-      //   end.add(1, "day").format("YYYY-MM-DD"),
-      //   platformSelected.toLowerCase(),
-      //   accessToken
-      // );
-      // setChartData(sentigraphData);
+      const sentigraphData = await getSentimentAnalysisByDate(
+        startDate.format("YYYY-MM-DD"),
+        end.format("YYYY-MM-DD"),
+        platformSelected.toLowerCase(),
+        accessToken
+      );
+      console.log(
+        "🚀 ~ handleDatePickerChange ~ sentigraphData:",
+        sentigraphData
+      );
+      setChartData(sentigraphData);
       // TEST
-      const data = await getData();
-      setChartData({
-        negative: data.negative,
-        positive: data.positive,
-      });
+      // const data = await getData();
+      // setChartData({
+      //   negative: data.negative,
+      //   positive: data.positive,
+      // });
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
       setChartData([]);
