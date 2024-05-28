@@ -10,7 +10,8 @@ export const getSocialMediaMention = async (platform, token) => {
     }
     const responseAPI = await PROVIDER_GET(url, token);
     const data = responseAPI.data;
-    if (!data || data == 429) throw "No Response Data";
+    if (!data || data == 429 || Object.keys(data).length === 0)
+      throw "No Response Data";
     const response = {
       total: data.total,
       chartData:

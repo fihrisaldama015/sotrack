@@ -40,7 +40,7 @@ export const getCriminalReportByType = async (type, platform, token) => {
     `criminalReports?platform=${platform}&period=${type}`,
     token
   );
-  const data = platform == "facebook" ? res.data.countsByYear : res.data;
+  const data = res.data;
   let chartData = [];
 
   if (type === "monthly") {

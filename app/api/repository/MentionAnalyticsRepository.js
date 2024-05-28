@@ -9,7 +9,19 @@ export const getMentionAnalyticsByPlatform = async (
     let url = `mentionAnalytic?platform=${platform}&period=${period}`;
     const response = await PROVIDER_GET(url, token);
     const data = response.data;
-    if (!data || Object.keys(data).length === 0) throw "No Response Data";
+    if (!data || Object.keys(data).length === 0) {
+      return [
+        {
+          x: "first",
+          y: 0.1,
+        },
+        {
+          x: "second",
+          y: 0.1,
+        },
+      ];
+    }
+
     let chartData = [];
     if (period == "monthly") {
       chartData = getMonthlyMentionAnalytics(data);

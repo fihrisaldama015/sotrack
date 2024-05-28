@@ -7,9 +7,11 @@ import { getSocialMediaMention } from "@/app/api/repository/SocialMediaMentionRe
 
 const MentionAnalyticsCard = () => {
   const [data, setData] = useState(SocialMediaMentionsData);
+  console.log("🚀 ~ MentionAnalyticsCard ~ data:", data);
   const [total, setTotal] = useState(0);
   const [title, setTitle] = useState("News Mentions");
   const dataLength = data.length;
+  console.log("🚀 ~ MentionAnalyticsCard ~ dataLength:", dataLength);
   const latestValue = dataLength == 0 ? 0 : data[data.length - 1].y;
   const firstValue = dataLength == 0 ? 0 : data[0].y;
   const growth = ((latestValue - firstValue) / firstValue) * 100;
