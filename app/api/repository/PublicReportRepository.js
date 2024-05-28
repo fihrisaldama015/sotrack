@@ -11,10 +11,10 @@ export const getLinkForm = async (token) => {
   }
 };
 
-export const getAllReport = async (startDate, endDate) => {
+export const getAllReport = async (startDate, endDate, token) => {
   try {
     let url = `report/getAllReport?since=${startDate}&until=${endDate}`;
-    const { data } = await PROVIDER_GET(url);
+    const { data } = await PROVIDER_GET(url, token);
     let response = [];
     data.map((item) => {
       response.push({

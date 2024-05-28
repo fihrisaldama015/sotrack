@@ -20,10 +20,7 @@ const DatePickerComponent = ({ chartStartDate, chartEndDate, refreshData }) => {
       alert("Start date cannot be after end date");
       return;
     }
-    if (
-      startDate.isAfter(dayjs().add(1, "day")) ||
-      endDate.isAfter(dayjs().add(1, "day"))
-    ) {
+    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
       alert("Date cannot be in the future");
       return;
     }

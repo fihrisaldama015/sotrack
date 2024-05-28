@@ -1,23 +1,22 @@
 "use client";
 // import { getSourceTrackerByDate } from "@/app/api/repository/SourceTrackerRepository";
+import {
+  getAllReport,
+  getLinkForm,
+} from "@/app/api/repository/PublicReportRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { Close, Link, Public } from "@mui/icons-material";
+import { Box, Divider } from "@mui/material";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
-import SearchBar from "./SearchBarComponent";
 import PublicReportTable from "./PublicReportTableComponent";
-import { Box, Divider } from "@mui/material";
-import { Close, Link, Public } from "@mui/icons-material";
-import { APP_URL, BASE_URL } from "@/app/utils/constants";
-import {
-  getAllReport,
-  getLinkForm,
-} from "@/app/api/repository/PublicReportRepository";
+import SearchBar from "./SearchBarComponent";
 
 const PublicReportContent = ({ platformId }) => {
   const [data, setData] = useState([]);
@@ -57,7 +56,8 @@ const PublicReportContent = ({ platformId }) => {
     setIsLoading(true);
     const response = await getAllReport(
       chartStartDate.format("YYYY-MM-DD"),
-      chartEndDate.add(1, "day").format("YYYY-MM-DD")
+      chartEndDate.add(1, "day").format("YYYY-MM-DD"),
+      accessToken
     );
     setData(response);
     setIsLoading(false);
@@ -89,7 +89,8 @@ const PublicReportContent = ({ platformId }) => {
     setIsLoading(true);
     const response = await getAllReport(
       startDate.format("YYYY-MM-DD"),
-      endDate.add(1, "day").format("YYYY-MM-DD")
+      endDate.add(1, "day").format("YYYY-MM-DD"),
+      accessToken
     );
     setData(response);
     setIsLoading(false);
