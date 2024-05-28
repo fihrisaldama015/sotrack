@@ -1,5 +1,7 @@
 "use client";
 import { sendMediaBroadCastEmail } from "@/app/api/repository/MediaBroadcastRepository";
+import { changeIsAlertOpen } from "@/app/redux/slices/AlertSlice";
+import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -7,15 +9,14 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { getCookie } from "cookies-next";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import DatePickerComponent from "./DatePickerComponent";
 import dayjs from "dayjs";
-import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import DatePickerComponent from "./DatePickerComponent";
 
-const AddNewBroadcastForm = ({ recipient, action }) => {
+const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
   const {
     register,
     handleSubmit,
@@ -27,16 +28,11 @@ const AddNewBroadcastForm = ({ recipient, action }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    if (action.reset == true) {
-      console.log("reset component");
-      setFiles([]);
-      reset();
-    }
-    return () => {
-      action.close();
-    };
-  }, [action.reset]);
+  const resetField = () => {
+    setFiles([]);
+    resetRecipient();
+    reset();
+  };
 
   const handleFile = (e) => {
     const newFiles = [];
@@ -153,7 +149,14 @@ const AddNewBroadcastForm = ({ recipient, action }) => {
       >
         <Button
           type="button"
-          onClick={() => action.open()}
+          onClick={() =>
+            dispatch(
+              changeIsAlertOpen({
+                isAlertOpen: true,
+                action: resetField,
+              })
+            )
+          }
           variant="contained"
           size="large"
           color="error"

@@ -4,6 +4,10 @@ import MediaBroadcastHubContent from "./components/MediaBroadcastHubContentCompo
 const MediaBroadcastHubPage = async ({ params }) => {
   return (
     <Stack spacing={2} className="w-full">
+      <AlertWarning
+        title={"Delete Broadcast"}
+        message={`Are you sure you want to cancel your broadcast?`}
+      />
       <MediaBroadcastHubContent platformId={params.platformId} />
     </Stack>
   );

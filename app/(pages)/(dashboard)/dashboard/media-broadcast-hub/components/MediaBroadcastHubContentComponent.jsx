@@ -17,7 +17,8 @@ import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { changeIsAlertOpen } from "@/app/redux/slices/AlertSlice";
 
 const MediaBroadcastHubContent = () => {
   const [data, setData] = useState([]);
@@ -32,6 +33,7 @@ const MediaBroadcastHubContent = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
+  const dispatch = useDispatch();
 
   const { emailSelected } = useSelector((state) => state.mediaReducer);
 
@@ -125,7 +127,14 @@ const MediaBroadcastHubContent = () => {
         </Button>
         <Button
           variant="contained"
-          onClick={DeleteEmail}
+          onClick={() => {
+            dispatch(
+              changeIsAlertOpen({
+                isAlertOpen: true,
+                action: DeleteEmail,
+              })
+            );
+          }}
           color="error"
           className="px-4 py-1 rounded-lg text-base font-semibold text-white shadow-lg shadow-red-700/20 m-1 flex items-center gap-2"
         >

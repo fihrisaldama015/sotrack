@@ -1,16 +1,28 @@
+"use client";
+import { changeIsAlertOpen } from "@/app/redux/slices/AlertSlice";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useDispatch, useSelector } from "react-redux";
 
-const AlertWarning = ({ isOpen, action, message, close }) => {
+const AlertWarning = ({ title, message }) => {
+  const { isAlertOpen, action } = useSelector((state) => state.alertReducer);
+  const dispatch = useDispatch();
+  const close = () => {
+    dispatch(
+      changeIsAlertOpen({
+        isAlertOpen: false,
+      })
+    );
+  };
   return (
     <Box
       className="fixed w-96 flex flex-col items-center shadow-xl rounded-xl bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
       sx={{
-        opacity: isOpen ? "1" : "0",
-        visibility: isOpen ? "visible" : "hidden",
+        opacity: isAlertOpen ? "1" : "0",
+        visibility: isAlertOpen ? "visible" : "hidden",
       }}
     >
       <Box
@@ -20,7 +32,7 @@ const AlertWarning = ({ isOpen, action, message, close }) => {
           <HelpOutline className="text-black scale-[2.5]" fontSize="medium" />
         </Box>
         <Typography className="font-semibold text-2xl text-black">
-          Cancel Broadcast
+          {title}
         </Typography>
       </Box>
       <Stack
@@ -36,7 +48,10 @@ const AlertWarning = ({ isOpen, action, message, close }) => {
             variant="contained"
             color={"error"}
             size="large"
-            onClick={() => action()}
+            onClick={() => {
+              action();
+              close();
+            }}
             className="py-3 px-5 rounded-lg w-full text-black text-lg font-medium"
           >
             Yes
