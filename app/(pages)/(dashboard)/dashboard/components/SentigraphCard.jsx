@@ -17,7 +17,7 @@ import { getSentimentAnalysisByDate } from "@/app/api/repository/DashboardAnalyt
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const SentigraphCard = ({ title }) => {
-  const [chartData, setChartData] = useState({ negative: "0", positive: "0" });
+  const [chartData, setChartData] = useState({ Negative: "0", Positive: "0" });
   const [startDate, setStartDate] = useState(dayjs().date(0));
   const [endDate, setEndDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
@@ -96,12 +96,12 @@ const SentigraphCard = ({ title }) => {
             {
               id: "Negative",
               label: "Negative",
-              value: isLoading ? "0" : chartData.negative,
+              value: isLoading ? "0" : chartData.Negative,
             },
             {
               id: "Positive",
               label: "Positive",
-              value: isLoading ? "0" : chartData.positive,
+              value: isLoading ? "0" : chartData.Positive,
             },
           ]}
         />
@@ -121,7 +121,7 @@ const SentigraphCard = ({ title }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            {isLoading ? "0" : chartData.positive}%
+            {isLoading ? "0" : chartData.Positive}%
           </Typography>
         </Stack>
         <Box className="border-none w-[1px] bg-[#F0F0F0]" />
@@ -133,7 +133,7 @@ const SentigraphCard = ({ title }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            {isLoading ? "0" : chartData.negative}%
+            {isLoading ? "0" : chartData.Negative}%
           </Typography>
         </Stack>
       </Stack>

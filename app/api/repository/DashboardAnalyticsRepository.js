@@ -148,15 +148,15 @@ export const getSentimentAnalysisByDate = async (
   platform,
   token
 ) => {
+  const currentDate = dayjs().format("YYYY-MM-DD");
+  if (currentDate < startDate || currentDate < endDate) {
+    throw new Error("Invalid date");
+  }
   const { data } = await PROVIDER_GET(
     `sentimentAnalysis?platform=${platform}&from=${startDate}&to=${endDate}`,
     token
   );
-
-  if (currentDate < startDate || currentDate < endDate) {
-    throw new Error("Invalid date");
-  }
-
+  console.log("🚀 ~ data:", data);
   let sentimentData = {};
   sentimentData = getSentimentData(data);
   return sentimentData;
@@ -165,7 +165,9 @@ export const getSentimentAnalysisByDate = async (
 const getSentimentData = (data) => {
   const sentimentData = {};
   Object.keys(data).map((key) => {
-    sentimentData[key] = data[key].split("%")[1];
+    console.log(data[key].pl);
+    sentimentData[key] = data[key].split("%")[0];
   });
+  console.log("🚀 ~ getSentimentData ~ sentimentData:", sentimentData);
   return sentimentData;
 };
