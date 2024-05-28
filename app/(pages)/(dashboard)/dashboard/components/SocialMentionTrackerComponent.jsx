@@ -4,6 +4,7 @@ import {
   getPageList,
 } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeDashboardOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
 import { openPopUpError } from "@/app/utils/extensions";
 import CalendarToday from "@mui/icons-material/CalendarToday";
@@ -32,13 +33,14 @@ const SocialMentionTracker = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [startDate, setStartDate] = useState(dayjs().date(1));
-  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
-  const [chartStartDate, setChartStartDate] = useState(startDate);
-  const [chartEndDate, setChartEndDate] = useState(endDate);
+  const [endDate, setEndDate] = useState(dayjs());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
-
+  const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const getMentionSourceData = async (start, end) => {
@@ -59,23 +61,26 @@ const SocialMentionTracker = () => {
   };
 
   useEffect(() => {
-    getMentionSourceData(chartStartDate, chartEndDate);
+    getMentionSourceData(sourceTrackerStartDate, sourceTrackerEndDate);
   }, [platformSelected]);
 
   const refreshData = async () => {
+    dispatch(
+      changeDashboardOptions({
+        sourceTrackerStartDate: startDate,
+        sourceTrackerEndDate: endDate,
+      })
+    );
     if (startDate.isAfter(endDate)) {
       alert("Start date cannot be after end date");
       return;
     }
-    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs().add(1, "day"))) {
+    if (startDate.isAfter(dayjs()) || endDate.isAfter(dayjs())) {
       alert("Date cannot be in the future");
       return;
     }
     setShowDatePicker(false);
     getMentionSourceData(startDate, endDate);
-
-    setChartStartDate(startDate);
-    setChartEndDate(endDate);
   };
   return (
     <Box className="p-6 bg-white flex flex-col gap-6 rounded-xl shadow-lg shadow-slate-100">
@@ -100,8 +105,8 @@ const SocialMentionTracker = () => {
               <CalendarToday color="grey" sx={{ width: 16 }} />
               <Typography className="text-[#0f172a] text-xs font-normal">
                 <span className="text-[rgba(0,0,0,0.7)] ">date: </span>{" "}
-                {chartStartDate.format("DD MMM")} -{" "}
-                {chartEndDate.format("DD MMM YYYY")}
+                {sourceTrackerStartDate.format("DD MMM")} -{" "}
+                {sourceTrackerEndDate.format("DD MMM YYYY")}
               </Typography>
             </Stack>
             <form

@@ -34,11 +34,6 @@ const SourceDetailContent = ({ platformId }) => {
   const [data, setData] = useState([]);
   const [topic, setTopic] = useState("All");
 
-  const [parameter, setParameter] = useState("");
-  // const [showParameter, setShowParameter] = useState(false);
-
-  // const [pageList, setPageList] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
@@ -47,6 +42,9 @@ const SourceDetailContent = ({ platformId }) => {
   const [chartEndDate, setChartEndDate] = useState(dayjs());
 
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
@@ -60,8 +58,8 @@ const SourceDetailContent = ({ platformId }) => {
       const source = platformSelected == "News" ? platformId : sourceType;
       setIsLoading(true);
       const res = await getMentionSourceDetail(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
+        sourceTrackerStartDate.format("YYYY-MM-DD"),
+        sourceTrackerEndDate.format("YYYY-MM-DD"),
         accessToken,
         pageId,
         platformSelected.toLowerCase(),
@@ -127,8 +125,8 @@ const SourceDetailContent = ({ platformId }) => {
     <>
       <Stack direction={"row"} className="gap-2" flexWrap={"wrap"}>
         <DatePicker
-          chartStartDate={chartStartDate}
-          chartEndDate={chartEndDate}
+          chartStartDate={sourceTrackerStartDate}
+          chartEndDate={sourceTrackerEndDate}
           setChartDate={(startDate, endDate) => {
             setChartStartDate(startDate);
             setChartEndDate(endDate);

@@ -1,5 +1,6 @@
 import AlertSlice from "./AlertSlice";
 import DashboardPlatformSlice from "./DashboardPlatformSlice";
+import DashboardOptionsSlice from "./DashboardOptionsSlice";
 import FacebookPageSlice from "./FacebookPageSlice";
 import FilterSlice from "./FilterSlice";
 import LoginSlice from "./LoginSlice";
@@ -10,6 +11,7 @@ import PopupSlice from "./PopupSlice";
 
 export {
   AlertSlice,
+  DashboardOptionsSlice,
   DashboardPlatformSlice,
   FacebookPageSlice,
   FilterSlice,

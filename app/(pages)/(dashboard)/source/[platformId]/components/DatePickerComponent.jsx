@@ -9,10 +9,14 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const DatePickerComponent = ({ chartStartDate, chartEndDate, refreshData }) => {
-  const [startDate, setStartDate] = useState(dayjs().date(0));
-  const [endDate, setEndDate] = useState(dayjs());
+  const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const [startDate, setStartDate] = useState(chartStartDate);
+  const [endDate, setEndDate] = useState(chartEndDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const validate = (e) => {
     e.preventDefault();
@@ -41,8 +45,8 @@ const DatePickerComponent = ({ chartStartDate, chartEndDate, refreshData }) => {
           <CalendarToday color="grey" sx={{ width: 16 }} />
           <Typography className="text-[#0f172a] text-base font-semibold">
             <span className="text-[rgba(0,0,0,0.7)]">Date: </span>{" "}
-            {chartStartDate.format("DD MMM")} -{" "}
-            {chartEndDate.format("DD MMM YYYY")}
+            {sourceTrackerStartDate.format("DD MMM")} -{" "}
+            {sourceTrackerEndDate.format("DD MMM YYYY")}
           </Typography>
         </Stack>
         <ArrowDropDown

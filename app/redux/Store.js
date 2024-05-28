@@ -9,6 +9,7 @@ import {
   ModalSlice,
   PlatformSlice,
   PopupSlice,
+  DashboardOptionsSlice,
 } from "./slices";
 
 export const Store = configureStore({
@@ -22,5 +23,6 @@ export const Store = configureStore({
     mediaReducer: MediaBroadcastSlice,
     dashboardReducer: DashboardPlatformSlice,
     alertReducer: AlertSlice,
+    dashboardOptionsReducer: DashboardOptionsSlice,
   },
 });

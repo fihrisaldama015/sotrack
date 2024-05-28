@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const AlertSlice = createSlice({
-  name: "popup",
+  name: "alert",
   initialState,
   reducers: {
     changeIsAlertOpen: (state, action) => {
