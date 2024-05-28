@@ -15,7 +15,7 @@ import { openPopUpError, openPopUpSuccess } from "@/app/utils/extensions";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
-const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
+const AddNewBroadcastForm = ({ recipient, action }) => {
   const {
     register,
     handleSubmit,
@@ -26,6 +26,17 @@ const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
   const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    if (action.reset == true) {
+      console.log("reset component");
+      setFiles([]);
+      reset();
+    }
+    return () => {
+      action.close();
+    };
+  }, [action.reset]);
 
   const handleFile = (e) => {
     const newFiles = [];
@@ -142,11 +153,7 @@ const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
       >
         <Button
           type="button"
-          onClick={() => {
-            setFiles([]);
-            reset();
-            resetRecipient();
-          }}
+          onClick={() => action.open()}
           variant="contained"
           size="large"
           color="error"

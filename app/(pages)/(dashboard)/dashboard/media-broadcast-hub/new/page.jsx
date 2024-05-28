@@ -5,9 +5,12 @@ import { Divider, Stack, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
 import AddNewBroadcastForm from "./components/AddNewBroadcastFormComponent";
+import AlertWarning from "./components/AlertWarningComponent";
 
-const page = () => {
+const MediaBroadCastHubNew = () => {
   const [recipient, setRecipient] = useState([]);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [email, setEmail] = useState("");
 
   const emailListener = (email) => {
@@ -44,8 +47,20 @@ const page = () => {
     setRecipient(emailList);
   };
 
+  const handleReset = () => {
+    setIsResetting(true);
+    setRecipient([]);
+    setIsAlertOpen(false);
+  };
+
   return (
     <Stack direction={"column"} spacing={3} className="bg-white p-6 rounded-lg">
+      <AlertWarning
+        message={`Are you sure you want to cancel your broadcast?`}
+        isOpen={isAlertOpen}
+        action={handleReset}
+        close={() => setIsAlertOpen(false)}
+      />
       <Stack spacing={1.25}>
         <Typography className="font-semibold text-xl text-[#343A40]">
           Add New Broadcast
@@ -101,10 +116,14 @@ const page = () => {
       </Typography>
       <AddNewBroadcastForm
         recipient={recipient.length == 0 ? recipient[0] : recipient.join(",")}
-        resetRecipient={() => setRecipient([])}
+        action={{
+          reset: isResetting,
+          close: () => setIsResetting(false),
+          open: () => setIsAlertOpen(true),
+        }}
       />
     </Stack>
   );
 };
 
-export default page;
+export default MediaBroadCastHubNew;

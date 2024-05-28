@@ -56,6 +56,7 @@ const PublicReportForm = ({ params }) => {
       (item) => item.province_id == data.province
     ).province;
     data.province = province_name;
+    data.message = "<p>" + data.message + "</p>";
     try {
       const response = await sendPublicReport(data, instance_id, accessToken);
       if (response) {
