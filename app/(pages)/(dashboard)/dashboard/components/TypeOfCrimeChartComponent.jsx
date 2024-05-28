@@ -37,7 +37,7 @@ const TypeOfCrimeChart = ({ data }) => {
           // legend: "type of crime",
           // legendPosition: "middle",
           // legendOffset: 32,
-          truncateTickAt: 8,
+          truncateTickAt: 4,
         }}
         gridYValues={5}
         enableLabel={false}
