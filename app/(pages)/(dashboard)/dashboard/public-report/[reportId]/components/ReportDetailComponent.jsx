@@ -31,7 +31,6 @@ function ReadOnlyTextField({ ...props }) {
 }
 
 const ReportDetail = ({ initialData }) => {
-  console.log("🚀 ~ ReportDetail ~ initialData:", initialData);
   return (
     <Box className="p-20 pt-5 flex flex-col justify-center items-center gap-3">
       <Typography className="font-extrabold text-4xl text-center">

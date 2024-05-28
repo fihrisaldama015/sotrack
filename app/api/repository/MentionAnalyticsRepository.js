@@ -8,7 +8,6 @@ export const getMentionAnalyticsByPlatform = async (
   try {
     let url = `mentionAnalytic?platform=${platform}&period=${period}`;
     const response = await PROVIDER_GET(url, token);
-    console.log("🚀 ~ response:", response);
     const data = response.data;
     if (!data || Object.keys(data).length === 0) throw "No Response Data";
     let chartData = [];

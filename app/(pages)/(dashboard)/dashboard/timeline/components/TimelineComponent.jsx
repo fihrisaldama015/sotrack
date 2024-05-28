@@ -79,7 +79,7 @@ const Timeline = () => {
       setTimelineData(res);
       setIsLoading(false);
     } catch (error) {
-      console.log("🚀 ~ getTimelineData ~ error:", error);
+      console.log("🚀 ~ getTimelineData - Timeline ~ error:", error);
     }
   };
 
@@ -108,7 +108,7 @@ const Timeline = () => {
         })
       );
     } catch (error) {
-      console.log("🚀 ~ error - Get Page List:", error);
+      console.log("🚀 ~ error - Get Page List - Timeline:", error);
     }
   };
 
@@ -137,7 +137,6 @@ const Timeline = () => {
   useEffect(() => {
     if (hashtagFilter.length > 0) {
       const joinedHashtag = joinSelectedFilter(hashtagFilter);
-      console.log("🚀 ~ useEffect ~ joinedHashtag:", joinedHashtag);
       setShowFilter(false);
       const pageIdFromSavedState =
         checkConnectedInstagramFromFacebook(facebookPageList);

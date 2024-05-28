@@ -38,7 +38,7 @@ export const getReportDetail = async (id) => {
     const { data } = await PROVIDER_GET(`report/getReport/${id}`);
     return data;
   } catch (error) {
-    console.log("🚀 ~ getAllReport ~ error:", error);
+    console.log("🚀 ~ getReportDetail ~ error:", error);
     return [];
   }
 };

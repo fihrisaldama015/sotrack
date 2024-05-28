@@ -67,24 +67,14 @@ const VerifyOTPForm = () => {
         });
         const allCookies = getCookies();
         const cookieHeaders = res;
-        // cookieHeaders.split("; ");
-        console.log("🚀 ~ onSubmit ~ cookieHeaders:", cookieHeaders);
-
-        console.log("🚀 ~ onSubmit ~ allCookies:", allCookies);
-        // const refreshToken = getCookie("refresh_token");
-        // setCookie("refresh_token", refreshToken, {
-        //   path: "/",
-        //   maxAge: 60 * 60 * 24 * 7,
-        // });
-
         router.push("/dashboard");
       }
     } catch (error) {
+      console.log("🚀 ~ onSubmit - VerifyOTPForm ~ error:", error);
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log({ error: error });
     }
   };
 
@@ -101,11 +91,11 @@ const VerifyOTPForm = () => {
         setTimerCountdown(240);
       }
     } catch (error) {
+      console.log("🚀 ~ handleResendOTP - VerifyOTPForm ~ error:", error);
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log({ error: error });
     }
     reset();
     setIsResendingOTP(false);

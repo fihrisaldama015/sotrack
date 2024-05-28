@@ -68,6 +68,7 @@ const PlatformSelect = () => {
         })
       );
     } catch (error) {
+      console.log("🚀 ~ getPageListData - PlatformSelect ~ error:", error);
       dispatch(
         changeIsPopUpOpen({
           isPopUpOpen: true,
@@ -76,7 +77,6 @@ const PlatformSelect = () => {
           popUpType: "FACEBOOK_NOT_CONNECTED",
         })
       );
-      console.log("🚀 ~ error - Get Page List:", error);
     }
   };
 

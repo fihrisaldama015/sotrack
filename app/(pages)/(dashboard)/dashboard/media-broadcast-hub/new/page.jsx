@@ -41,7 +41,6 @@ const page = () => {
 
   const removeEmailFromList = (id) => {
     const emailList = recipient.filter((email, index) => index !== id);
-    console.log("🚀 ~ removeEmailFromList ~ emailList:", emailList);
     setRecipient(emailList);
   };
 

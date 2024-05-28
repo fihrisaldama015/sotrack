@@ -145,7 +145,7 @@ const MostDiscusedLately = ({ initialData }) => {
     try {
       setIsLoading(true);
     } catch (error) {
-      console.log("🚀 ~ error:", error);
+      console.log("🚀 ~ refreshData - MostDiscusedLately ~ error:", error);
     }
 
     setChartStartDate(startDate);

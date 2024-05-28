@@ -99,7 +99,6 @@ const MediaBroadcastHubTable = ({ initialData }) => {
         emailSelected: newSelection,
       })
     );
-    console.log("Selected row IDs:", newSelection);
   };
   const handleRowClick = (row) => {
     const rowId = row.id;

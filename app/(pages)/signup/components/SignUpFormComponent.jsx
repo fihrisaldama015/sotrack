@@ -37,11 +37,11 @@ const SignUpFormComponent = () => {
         router.push("/login");
       }
     } catch (error) {
+      console.log("🚀 ~ onSubmit - SignUpForm ~ error:", error);
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log({ error: error });
     }
   };
 

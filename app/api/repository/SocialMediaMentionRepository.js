@@ -42,7 +42,6 @@ const formatDataToChart = (data) => {
   let weeklyData = [];
   let temp_week_index = 0;
 
-  console.log("data => ", data);
   if (data == undefined)
     return weeklyData.push({
       x: `Week 1 (2021)`,

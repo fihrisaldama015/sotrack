@@ -36,7 +36,6 @@ const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     const token = getCookie("accessToken");
     const { title, city, broadcast, file } = data;
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
@@ -56,11 +55,11 @@ const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
         router.push("/dashboard/media-broadcast-hub");
       }
     } catch (error) {
+      console.log("🚀 ~ onSubmit - AddNewBroadcastForm ~ error:", error);
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log("🚀 ~ onSubmit ~ e:", error);
     }
   };
   return (

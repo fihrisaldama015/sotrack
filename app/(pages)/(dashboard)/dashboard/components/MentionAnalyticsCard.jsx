@@ -10,9 +10,6 @@ const MentionAnalyticsCard = () => {
   const [total, setTotal] = useState(0);
   const [title, setTitle] = useState("News Mentions");
   const dataLength = data.length;
-  console.log("🚀 ~ MentionAnalyticsCard ~ data:", data);
-  console.log("🚀 ~ MentionAnalyticsCard ~ dataLength:", dataLength);
-
   const latestValue = dataLength == 0 ? 0 : data[data.length - 1].y;
   const firstValue = dataLength == 0 ? 0 : data[0].y;
   const growth = ((latestValue - firstValue) / firstValue) * 100;
@@ -23,10 +20,6 @@ const MentionAnalyticsCard = () => {
     const socialMentionData = await getSocialMediaMention(
       platformSelected.toLowerCase(),
       accessToken
-    );
-    console.log(
-      "🚀 ~ getMentionAnalyticsData ~ socialMentionData:",
-      socialMentionData
     );
     setTotal(socialMentionData.total);
     setData(socialMentionData.chartData);

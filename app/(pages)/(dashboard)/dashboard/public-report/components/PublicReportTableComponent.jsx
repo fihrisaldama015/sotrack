@@ -66,9 +66,8 @@ const PublicReportTable = ({ initialData, refresh }) => {
     event.stopPropagation();
     try {
       const response = await handleReport(id);
-      console.log(response);
     } catch (error) {
-      console.log("🚀 ~ handleCheckbox ~ error:", error);
+      console.log("🚀 ~ handleCheckbox - PublicReportTable ~ error:", error);
     }
     refresh();
   };

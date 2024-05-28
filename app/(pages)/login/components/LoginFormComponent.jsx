@@ -48,11 +48,11 @@ const LoginFormComponent = () => {
         router.push("/login/verification");
       }
     } catch (error) {
+      console.log("🚀 ~ onSubmit - LoginForm ~ error:", error);
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log({ error: error });
     }
   };
 

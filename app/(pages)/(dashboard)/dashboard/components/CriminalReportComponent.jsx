@@ -30,7 +30,10 @@ const CriminalReport = ({ initialData }) => {
       );
       setChartData(res);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log(
+        "🚀 ~ refreshChart - Criminal Report Component ~ error:",
+        error
+      );
       setChartData([]);
     }
     setIsLoading(false);

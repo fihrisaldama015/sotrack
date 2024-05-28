@@ -47,7 +47,7 @@ const MediaBroadcastHubContent = () => {
       );
       setData(res);
     } catch (e) {
-      console.log("🚀 ~ useEffect ~ e", e);
+      console.log("🚀 ~ getInitialEmailData - MediaBroadcastHub ~ e:", e);
     }
     setIsLoading(false);
   };
@@ -84,7 +84,7 @@ const MediaBroadcastHubContent = () => {
       );
       setData(res);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log("🚀 ~ refreshChart - MediaBroadcastHub ~ error:", error);
     }
     setIsLoading(false);
   };
@@ -95,11 +95,10 @@ const MediaBroadcastHubContent = () => {
         const response = await deleteMediaBroadCastEmail(email, accessToken);
         return response;
       } catch (error) {
-        console.log("🚀 ~ deleteTheEmail ~ error:", error);
+        console.log("🚀 ~ deleteTheEmail - MediaBroadcastHub ~ error:", error);
       }
     };
     emailSelected.map((email) => {
-      console.log("delete => ", email);
       deleteTheEmail(email);
     });
     setTimeout(() => {

@@ -12,10 +12,8 @@ export const getTimelineByPlatform = async (
     let URL = `timeline?platform=${platform}&pageId=${pageId}&mention=${mention}&hashtag=${hashtag}&order=${order}`;
     if (platform == "instagram") {
       if (hashtag == "") {
-        console.log("TIDAK ADA HASHTAG");
         URL = `timeline?platform=${platform}&pageId=${pageId}&mention=${mention}`;
       } else if (mention == "") {
-        console.log("TIDAK ADA MENTION");
         URL = `timeline?platform=${platform}&pageId=${pageId}&hashtag=${hashtag}&order=${order}`;
       }
     }

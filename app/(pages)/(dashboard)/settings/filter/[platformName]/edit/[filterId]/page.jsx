@@ -11,7 +11,7 @@ const getCategory = async (token) => {
 
     return res.data;
   } catch (error) {
-    console.log({ error });
+    console.log("🚀 ~ getCategory - EditFilterPage ~ error:", error);
   }
 };
 

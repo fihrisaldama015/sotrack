@@ -61,13 +61,12 @@ const PublicReportForm = ({ params }) => {
       if (response) {
         openPopUpSuccess(dispatch, `${response.message}!`);
       }
-      console.log("🚀 ~ onSubmit ~ response:", response);
     } catch (error) {
       openPopUpError(
         dispatch,
         error?.error ? error?.error : "Terjadi kesalahan dari server, coba lagi"
       );
-      console.log("🚀 ~ onSubmit ~ error:", error);
+      console.log("🚀 ~ onSubmit - PublicReportForm ~ error:", error);
     }
   };
 

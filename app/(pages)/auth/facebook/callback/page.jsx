@@ -8,7 +8,6 @@ import { useEffect } from "react";
 const page = () => {
   const searchParams = useSearchParams();
   const facebook_user_id = searchParams.get("facebook_user_id");
-  console.log("🚀 ~ page ~ facebook_user_id:", facebook_user_id);
   const router = useRouter();
   useEffect(() => {
     setCookie("facebook_user_id", facebook_user_id, {

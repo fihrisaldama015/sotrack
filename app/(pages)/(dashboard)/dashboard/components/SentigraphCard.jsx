@@ -25,39 +25,18 @@ const SentigraphCard = ({ title }) => {
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
   const accessToken = getCookie("accessToken");
 
-  // TES
-  const getData = async () => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(1000);
-    return {
-      negative: "80.77",
-      positive: "19.23",
-    };
-  };
-
   const handleDatePickerChange = async (start, end) => {
     setStartDate(start);
     setEndDate(end);
     setIsLoading(true);
     try {
-      // REAL
       const sentigraphData = await getSentimentAnalysisByDate(
         startDate.format("YYYY-MM-DD"),
         end.format("YYYY-MM-DD"),
         platformSelected.toLowerCase(),
         accessToken
       );
-      console.log(
-        "🚀 ~ handleDatePickerChange ~ sentigraphData:",
-        sentigraphData
-      );
       setChartData(sentigraphData);
-      // TEST
-      // const data = await getData();
-      // setChartData({
-      //   negative: data.negative,
-      //   positive: data.positive,
-      // });
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
       setChartData([]);
@@ -68,10 +47,6 @@ const SentigraphCard = ({ title }) => {
   useEffect(() => {
     handleDatePickerChange(startDate, endDate);
   }, [platformSelected]);
-
-  useEffect(() => {
-    handleDatePickerChange(dayjs().date(0), dayjs());
-  }, []);
 
   return (
     <div className="bg-white rounded-2xl p-7 flex flex-col w-96">

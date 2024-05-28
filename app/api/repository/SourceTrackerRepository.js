@@ -54,7 +54,6 @@ const getFormattedMentionSource = (data, platform) => {
       formattedData = [...formattedData, ...temp];
     });
   }
-  console.log("🚀 ~ getFormattedMentionSource ~ formattedData:", formattedData);
   return formattedData;
 };
 

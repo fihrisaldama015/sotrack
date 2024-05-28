@@ -156,7 +156,6 @@ export const getSentimentAnalysisByDate = async (
     `sentimentAnalysis?platform=${platform}&from=${startDate}&to=${endDate}`,
     token
   );
-  console.log("🚀 ~ data:", data);
   let sentimentData = {};
   sentimentData = getSentimentData(data);
   return sentimentData;

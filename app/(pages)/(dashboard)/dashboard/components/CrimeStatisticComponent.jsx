@@ -42,7 +42,7 @@ const CrimeStatistic = ({ initialData }) => {
 
       setChartData(CrimeStatisticResult);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log("🚀 ~ getTypeOfCrimeData - component ~ error:", error);
       setChartData([]);
     }
     setIsLoading(false);
@@ -82,7 +82,10 @@ const CrimeStatistic = ({ initialData }) => {
 
       setChartData(CrimeStatisticResult);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log(
+        "🚀 ~ refreshChart - CrimeStatistic Component ~ error:",
+        error
+      );
     }
     setIsLoading(false);
   };

@@ -8,7 +8,7 @@ const getCategory = async (token) => {
 
     return res.data;
   } catch (error) {
-    console.log({ error });
+    console.log("🚀 ~ getCategory - FilterPlatformPage ~ error:", error);
   }
 };
 

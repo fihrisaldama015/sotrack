@@ -13,7 +13,6 @@ export const getMediaBroadcastEmailList = async (
     const { data } = await PROVIDER_GET(URL, token);
 
     let mediaBroadcastEmailList = data;
-    console.log("🚀 ~ mediaBroadcastEmailList:", mediaBroadcastEmailList);
 
     return mediaBroadcastEmailList;
   } catch (e) {
@@ -27,7 +26,7 @@ export const getMediaBroadcastEmailDetail = async (id, token) => {
     const { data } = await PROVIDER_GET(`getEmail/${id}`, token);
     return data;
   } catch (e) {
-    console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);
+    console.log("🚀 ~ getMediaBroadcastEmailDetail - e:", e);
     return [];
   }
 };
@@ -51,16 +50,12 @@ export const sendMediaBroadCastEmail = async (
     files.forEach((file) => {
       const file_upload = file;
       form.append("files", file_upload);
-      console.log("file => ", file_upload);
     });
-    for (var pair of form.entries()) {
-      console.log(pair[0] + " - " + pair[1]);
-    }
     const res = await PROVIDER_POST("sendEmail", form, token, true);
 
     return res;
   } catch (e) {
-    console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);
+    console.log("🚀 ~ sendMediaBroadCastEmail - e:", e);
     return [];
   }
 };
@@ -70,7 +65,7 @@ export const deleteMediaBroadCastEmail = async (id, token) => {
     const { data } = await PROVIDER_DELETE(`deleteEmail/${id}`, null, token);
     return data;
   } catch (e) {
-    console.log("🚀 ~ getMediaBroadcastEmailList - e:", e);
+    console.log("🚀 ~ deleteMediaBroadCastEmail ~ e:", e);
     return [];
   }
 };

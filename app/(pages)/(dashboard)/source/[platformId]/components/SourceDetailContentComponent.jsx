@@ -46,7 +46,6 @@ const SourceDetailContent = ({ platformId }) => {
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
 
-  // const { facebookPageList } = useSelector((state) => state.facebookReducer);
   const { platformSelected } = useSelector((state) => state.dashboardReducer);
 
   const searchParams = useSearchParams();
@@ -59,7 +58,6 @@ const SourceDetailContent = ({ platformId }) => {
   const getMentionDetailData = async () => {
     try {
       const source = platformSelected == "News" ? platformId : sourceType;
-      console.log("🚀 ~ getMentionDetailData ~ source:", source);
       setIsLoading(true);
       const res = await getMentionSourceDetail(
         chartStartDate.format("YYYY-MM-DD"),
@@ -71,46 +69,16 @@ const SourceDetailContent = ({ platformId }) => {
         source,
         instagram_id
       );
-      console.log("🚀 ~ getMentionDetailData ~ res:", res);
       setData(res);
       setIsLoading(false);
     } catch (error) {
-      console.log("🚀 ~ getMentionDetailData ~ error:", error);
-      // alert("Please Connect your Social Media account in Menu to view data");
+      console.log("🚀 ~ getMentionDetailData - SourceDetail ~ error:", error);
     }
   };
 
-  // const getPageListData = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const pageListResult = await getPageList();
-  //     const pageId = checkConnectedInstagramFromFacebook(pageListResult);
-  //     setParameter(pageId);
-  //     setPageList(pageListResult);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.log("🚀 ~ error - Get Page List:", error);
-  //   }
-  // };
-
   useEffect(() => {
-    // if (platformId === "facebook" || platformId === "instagram") {
-    //   if (facebookPageList.length === 0) {
-    //     getPageListData();
-    //   } else {
-    //     setPageList(facebookPageList);
-    //     setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-    //   }
-    // } else {
     getMentionDetailData();
-    // }
   }, []);
-
-  // useEffect(() => {
-  //   if (parameter !== "") {
-  //     getMentionDetailData();
-  //   }
-  // }, [parameter]);
 
   useEffect(() => {
     if (search) {
@@ -148,10 +116,9 @@ const SourceDetailContent = ({ platformId }) => {
         source,
         instagram_id
       );
-      console.log("🚀 ~ refreshData ~ res:", res);
       setData(res);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log("🚀 ~ refreshChart - SourceDetail ~ error:", error);
     }
 
     setIsLoading(false);

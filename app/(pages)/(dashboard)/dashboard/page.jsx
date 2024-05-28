@@ -17,38 +17,7 @@ import Image from "next/image";
 import PlatformSelect from "./components/PlatformSelectComponent";
 import { redirect } from "next/navigation";
 
-const getInitialCriminalReport = async () => {
-  const accessToken = cookies().get("accessToken")?.value;
-  try {
-    const res = await getCriminalReportByType("monthly", "news", accessToken);
-    return res;
-  } catch (error) {
-    console.log("🚀 ~ refreshChart ~ error:", error);
-    return [];
-  }
-};
-
-const getInitialCrimeStatistic = async () => {
-  const startDate = dayjs().subtract(1, "month").endOf("month");
-  const endDate = dayjs();
-  const accessToken = cookies().get("accessToken")?.value;
-  try {
-    const res = await getCrimeStatisticByDate(
-      startDate.format("YYYY-MM-DD"),
-      endDate.format("YYYY-MM-DD"),
-      "news",
-      accessToken
-    );
-    return res;
-  } catch (error) {
-    console.log("🚀 ~ refreshChart ~ error:", error);
-    return [];
-  }
-};
-
 const DashboardPage = async () => {
-  // const initialCrimeStatistic = await getInitialCrimeStatistic();
-  // const initialCriminalReport = await getInitialCriminalReport();
   const token = cookies().get("accessToken")?.value;
 
   if (!token) {

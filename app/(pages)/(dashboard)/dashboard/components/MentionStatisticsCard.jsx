@@ -17,10 +17,7 @@ const MentionStatisticsCard = ({ title }) => {
 
   const dataLength = chartData.length;
   const firstValue = dataLength == 0 ? 0 : chartData[0].y;
-  console.log("AOWKOWAK");
-  console.log("🚀s ~ MentionStatisticsCard ~ chartData:", chartData);
   const latestValue = dataLength < 1 ? firstValue : chartData[dataLength - 1].y;
-
   const growth =
     dataLength < 1 ? 0 : ((latestValue - firstValue) / firstValue) * 100;
 
@@ -37,10 +34,6 @@ const MentionStatisticsCard = ({ title }) => {
         type,
         accessToken
       );
-      console.log(
-        "🚀 ~ handleParameterChange ~ socialMentionData:",
-        socialMentionData
-      );
 
       if (socialMentionData.length == 1) {
         socialMentionData.push({
@@ -50,7 +43,7 @@ const MentionStatisticsCard = ({ title }) => {
       }
       setChartData(socialMentionData);
     } catch (error) {
-      console.log("🚀 ~ refreshChart ~ error:", error);
+      console.log("🚀 ~ refreshChart - MentionStatisticCard ~ error:", error);
       setChartData([]);
     }
     setIsLoading(false);
