@@ -10,8 +10,13 @@ export const getSocialMediaMention = async (platform, token) => {
     }
     const responseAPI = await PROVIDER_GET(url, token);
     const data = responseAPI.data;
-    if (!data || data == 429 || Object.keys(data).length === 0)
+    if (
+      !data ||
+      responseAPI.statusCode == 400 ||
+      Object.keys(data).length === 0
+    )
       throw "No Response Data";
+    console.log("MASIH DISINI");
     const response = {
       total: data.total,
       chartData:
@@ -22,6 +27,7 @@ export const getSocialMediaMention = async (platform, token) => {
 
     return response;
   } catch (error) {
+    console.log("MASUK CATCH");
     console.log("🚀 ~ getSocialMediaMention ~ error:", error);
     return {
       total: 0,

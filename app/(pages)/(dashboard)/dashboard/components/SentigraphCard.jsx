@@ -71,12 +71,20 @@ const SentigraphCard = ({ title }) => {
             {
               id: "Negative",
               label: "Negative",
-              value: isLoading ? "0" : chartData.Negative,
+              value: isLoading
+                ? "0"
+                : chartData.Negative
+                ? chartData.Negative
+                : "0",
             },
             {
               id: "Positive",
               label: "Positive",
-              value: isLoading ? "0" : chartData.Positive,
+              value: isLoading
+                ? "0"
+                : chartData.Positive
+                ? chartData.Positive
+                : "0",
             },
           ]}
         />
@@ -96,7 +104,7 @@ const SentigraphCard = ({ title }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            {isLoading ? "0" : chartData.Positive}%
+            {isLoading ? "0" : chartData.Positive ? chartData.Positive : "0"}%
           </Typography>
         </Stack>
         <Box className="border-none w-[1px] bg-[#F0F0F0]" />
@@ -108,7 +116,7 @@ const SentigraphCard = ({ title }) => {
             </Typography>
           </Stack>
           <Typography className="text-[#2B3674] text-lg font-extrabold">
-            {isLoading ? "0" : chartData.Negative}%
+            {isLoading ? "0" : chartData.Negative ? chartData.Negative : "0"}%
           </Typography>
         </Stack>
       </Stack>
