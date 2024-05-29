@@ -2,6 +2,7 @@
 import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 import { AlertWarning } from "@/app/components";
 import { BASE_URL } from "@/app/utils/constants";
+import { SocialDistance } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -13,13 +14,12 @@ import { useEffect, useState } from "react";
 
 const ConnectFacebook = () => {
   const facebook_id = getCookie("facebook_user_id") ?? "";
-  const socialens_user_id = getCookie("socialens_user_id") ?? "";
+  const socialens_user_id = getCookie("socialens_user_id");
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [pageList, setPageList] = useState([]);
-
   const logout = () => {
     deleteCookie("facebook_user_id");
     setIsLoading(true);
@@ -76,9 +76,10 @@ const ConnectFacebook = () => {
               justifyContent={"center"}
               spacing={2}
               className={`py-4 px-8 rounded-md transition-all ${
-                !isLoading
-                  ? "bg-slate-200 cursor-not-allowed text-slate-400"
-                  : "cursor-pointer bg-[#3D5A98] hover:bg-[#2E4A7D] text-white"
+                !isLoading || socialens_user_id === ""
+                  ? "bg-slate-200 cursor-not-allowed"
+                  : "cursor-pointer bg-[#3D5A98] hover:bg-[#2E4A7D] "
+              }"
               }`}
             >
               <Image
@@ -87,7 +88,13 @@ const ConnectFacebook = () => {
                 height={16}
                 alt="facebook"
               />
-              <Typography className=" font-semibold text-sm lg:text-base xl:text-xl">
+              <Typography
+                className={`font-semibold text-sm lg:text-base xl:text-xl ${
+                  !isLoading || socialens_user_id === ""
+                    ? "text-slate-400"
+                    : "text-white"
+                }`}
+              >
                 Log in with Facebook
               </Typography>
             </Stack>

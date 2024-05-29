@@ -139,23 +139,12 @@ const SidebarComponent = () => {
               SETTINGS
             </Typography>
             <AccordionItem label="Settings">
-              <Link href="/settings/filter/instagram" className="no-underline">
-                <Box
-                  display={"flex"}
-                  alignItems={"center"}
-                  className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
-                    pathname == "/settings/filter" ? "bg-[#EEF3FF]" : "bg-white"
-                  }`}
-                >
-                  <Box className="w-2 h-2 bg-[#4AF26F] rounded-full"></Box>
-                  <Typography
-                    className="text-sm text-neutral-600"
-                    fontWeight={pathname === "/settings/filter" ? 600 : 500}
-                  >
-                    Filter Settings
-                  </Typography>
-                </Box>
-              </Link>
+              <AccordionItemLink
+                color={"#4AF26F"}
+                label={"Filter Settings"}
+                path={"/settings/filter"}
+                pathname={pathname}
+              />
               <AccordionItemLink
                 color="#4AF26F"
                 label="Connect Account"
@@ -209,7 +198,7 @@ const AccordionItemLink = ({ label, path, color, pathname }) => {
         display={"flex"}
         alignItems={"center"}
         className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
-          pathname == path ? "bg-[#EEF3FF]" : "bg-white"
+          pathname.includes(path) ? "bg-[#EEF3FF]" : "bg-white"
         }`}
       >
         <Box
@@ -218,7 +207,7 @@ const AccordionItemLink = ({ label, path, color, pathname }) => {
         ></Box>
         <Typography
           className="text-sm tracking-wide text-neutral-600"
-          fontWeight={pathname === path ? 600 : 500}
+          fontWeight={pathname.includes(path) ? 600 : 500}
         >
           {label}
         </Typography>
