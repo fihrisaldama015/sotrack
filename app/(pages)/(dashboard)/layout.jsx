@@ -18,6 +18,10 @@ const refreshCurrentToken = async (router) => {
       path: "/",
       maxAge: 60 * 15,
     });
+    setCookie("socialens_user_id", res.data.id, {
+      path: "/",
+      maxAge: 60 * 20,
+    });
     alert("Your session has expired, please refresh the page or login again.");
     router.push("/dashboard");
   } catch (e) {

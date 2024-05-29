@@ -23,6 +23,10 @@ const SidebarComponent = () => {
       path: "/",
       maxAge: -1,
     });
+    setCookie("socialens_user_id", "", {
+      path: "/",
+      maxAge: -1,
+    });
     router.push("/login");
   };
 
@@ -35,7 +39,7 @@ const SidebarComponent = () => {
         message={"Are you sure want to log out?"}
       />
       <nav
-        className="bg-white sticky top-0 h-[100dvh] border-none rounded-tr-2xl rounded-br-2xl ring-2 ring-neutral-300 z-10 transition-all duration-500"
+        className="bg-white sticky top-0 h-[100dvh] border-none rounded-tr-2xl rounded-br-2xl ring-2 ring-neutral-300 z-10 transition-all duration-500 flex flex-col justify-between"
         style={{ width: isMinimized ? "80px" : "350px" }}
       >
         <Box
@@ -72,7 +76,7 @@ const SidebarComponent = () => {
           </Stack>
         </Box>
         <Divider className="border-none h-[2px] bg-neutral-300" />
-        <Box position={"relative"}>
+        <Box position={"relative"} className="z-50">
           <Box
             position={"absolute"}
             display={"flex"}
@@ -84,82 +88,84 @@ const SidebarComponent = () => {
             <Image src={UNION} width={14} height={8} alt="Union Icon" />
           </Box>
         </Box>
-        <Box
-          display={isMinimized ? "none" : "flex"}
-          flexDirection={"column"}
-          className="p-6 gap-2"
-        >
-          <Typography
-            marginLeft={"12px"}
-            className="text-[10px] text-neutral-600 tracking-wider font-medium"
+        <Stack className="overflow-y-auto flex flex-1 h-full mb-[5.5rem] z-20">
+          <Box
+            display={isMinimized ? "none" : "flex"}
+            flexDirection={"column"}
+            className="p-6 gap-2"
           >
-            DASHBOARD
-          </Typography>
-          <AccordionItem label={"SOCIALENS"}>
-            <AccordionItemLink
-              color="#F2994A"
-              label="Analytics"
-              path="/dashboard"
-              pathname={pathname}
-            />
-            <AccordionItemLink
-              color="#F25E4A"
-              label="Timeline"
-              path="/dashboard/timeline"
-              pathname={pathname}
-            />
-            <AccordionItemLink
-              color={"#F25E4A"}
-              label={"Public Report"}
-              path={"/dashboard/public-report"}
-              pathname={pathname}
-            />
-            <AccordionItemLink
-              color={"#F25E4A"}
-              label={"Media Broadcast Hub"}
-              path={"/dashboard/media-broadcast-hub"}
-              pathname={pathname}
-            />
-          </AccordionItem>
-        </Box>
-        <Box
-          display={isMinimized ? "none" : "flex"}
-          flexDirection={"column"}
-          className="p-6 gap-2"
-        >
-          <Typography
-            marginLeft={"12px"}
-            className="text-[10px] text-neutral-600 tracking-wider font-medium"
+            <Typography
+              marginLeft={"12px"}
+              className="text-[10px] text-neutral-600 tracking-wider font-medium"
+            >
+              DASHBOARD
+            </Typography>
+            <AccordionItem label={"SOCIALENS"}>
+              <AccordionItemLink
+                color="#F2994A"
+                label="Analytics"
+                path="/dashboard"
+                pathname={pathname}
+              />
+              <AccordionItemLink
+                color="#F25E4A"
+                label="Timeline"
+                path="/dashboard/timeline"
+                pathname={pathname}
+              />
+              <AccordionItemLink
+                color={"#F25E4A"}
+                label={"Public Report"}
+                path={"/dashboard/public-report"}
+                pathname={pathname}
+              />
+              <AccordionItemLink
+                color={"#F25E4A"}
+                label={"Media Broadcast Hub"}
+                path={"/dashboard/media-broadcast-hub"}
+                pathname={pathname}
+              />
+            </AccordionItem>
+          </Box>
+          <Box
+            display={isMinimized ? "none" : "flex"}
+            flexDirection={"column"}
+            className="p-6 gap-2"
           >
-            SETTINGS
-          </Typography>
-          <AccordionItem label="Settings">
-            <Link href="/settings/filter/instagram" className="no-underline">
-              <Box
-                display={"flex"}
-                alignItems={"center"}
-                className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
-                  pathname == "/settings/filter" ? "bg-[#EEF3FF]" : "bg-white"
-                }`}
-              >
-                <Box className="w-2 h-2 bg-[#4AF26F] rounded-full"></Box>
-                <Typography
-                  className="text-sm text-neutral-600"
-                  fontWeight={pathname === "/settings/filter" ? 600 : 500}
+            <Typography
+              marginLeft={"12px"}
+              className="text-[10px] text-neutral-600 tracking-wider font-medium"
+            >
+              SETTINGS
+            </Typography>
+            <AccordionItem label="Settings">
+              <Link href="/settings/filter/instagram" className="no-underline">
+                <Box
+                  display={"flex"}
+                  alignItems={"center"}
+                  className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
+                    pathname == "/settings/filter" ? "bg-[#EEF3FF]" : "bg-white"
+                  }`}
                 >
-                  Filter Settings
-                </Typography>
-              </Box>
-            </Link>
-            <AccordionItemLink
-              color="#4AF26F"
-              label="Connect Account"
-              path="/connect/facebook"
-              pathname={pathname}
-            />
-          </AccordionItem>
-        </Box>
-        <Box className="absolute flex flex-col w-full bottom-0 bg-[#FAFAFA]">
+                  <Box className="w-2 h-2 bg-[#4AF26F] rounded-full"></Box>
+                  <Typography
+                    className="text-sm text-neutral-600"
+                    fontWeight={pathname === "/settings/filter" ? 600 : 500}
+                  >
+                    Filter Settings
+                  </Typography>
+                </Box>
+              </Link>
+              <AccordionItemLink
+                color="#4AF26F"
+                label="Connect Account"
+                path="/connect/facebook"
+                pathname={pathname}
+              />
+            </AccordionItem>
+          </Box>
+        </Stack>
+        <Box className="absolute flex flex-col w-full h-[5.5rem] bottom-0 bg-[#FAFAFA] rounded-br-2xl">
           <Divider className="border-none h-[2px] bg-neutral-300" />
           <Box
             display={"flex"}

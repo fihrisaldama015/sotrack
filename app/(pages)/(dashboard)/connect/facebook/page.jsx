@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 const ConnectFacebook = () => {
   const facebook_id = getCookie("facebook_user_id") ?? "";
+  const socialens_user_id = getCookie("socialens_user_id") ?? "";
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -65,7 +66,10 @@ const ConnectFacebook = () => {
             Click the button below and please login to your Facebook account
           </Typography>
 
-          <a href={`${BASE_URL}/auth/facebook`} className="no-underline">
+          <a
+            href={`${BASE_URL}/auth/facebook?id=${socialens_user_id}`}
+            className="no-underline"
+          >
             <Stack
               direction={"row"}
               alignItems={"center"}

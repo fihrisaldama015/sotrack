@@ -65,8 +65,10 @@ const VerifyOTPForm = () => {
           path: "/",
           maxAge: 60 * 15,
         });
-        const allCookies = getCookies();
-        const cookieHeaders = res;
+        setCookie("socialens_user_id", res.data.id, {
+          path: "/",
+          maxAge: 60 * 20,
+        });
         router.push("/dashboard");
       }
     } catch (error) {
