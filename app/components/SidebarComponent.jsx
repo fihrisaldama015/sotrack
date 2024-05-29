@@ -192,13 +192,19 @@ const SidebarComponent = () => {
 export default SidebarComponent;
 
 const AccordionItemLink = ({ label, path, color, pathname }) => {
+  let active = false;
+  if (path == "/dashboard") {
+    active = pathname == path;
+  } else {
+    active = pathname.includes(path);
+  }
   return (
     <Link href={path} className="no-underline">
       <Box
         display={"flex"}
         alignItems={"center"}
         className={`py-2.5 px-3 gap-2 hover:bg-[#EEF3FF] rounded-lg cursor-pointer ${
-          pathname.includes(path) ? "bg-[#EEF3FF]" : "bg-white"
+          active ? "bg-[#EEF3FF]" : "bg-white"
         }`}
       >
         <Box
@@ -207,7 +213,7 @@ const AccordionItemLink = ({ label, path, color, pathname }) => {
         ></Box>
         <Typography
           className="text-sm tracking-wide text-neutral-600"
-          fontWeight={pathname.includes(path) ? 600 : 500}
+          fontWeight={active ? 600 : 500}
         >
           {label}
         </Typography>

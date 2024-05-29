@@ -7,8 +7,8 @@ import SignUpFormComponent from "./components/SignUpFormComponent";
 
 const SignUpPage = () => {
   return (
-    <Stack direction={"row"}>
-      <Box className="flex-1 flex">
+    <Stack direction={"row"} className="min-h-[100dvh]">
+      <Box className="flex-1 flex max-sm:hidden">
         <Image
           src={BG_LOGIN}
           alt="login background"
@@ -22,7 +22,7 @@ const SignUpPage = () => {
         justifyContent={"center"}
         alignItems={"center"}
         spacing={6}
-        className="flex-1"
+        className="flex-1 px-6"
       >
         <Box>
           <Typography

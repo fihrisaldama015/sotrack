@@ -15,13 +15,13 @@ const LoginPage = () => {
   }
 
   return (
-    <Stack direction={"row"}>
+    <Stack direction={"row"} className="min-h-[100dvh]">
       <Stack
         direction={"column"}
         justifyContent={"center"}
         alignItems={"center"}
         spacing={6}
-        className="flex-1"
+        className="flex-1 px-6"
       >
         <Box>
           <Typography
@@ -36,7 +36,7 @@ const LoginPage = () => {
         </Box>
         <LoginFormComponent />
       </Stack>
-      <Box className="flex-1 flex">
+      <Box className="flex-1 flex max-sm:hidden">
         <Image
           src={BG_LOGIN}
           alt="login background"

@@ -8,7 +8,7 @@ import VerifyOTPForm from "./components/VerifyOTPFormComponent";
 const VerificationPage = () => {
   return (
     <Stack direction={"row"} className="min-h-[100svh]">
-      <Box className="flex-1 flex items-center">
+      <Box className="flex-1 flex items-center max-sm:hidden">
         <Image
           src={BG_OTP}
           alt="OTP background"
@@ -23,7 +23,7 @@ const VerificationPage = () => {
         direction={"column"}
         justifyContent={"center"}
         alignItems={"center"}
-        className="flex-1"
+        className="flex-1 px-6"
       >
         <Box className="max-w-[26rem]">
           <Typography
