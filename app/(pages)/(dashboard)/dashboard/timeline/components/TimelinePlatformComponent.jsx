@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { changeTimelineOptions } from "@/app/redux/slices/TimelineDataSlice";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const TimelinePlatform = ({
-  platform,
-  selected,
-  setSelected,
-  setSelectedId,
-}) => {
+const TimelinePlatform = ({ platform }) => {
   const [isHover, setIsHover] = useState(false);
-  const active = platform.name.toLowerCase() == selected;
+  const { selectedPlatform } = useSelector(
+    (state) => state.timelineDataReducer
+  );
+  const dispatch = useDispatch();
+  const active = platform.name.toLowerCase() == selectedPlatform;
   return (
     <Stack
       direction={"row"}
@@ -18,8 +19,12 @@ const TimelinePlatform = ({
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       onClick={() => {
-        setSelectedId(platform.id);
-        setSelected(platform.name.toLowerCase());
+        dispatch(
+          changeTimelineOptions({
+            selectedPlatform: platform.name.toLowerCase(),
+            selectedPlatformId: platform.id,
+          })
+        );
       }}
       className={`py-2.5 px-4 bg-white rounded-lg ring-1 hover:ring-[#1B59F8CC] cursor-pointer transition-all group ${
         active ? "ring-[#1B59F8CC]" : "ring-[#E0E0E0]"

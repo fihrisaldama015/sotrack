@@ -150,7 +150,7 @@ const PlatformSelect = () => {
             <Box
               key={platform.id}
               onClick={() => handleParameterChange(platform.name, platform.id)}
-              className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
+              className="bg-white px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
             >
               {platform.name}
             </Box>

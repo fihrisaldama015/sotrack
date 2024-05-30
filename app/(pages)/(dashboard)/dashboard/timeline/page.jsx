@@ -6,9 +6,20 @@ import { cookies } from "next/headers";
 import MostDiscussed from "./components/MostDiscussedComponent";
 import TargetIcon from "./components/TargetIconComponent";
 import Timeline from "./components/TimelineComponent";
+import { getAllCategory } from "@/app/api/repository/CategoryRepository";
+
+const getCategory = async (token) => {
+  try {
+    const res = await getAllCategory(token);
+    return res.data;
+  } catch (error) {
+    console.log("🚀 ~ getCategory - FilterPlatformPage ~ error:", error);
+  }
+};
 
 const TimelinePage = async () => {
-  const token = cookies().get("accessToken")?.value;
+  const token = cookies().get("accessToken")?.value || "";
+  const category = await getCategory(token);
   return (
     <Box className="w-full flex gap-4 flex-row max-md:flex-col-reverse h-[100svh]">
       <Stack spacing={2} direction={"column"} className="flex-1">
@@ -31,7 +42,7 @@ const TimelinePage = async () => {
             No Data
           </Typography>
         </Stack>
-        <Timeline />
+        <Timeline category={category} />
       </Stack>
       <MostDiscussed />
     </Box>

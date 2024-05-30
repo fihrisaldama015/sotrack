@@ -24,6 +24,7 @@ const refreshCurrentToken = async (router) => {
     });
     alert("Your session has expired, please refresh the page or login again.");
     router.push("/dashboard");
+    router.refresh();
   } catch (e) {
     console.log({ errorRefreshToken: e });
     router.push("/login");
