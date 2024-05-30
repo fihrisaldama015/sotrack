@@ -2,7 +2,7 @@
 import { getUserFilterByPlatformId } from "@/app/api/repository/FilterRepository";
 import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
 import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
-import { changeDashboardPlatform } from "@/app/redux/slices/DashboardPlatformSlice";
+import { changeDashboardPlatform } from "@/app/redux/slices/DashboardOptionsSlice";
 import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 import { changeIsPopUpOpen } from "@/app/redux/slices/PopupSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
@@ -19,7 +19,7 @@ import useSWR from "swr";
 const PlatformSelect = () => {
   const [showParameter, setShowParameter] = useState(false);
   const { platformSelected, platformSelectedId } = useSelector(
-    (state) => state.dashboardReducer
+    (state) => state.dashboardOptionsReducer
   );
   const { facebookPageList } = useSelector((state) => state.facebookReducer);
   const [parameter, setParameter] = useState(platformSelected);

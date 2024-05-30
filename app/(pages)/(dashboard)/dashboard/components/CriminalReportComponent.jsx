@@ -8,18 +8,30 @@ import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import CriminalReportChart from "./CriminalReportChartComponent";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { changeDashboardCriminalReport } from "@/app/redux/slices/DashboardDataSlice";
+import { changeDashboardCriminalReportOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 
 const CriminalReport = ({ initialData }) => {
   const [showParameter, setShowParameter] = useState(false);
   const [parameter, setParameter] = useState("monthly");
   const [chartData, setChartData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const { criminalReportTimeRange } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const handleParameterChange = async (type) => {
-    setParameter(type);
+    dispatch(
+      changeDashboardCriminalReportOptions({
+        criminalReportTimeRange: type,
+      })
+    );
     setShowParameter(false);
     setIsLoading(true);
     try {
@@ -29,6 +41,11 @@ const CriminalReport = ({ initialData }) => {
         accessToken
       );
       setChartData(res);
+      dispatch(
+        changeDashboardCriminalReport({
+          criminalReportData: res,
+        })
+      );
     } catch (error) {
       console.log(
         "🚀 ~ refreshChart - Criminal Report Component ~ error:",

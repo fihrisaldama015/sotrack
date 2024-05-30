@@ -11,10 +11,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import SentigraphChart from "./SentigraphChartComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 import { getSentimentAnalysisByDate } from "@/app/api/repository/DashboardAnalyticsRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeDashboardSentigraph } from "@/app/redux/slices/DashboardDataSlice";
 
 const SentigraphCard = ({ title }) => {
   const [chartData, setChartData] = useState({ Negative: "0", Positive: "0" });
@@ -22,7 +23,10 @@ const SentigraphCard = ({ title }) => {
   const [endDate, setEndDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
 
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const handleDatePickerChange = async (start, end) => {
@@ -37,6 +41,11 @@ const SentigraphCard = ({ title }) => {
         accessToken
       );
       setChartData(sentigraphData);
+      dispatch(
+        changeDashboardSentigraph({
+          sentigraphData: sentigraphData,
+        })
+      );
     } catch (error) {
       console.log("🚀 ~ refreshChart ~ error:", error);
       setChartData([]);

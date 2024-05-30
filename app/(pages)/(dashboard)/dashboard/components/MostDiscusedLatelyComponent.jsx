@@ -2,6 +2,7 @@
 import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
 import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeDashboardMostDiscusedLately } from "@/app/redux/slices/DashboardDataSlice";
 import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
 import CalendarToday from "@mui/icons-material/CalendarToday";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -41,7 +42,9 @@ const MostDiscusedLately = ({ initialData }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [showPlatform, setShowPlatform] = useState(false);
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
   const [platform, setPlatform] = useState(platformSelected);
 
   const [parameter, setParameter] = useState("");
@@ -105,6 +108,18 @@ const MostDiscusedLately = ({ initialData }) => {
       fallbackData: [],
     }
   );
+
+  useEffect(() => {
+    if (!data) return;
+    if (data.length == 0) return;
+    if (data.length > 0) {
+      dispatch(
+        changeDashboardMostDiscusedLately({
+          mostDiscusedLatelyData: data,
+        })
+      );
+    }
+  }, [data]);
   useEffect(() => {
     setIsLoading(loadingCache);
   }, [loadingCache]);

@@ -16,7 +16,6 @@ export const getSocialMediaMention = async (platform, token) => {
       Object.keys(data).length === 0
     )
       throw "No Response Data";
-    console.log("MASIH DISINI");
     const response = {
       total: data.total,
       chartData:
@@ -27,7 +26,6 @@ export const getSocialMediaMention = async (platform, token) => {
 
     return response;
   } catch (error) {
-    console.log("MASUK CATCH");
     console.log("🚀 ~ getSocialMediaMention ~ error:", error);
     return {
       total: 0,

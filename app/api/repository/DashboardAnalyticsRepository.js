@@ -164,9 +164,7 @@ export const getSentimentAnalysisByDate = async (
 const getSentimentData = (data) => {
   const sentimentData = {};
   Object.keys(data).map((key) => {
-    console.log(data[key].pl);
     sentimentData[key] = data[key].split("%")[0];
   });
-  console.log("🚀 ~ getSentimentData ~ sentimentData:", sentimentData);
   return sentimentData;
 };

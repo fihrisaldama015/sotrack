@@ -41,7 +41,9 @@ const SourceDetailContent = ({ platformId }) => {
   const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
   const [chartEndDate, setChartEndDate] = useState(dayjs());
 
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
   const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
     (state) => state.dashboardOptionsReducer
   );

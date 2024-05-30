@@ -14,20 +14,29 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import TypeOfCrimeChart from "./TypeOfCrimeChartComponent";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { changeDashboardCrimeStatistic } from "@/app/redux/slices/DashboardDataSlice";
+import { changeDashboardCrimeStatisticOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 
-const CrimeStatistic = ({ initialData }) => {
-  const [chartData, setChartData] = useState(initialData);
+const CrimeStatistic = () => {
+  const [chartData, setChartData] = useState([]);
   const [startDate, setStartDate] = useState(dayjs().date(0));
   const [endDate, setEndDate] = useState(dayjs());
 
-  const [chartStartDate, setChartStartDate] = useState(startDate);
-  const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = getCookie("accessToken");
 
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const { crimeStatisticStartDate, crimeStatisticEndDate } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const { crimeStatisticData } = useSelector(
+    (state) => state.dashboardDataReducer
+  );
+  const dispatch = useDispatch();
 
   const getTypeOfCrimeData = async () => {
     setIsLoading(true);
@@ -41,6 +50,11 @@ const CrimeStatistic = ({ initialData }) => {
       );
 
       setChartData(CrimeStatisticResult);
+      dispatch(
+        changeDashboardCrimeStatistic({
+          crimeStatisticData: CrimeStatisticResult,
+        })
+      );
     } catch (error) {
       console.log("🚀 ~ getTypeOfCrimeData - component ~ error:", error);
       setChartData([]);
@@ -49,11 +63,13 @@ const CrimeStatistic = ({ initialData }) => {
   };
 
   useEffect(() => {
-    getTypeOfCrimeData();
+    if (platformSelected !== "") {
+      getTypeOfCrimeData();
+    }
   }, [platformSelected]);
 
   useEffect(() => {
-    if (initialData.length === 0) {
+    if (crimeStatisticData.length === 0) {
       getTypeOfCrimeData();
     }
   }, []);
@@ -68,8 +84,12 @@ const CrimeStatistic = ({ initialData }) => {
       alert("Date cannot be in the future");
       return;
     }
-    setChartStartDate(startDate);
-    setChartEndDate(endDate);
+    dispatch(
+      changeDashboardCrimeStatisticOptions({
+        crimeStatisticStartDate: startDate,
+        crimeStatisticEndDate: endDate,
+      })
+    );
     setShowDatePicker(false);
     try {
       setIsLoading(true);
@@ -110,8 +130,8 @@ const CrimeStatistic = ({ initialData }) => {
             <CalendarToday color="grey" sx={{ width: 16 }} />
             <Typography className="text-[#0f172a] text-xs font-normal">
               <span className="text-[rgba(0,0,0,0.7)] ">date: </span>{" "}
-              {chartStartDate.format("DD MMM")} -{" "}
-              {chartEndDate.format("DD MMM YYYY")}
+              {crimeStatisticStartDate.format("DD MMM")} -{" "}
+              {crimeStatisticEndDate.format("DD MMM YYYY")}
             </Typography>
           </Stack>
           <form

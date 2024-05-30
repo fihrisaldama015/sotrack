@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
   AlertSlice,
+  DashboardDataSlice,
   DashboardOptionsSlice,
-  DashboardPlatformSlice,
   FacebookPageSlice,
   FilterSlice,
   LoginSlice,
@@ -22,9 +22,9 @@ export const Store = configureStore({
     filterReducer: FilterSlice,
     facebookReducer: FacebookPageSlice,
     mediaReducer: MediaBroadcastSlice,
-    dashboardReducer: DashboardPlatformSlice,
     alertReducer: AlertSlice,
     dashboardOptionsReducer: DashboardOptionsSlice,
+    dashboardDataReducer: DashboardDataSlice,
     timelineDataReducer: TimelineDataSlice,
   },
 });

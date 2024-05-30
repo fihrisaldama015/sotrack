@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import MentionAnalyticsChart from "./MentionAnalyticsChartComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCookie } from "cookies-next";
 import { getSocialMediaMention } from "@/app/api/repository/SocialMediaMentionRepository";
+import { changeDashboardSocialMention } from "@/app/redux/slices/DashboardDataSlice";
 
 const MentionAnalyticsCard = () => {
   const [data, setData] = useState(SocialMediaMentionsData);
@@ -15,7 +16,10 @@ const MentionAnalyticsCard = () => {
   const latestValue = dataLength == 0 ? 0 : data[data.length - 1].y;
   const firstValue = dataLength == 0 ? 0 : data[0].y;
   const growth = ((latestValue - firstValue) / firstValue) * 100;
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const getMentionAnalyticsData = async () => {
@@ -25,6 +29,11 @@ const MentionAnalyticsCard = () => {
     );
     setTotal(socialMentionData.total);
     setData(socialMentionData.chartData);
+    dispatch(
+      changeDashboardSocialMention({
+        socialMentionData: socialMentionData,
+      })
+    );
     return socialMentionData;
   };
 

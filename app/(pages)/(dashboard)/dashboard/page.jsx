@@ -59,7 +59,7 @@ const DashboardPage = async () => {
       </Stack>
 
       <Stack className="lg:flex-row flex-col gap-3 w-full">
-        <CrimeStatistic initialData={[]} />
+        <CrimeStatistic />
         <CriminalReport initialData={[]} />
       </Stack>
 

@@ -32,7 +32,9 @@ export default AlertContainer;
 const Alert = ({ type, message }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { platformSelectedId } = useSelector((state) => state.dashboardReducer);
+  const { platformSelectedId } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
   const closePopUp = () => {
     dispatch(
       changeIsPopUpOpen({

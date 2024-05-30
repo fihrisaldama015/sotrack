@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import MentionStatisticsChart from "./MentionStatisticsChartComponent";
 import { getCookie } from "cookies-next";
-import { getSocialMediaMention } from "@/app/api/repository/SocialMediaMentionRepository";
 import { Box, Stack, Typography } from "@mui/material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { getMentionAnalyticsByPlatform } from "@/app/api/repository/MentionAnalyticsRepository";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeDashboardMentionAnalytics } from "@/app/redux/slices/DashboardDataSlice";
+import { changeDashboardMentionAnalyticsOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 
 const MentionStatisticsCard = ({ title }) => {
   const [showParameter, setShowParameter] = useState(false);
@@ -21,11 +22,21 @@ const MentionStatisticsCard = ({ title }) => {
   const growth =
     dataLength < 1 ? 0 : ((latestValue - firstValue) / firstValue) * 100;
 
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const { mentionAnalyticsTimeRange } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
+  const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const handleParameterChange = async (type) => {
-    setParameter(type);
+    dispatch(
+      changeDashboardMentionAnalyticsOptions({
+        mentionAnalyticsTimeRange: type,
+      })
+    );
     setShowParameter(false);
     setIsLoading(true);
     try {
@@ -42,6 +53,11 @@ const MentionStatisticsCard = ({ title }) => {
         });
       }
       setChartData(socialMentionData);
+      dispatch(
+        changeDashboardMentionAnalytics({
+          mentionAnalyticsData: socialMentionData,
+        })
+      );
     } catch (error) {
       console.log("🚀 ~ refreshChart - MentionStatisticCard ~ error:", error);
       setChartData([]);
@@ -50,13 +66,12 @@ const MentionStatisticsCard = ({ title }) => {
   };
 
   useEffect(() => {
-    // if (platformSelected != "News") return;
-    handleParameterChange("monthly");
+    handleParameterChange(mentionAnalyticsTimeRange);
   }, [platformSelected]);
 
-  useEffect(() => {
-    handleParameterChange("monthly");
-  }, []);
+  // useEffect(() => {
+  //   handleParameterChange("monthly");
+  // }, []);
 
   return (
     <div className="relative bg-white rounded-2xl p-7 flex flex-col flex-1 gap-7">
@@ -87,7 +102,7 @@ const MentionStatisticsCard = ({ title }) => {
             className="rounded-lg ring-1 ring-slate-50 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50"
           >
             <Typography className="text-xs font-normal first-letter:capitalize">
-              {parameter}
+              {mentionAnalyticsTimeRange}
             </Typography>
             <ExpandMore color="grey" sx={{ width: 16 }} />
           </Stack>

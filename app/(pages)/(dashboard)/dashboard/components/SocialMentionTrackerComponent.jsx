@@ -4,6 +4,7 @@ import {
   getPageList,
 } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { changeDashboardMentionSource } from "@/app/redux/slices/DashboardDataSlice";
 import { changeDashboardOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 import { PLATFORM_ICON } from "@/app/utils/constants";
 import { openPopUpError } from "@/app/utils/extensions";
@@ -36,7 +37,9 @@ const SocialMentionTracker = () => {
   const [endDate, setEndDate] = useState(dayjs());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const { platformSelected } = useSelector((state) => state.dashboardReducer);
+  const { platformSelected } = useSelector(
+    (state) => state.dashboardOptionsReducer
+  );
   const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
     (state) => state.dashboardOptionsReducer
   );
@@ -53,6 +56,11 @@ const SocialMentionTracker = () => {
         platformSelected.toLowerCase()
       );
       setData(mentionSourceResult);
+      dispatch(
+        changeDashboardMentionSource({
+          mentionSourceData: mentionSourceResult,
+        })
+      );
     } catch (error) {
       setData([]);
       console.log("🚀 ~ error:", error);
