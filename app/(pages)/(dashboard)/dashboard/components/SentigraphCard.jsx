@@ -16,27 +16,33 @@ import { getCookie } from "cookies-next";
 import { getSentimentAnalysisByDate } from "@/app/api/repository/DashboardAnalyticsRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { changeDashboardSentigraph } from "@/app/redux/slices/DashboardDataSlice";
+import { changeDashboardSentigraphOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 
 const SentigraphCard = ({ title }) => {
   const [chartData, setChartData] = useState({ Negative: "0", Positive: "0" });
-  const [startDate, setStartDate] = useState(dayjs().date(0));
-  const [endDate, setEndDate] = useState(dayjs());
+  // const [startDate, setStartDate] = useState(dayjs().date(0));
+  // const [endDate, setEndDate] = useState(dayjs());
   const [isLoading, setIsLoading] = useState(false);
 
-  const { platformSelected } = useSelector(
-    (state) => state.dashboardOptionsReducer
-  );
+  const { platformSelected, sentigraphStartDate, sentigraphEndDate } =
+    useSelector((state) => state.dashboardOptionsReducer);
   const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
   const handleDatePickerChange = async (start, end) => {
-    setStartDate(start);
-    setEndDate(end);
+    // setStartDate(start);
+    // setEndDate(end);
+    dispatch(
+      changeDashboardSentigraphOptions({
+        sentigraphStartDate: start,
+        sentigraphEndDate: end,
+      })
+    );
     setIsLoading(true);
     try {
       const sentigraphData = await getSentimentAnalysisByDate(
-        startDate.format("YYYY-MM-DD"),
-        end.format("YYYY-MM-DD"),
+        start.format("YYYY-MM-DD"),
+        end.add(1, "day").format("YYYY-MM-DD"),
         platformSelected.toLowerCase(),
         accessToken
       );
@@ -54,7 +60,7 @@ const SentigraphCard = ({ title }) => {
   };
 
   useEffect(() => {
-    handleDatePickerChange(startDate, endDate);
+    handleDatePickerChange(sentigraphStartDate, sentigraphEndDate);
   }, [platformSelected]);
 
   return (
@@ -64,8 +70,8 @@ const SentigraphCard = ({ title }) => {
           {title}
         </p>
         <DatePickerComponent
-          start={startDate}
-          end={endDate}
+          start={sentigraphStartDate}
+          end={sentigraphEndDate}
           refresh={handleDatePickerChange}
         />
       </Stack>

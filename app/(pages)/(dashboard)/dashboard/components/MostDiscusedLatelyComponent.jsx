@@ -1,12 +1,9 @@
 "use client";
 import { getMostDiscusedLatelyByDate } from "@/app/api/repository/MostDiscusedRepository";
-import { getPageList } from "@/app/api/repository/SourceTrackerRepository";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { changeDashboardMostDiscusedLately } from "@/app/redux/slices/DashboardDataSlice";
-import { changeFacebookPageList } from "@/app/redux/slices/FacebookPageSlice";
+import { changeDashboardMostDiscusedLatelyOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 import CalendarToday from "@mui/icons-material/CalendarToday";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import PersonIcon from "@mui/icons-material/Person";
 import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,10 +12,9 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
-import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
 const PLATFORM_ICON = {
   twitter: "/assets/icon/twitter.svg",
@@ -37,68 +33,35 @@ const checkConnectedInstagramFromFacebook = (pageList) => {
   return "";
 };
 
-const MostDiscusedLately = ({ initialData }) => {
-  // const [data, setData] = useState([]);
+const MostDiscusedLately = () => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const [showPlatform, setShowPlatform] = useState(false);
-  const { platformSelected } = useSelector(
-    (state) => state.dashboardOptionsReducer
-  );
-  const [platform, setPlatform] = useState(platformSelected);
-
-  const [parameter, setParameter] = useState("");
-  const [showParameter, setShowParameter] = useState(false);
-
-  const [pageList, setPageList] = useState([]);
-
-  const [startDate, setStartDate] = useState(dayjs().date(1));
-  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
-  const [chartStartDate, setChartStartDate] = useState(startDate);
-  const [chartEndDate, setChartEndDate] = useState(endDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const dispatch = useDispatch();
-  const { facebookPageList } = useSelector((state) => state.facebookReducer);
-
+  const {
+    platformSelected,
+    mostDiscusedLatelyStartDate,
+    mostDiscusedLatelyEndDate,
+  } = useSelector((state) => state.dashboardOptionsReducer);
   const accessToken = getCookie("accessToken");
-
-  const handlePlatformChange = (platform) => {
-    setPlatform(platform);
-    setShowPlatform(false);
-  };
-
-  const getPageListData = async () => {
-    try {
-      const pageListResult = await getPageList();
-      const pageId = checkConnectedInstagramFromFacebook(pageListResult);
-      setParameter(pageId);
-      setPageList(pageListResult);
-      dispatch(
-        changeFacebookPageList({
-          facebookPageList: pageListResult,
-        })
-      );
-    } catch (error) {
-      console.log("🚀 ~ error - Get Page List:", error);
-    }
-  };
+  const [startDate, setStartDate] = useState(mostDiscusedLatelyStartDate);
+  const [endDate, setEndDate] = useState(mostDiscusedLatelyEndDate);
 
   const {
     data,
     error,
     isLoading: loadingCache,
   } = useSWR(
-    `/api/data/platform=${platform}&since=${chartStartDate.format(
+    `/api/data/platform=${platformSelected}&since=${mostDiscusedLatelyStartDate.format(
       "YYYY-MM-DD"
-    )}&until=${chartEndDate.format("YYYY-MM-DD")}`,
+    )}&until=${mostDiscusedLatelyEndDate.add(1, "day").format("YYYY-MM-DD")}`,
     () =>
       getMostDiscusedLatelyByDate(
-        chartStartDate.format("YYYY-MM-DD"),
-        chartEndDate.format("YYYY-MM-DD"),
+        mostDiscusedLatelyStartDate.format("YYYY-MM-DD"),
+        mostDiscusedLatelyEndDate.add(1, "day").format("YYYY-MM-DD"),
         accessToken,
-        platform,
-        parameter ? parameter : ""
+        platformSelected,
+        ""
       ),
     {
       refreshInterval: 0, // Disable automatic refreshing
@@ -124,29 +87,6 @@ const MostDiscusedLately = ({ initialData }) => {
     setIsLoading(loadingCache);
   }, [loadingCache]);
 
-  useEffect(() => {
-    if (platformSelected == "Facebook" || platformSelected == "Instagram") {
-      if (facebookPageList.length === 0) {
-        getPageListData();
-      } else {
-        setPageList(facebookPageList);
-        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    setPlatform(platformSelected);
-    if (platformSelected == "Facebook" || platformSelected == "Instagram") {
-      if (facebookPageList.length === 0) {
-        getPageListData();
-      } else {
-        setPageList(facebookPageList);
-        setParameter(checkConnectedInstagramFromFacebook(facebookPageList));
-      }
-    }
-  }, [platformSelected]);
-
   const refreshData = async () => {
     if (startDate.isAfter(endDate)) {
       alert("Start date cannot be after end date");
@@ -162,9 +102,12 @@ const MostDiscusedLately = ({ initialData }) => {
     } catch (error) {
       console.log("🚀 ~ refreshData - MostDiscusedLately ~ error:", error);
     }
-
-    setChartStartDate(startDate);
-    setChartEndDate(endDate);
+    dispatch(
+      changeDashboardMostDiscusedLatelyOptions({
+        mostDiscusedLatelyStartDate: startDate,
+        mostDiscusedLatelyEndDate: endDate,
+      })
+    );
 
     setIsLoading(false);
   };
@@ -187,125 +130,6 @@ const MostDiscusedLately = ({ initialData }) => {
           alignItems={"center"}
           justifyContent={"flex-end"}
         >
-          {/* <Box className="relative">
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              spacing={0.5}
-              onClick={() => setShowPlatform((prev) => !prev)}
-              className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
-            >
-              <Image
-                src={
-                  platform.toLowerCase() in PLATFORM_ICON
-                    ? PLATFORM_ICON[platform.toLowerCase()]
-                    : "/assets/icon/news.svg"
-                }
-                width={16}
-                height={16}
-                alt="platform icon"
-              />
-              <Typography className="text-xs font-normal first-letter:capitalize">
-                {platform}
-              </Typography>
-              <ExpandMore color="grey" sx={{ width: 16 }} />
-            </Stack>
-            <form
-              className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
-              style={{
-                visibility: showPlatform ? "visible" : "hidden",
-                opacity: showPlatform ? 1 : 0,
-              }}
-            >
-              <Stack direction={"column"} spacing={0}>
-                <Box
-                  onClick={() => handlePlatformChange("twitter")}
-                  className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                >
-                  Twitter
-                </Box>
-                <Box
-                  onClick={() => handlePlatformChange("tiktok")}
-                  className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                >
-                  Tiktok
-                </Box>
-                <Box
-                  onClick={() => handlePlatformChange("instagram")}
-                  className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                >
-                  Instagram
-                </Box>
-                <Box
-                  onClick={() => handlePlatformChange("facebook")}
-                  className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                >
-                  Facebook
-                </Box>
-                <Box
-                  onClick={() => handlePlatformChange("news")}
-                  className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                >
-                  News
-                </Box>
-              </Stack>
-            </form>
-          </Box> */}
-          {platform.toLowerCase() !== "news" && (
-            <Box className="relative">
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                spacing={0.5}
-                onClick={() => setShowParameter(!showParameter)}
-                className="rounded-lg ring-1 ring-slate-100 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50 shadow-md"
-              >
-                <PersonIcon color="grey" sx={{ width: 16 }} />
-                <Typography className="text-xs font-normal first-letter:capitalize">
-                  {parameter === ""
-                    ? "Choose Page"
-                    : pageList.find((page) => page.id === parameter)?.name}
-                </Typography>
-                <ExpandMore color="grey" sx={{ width: 16 }} />
-              </Stack>
-              <form
-                className="absolute right-0 top-8 bg-slate-50 p-1 z-10 shadow-lg rounded-xl transition-all text-sm"
-                style={{
-                  visibility: showParameter ? "visible" : "hidden",
-                  opacity: showParameter ? 1 : 0,
-                }}
-              >
-                <Stack direction={"column"} spacing={0}>
-                  {pageList.length > 0 &&
-                    pageList.map((page, id) => (
-                      <Stack
-                        direction={"row"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                        spacing={2}
-                        key={id}
-                        onClick={() => {
-                          setParameter(page.id);
-                          setShowParameter(false);
-                        }}
-                        className="bg-slate-50 px-3 py-1 hover:bg-slate-200 transition-all rounded-lg cursor-pointer"
-                      >
-                        <Typography> {page.name}</Typography>
-                        {"instagram_business_account" in page && (
-                          <Image
-                            src="/assets/icon/instagram.svg"
-                            width={16}
-                            height={16}
-                            alt="instagram"
-                          />
-                        )}
-                      </Stack>
-                    ))}
-                </Stack>
-              </form>
-            </Box>
-          )}
-
           <Box className="relative">
             <Stack
               direction={"row"}
@@ -317,8 +141,8 @@ const MostDiscusedLately = ({ initialData }) => {
               <CalendarToday color="grey" sx={{ width: 16 }} />
               <Typography className="text-[#0f172a] text-xs font-normal">
                 <span className="text-[rgba(0,0,0,0.7)] ">date: </span>{" "}
-                {chartStartDate.format("DD MMM")} -{" "}
-                {chartEndDate.format("DD MMM YYYY")}
+                {mostDiscusedLatelyStartDate.format("DD MMM")} -{" "}
+                {mostDiscusedLatelyEndDate.format("DD MMM YYYY")}
               </Typography>
             </Stack>
             <form
@@ -370,18 +194,12 @@ const MostDiscusedLately = ({ initialData }) => {
         {isLoading ? (
           <div className="w-full h-48 flex justify-center items-center">
             <LoadingSpinner />
-            {(platform == "facebook" || platform == "instagram") &&
-            pageList.length == 0
-              ? "Loading Facebook Page List"
-              : "Loading Most Discussed Data"}
+            Loading Most Discussed Data
           </div>
         ) : (
           data.length == 0 && (
             <div className="w-full h-48 flex justify-center items-center">
-              {(platform == "facebook" || platform == "instagram") &&
-              pageList.length == 0
-                ? "No Connected Facebook Account, go to Connect Account Menu"
-                : "No Data, Please select another date range or platform"}
+              No Data, Please select another date range or platform
             </div>
           )
         )}

@@ -12,7 +12,6 @@ import { changeDashboardMentionAnalyticsOptions } from "@/app/redux/slices/Dashb
 
 const MentionStatisticsCard = ({ title }) => {
   const [showParameter, setShowParameter] = useState(false);
-  const [parameter, setParameter] = useState("monthly");
   const [isLoading, setIsLoading] = useState(false);
   const [chartData, setChartData] = useState(SocialMediaMentionsData);
 

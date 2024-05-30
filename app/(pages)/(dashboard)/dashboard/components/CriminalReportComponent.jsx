@@ -14,7 +14,6 @@ import { changeDashboardCriminalReportOptions } from "@/app/redux/slices/Dashboa
 
 const CriminalReport = ({ initialData }) => {
   const [showParameter, setShowParameter] = useState(false);
-  const [parameter, setParameter] = useState("monthly");
   const [chartData, setChartData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const { platformSelected } = useSelector(
@@ -82,7 +81,7 @@ const CriminalReport = ({ initialData }) => {
             className="rounded-lg ring-1 ring-slate-50 hover:ring-slate-200 transition-all pl-3 py-1 pr-2 cursor-pointer hover:bg-slate-50"
           >
             <Typography className="text-xs font-normal first-letter:capitalize">
-              {parameter}
+              {criminalReportTimeRange}
             </Typography>
             <ExpandMore color="grey" sx={{ width: 16 }} />
           </Stack>
@@ -126,7 +125,7 @@ const CriminalReport = ({ initialData }) => {
         )}
         <CriminalReportChart
           data={isLoading ? [] : chartData}
-          type={parameter}
+          type={criminalReportTimeRange}
         />
       </Box>
     </Box>

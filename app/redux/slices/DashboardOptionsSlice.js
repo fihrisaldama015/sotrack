@@ -6,7 +6,7 @@ const initialState = {
   platformSelectedId: "f50a94f8-2ccc-449b-bf2d-7b2809fe72f8",
   sourceTrackerStartDate: dayjs().date(1),
   sourceTrackerEndDate: dayjs(),
-  mostDiscusedLatelyStartDate: dayjs().date(1),
+  mostDiscusedLatelyStartDate: dayjs().date(0),
   mostDiscusedLatelyEndDate: dayjs(),
   criminalReportTimeRange: "monthly",
   crimeStatisticStartDate: dayjs().date(0),

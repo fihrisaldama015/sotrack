@@ -148,7 +148,7 @@ export const getSentimentAnalysisByDate = async (
   platform,
   token
 ) => {
-  const currentDate = dayjs().format("YYYY-MM-DD");
+  const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
   if (currentDate < startDate || currentDate < endDate) {
     throw new Error("Invalid date");
   }
