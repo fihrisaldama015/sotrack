@@ -106,7 +106,7 @@ const PlatformCategoryForm = ({
 
   return (
     <form
-      style={{ width: 440 }}
+      style={{ width: 300 }}
       className="flex flex-col gap-3"
       onSubmit={edit ? handleEditFilter : handleSubmitFilter}
     >
