@@ -31,7 +31,7 @@ const PlatformCategoryForm = ({
 }) => {
   const [categoryId, setCategoryId] = useState("");
   const [parameter, setParameter] = useState("");
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { platformId } = useSelector((state) => state.platformReducer);
@@ -42,8 +42,13 @@ const PlatformCategoryForm = ({
     if (edit) {
       setCategoryId(filterData.category_id);
       setParameter(filterData.parameter);
+      setIsActive(filterData.is_active ? "active" : "not_active");
     }
   }, []);
+
+  const handleRadio = (e) => {
+    setIsActive(e.target.value);
+  };
 
   const CATEGORY_COLOR = new Map()
     .set("Keyword", "#3E3AFF")
@@ -84,7 +89,7 @@ const PlatformCategoryForm = ({
           category_id: categoryId,
           parameter,
           platform_id: platformId,
-          is_active: isActive,
+          is_active: isActive === "active",
         },
         token
       );
@@ -150,11 +155,15 @@ const PlatformCategoryForm = ({
             aria-labelledby="is_active_group"
             name="is_active"
             value={isActive}
-            onChange={setIsActive}
+            onChange={handleRadio}
           >
-            <FormControlLabel value={true} control={<Radio />} label="Active" />
             <FormControlLabel
-              value={false}
+              value="active"
+              control={<Radio />}
+              label="Active"
+            />
+            <FormControlLabel
+              value="not_active"
               control={<Radio />}
               label="Not Active"
             />

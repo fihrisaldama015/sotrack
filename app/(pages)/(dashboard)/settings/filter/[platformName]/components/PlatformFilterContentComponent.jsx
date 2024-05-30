@@ -96,6 +96,7 @@ const formatDataToTable = (data, platformName, categoryMap) => {
       categoryMap.get(item.category_id),
       platformName,
       item.parameter,
+      item.is_active,
       "",
     ];
   });

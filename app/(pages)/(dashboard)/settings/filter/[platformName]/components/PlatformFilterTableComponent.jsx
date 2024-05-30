@@ -102,10 +102,15 @@ const PlatformFilterTable = ({
           return <h3>{columnMeta.label}</h3>;
         },
         customBodyRender: (value, tableMeta, updateValue) => {
+          const is_active = tableMeta.rowData[6];
           return (
             <Box
               className="py-0.5 px-2.5 rounded-lg font-semibold drop-shadow-sm text-center text-white"
-              sx={{ backgroundColor: `${CATEGORY_COLOR.get(value)}` }}
+              sx={{
+                backgroundColor: `${
+                  is_active ? CATEGORY_COLOR.get(value) : "#E0E0E0"
+                }`,
+              }}
             >
               {value}
             </Box>
@@ -123,18 +128,22 @@ const PlatformFilterTable = ({
           return <h3>{columnMeta.label}</h3>;
         },
         customBodyRender: (value, tableMeta, updateValue) => {
+          const is_active = tableMeta.rowData[6];
           return (
             <Stack
               direction={"row"}
               spacing={1}
               alignItems={"center"}
-              className="py-1 pr-3 pl-2 rounded-lg ring-1 ring-[#F0F0F0] shadow-md"
+              className={`py-1 pr-3 pl-2 rounded-lg ring-1 ring-[#F0F0F0] shadow-md ${
+                is_active ? "bg-white text-black" : "bg-[#E0E0E0] text-white"
+              }`}
             >
               <Image
                 src={PLATFORM_ICON.get(value)}
                 width={13}
                 height={13}
                 alt={value}
+                className={`${is_active ? "" : "grayscale-[1]"}`}
               />
               <Typography className="text-sm first-letter:capitalize">
                 {value}
@@ -155,6 +164,7 @@ const PlatformFilterTable = ({
         },
       },
     },
+    { name: "is_active", label: "Is Active", options: { display: false } },
     {
       name: "action",
       label: "Action",
@@ -202,6 +212,7 @@ const PlatformFilterTable = ({
                         category: tableMeta.rowData[3],
                         platform: tableMeta.rowData[4],
                         parameter: tableMeta.rowData[5],
+                        is_active: tableMeta.rowData[6],
                       },
                     })
                   );
