@@ -7,19 +7,30 @@ import MostDiscussed from "./components/MostDiscussedComponent";
 import TargetIcon from "./components/TargetIconComponent";
 import Timeline from "./components/TimelineComponent";
 import { getAllCategory } from "@/app/api/repository/CategoryRepository";
+import { getAllPlatform } from "@/app/api/repository/PlatformRepository";
 
 const getCategory = async (token) => {
   try {
     const res = await getAllCategory(token);
     return res.data;
   } catch (error) {
-    console.log("🚀 ~ getCategory - FilterPlatformPage ~ error:", error);
+    console.log("🚀 ~ getCategory - TimelinePage ~ error:", error);
+  }
+};
+
+const getAllPlatformData = async (token) => {
+  try {
+    const res = getAllPlatform(token);
+    return res;
+  } catch (error) {
+    console.log("🚀 ~ getAllPlatform - TimelinePage ~ error:", error);
   }
 };
 
 const TimelinePage = async () => {
   const token = cookies().get("accessToken")?.value || "";
   const category = await getCategory(token);
+  const platform = await getAllPlatformData(token);
   return (
     <Box className="w-full flex gap-4 flex-row max-md:flex-col-reverse h-[100svh]">
       <Stack spacing={2} direction={"column"} className="flex-1">
@@ -42,7 +53,7 @@ const TimelinePage = async () => {
             No Data
           </Typography>
         </Stack>
-        <Timeline category={category} />
+        <Timeline category={category} platform={platform} />
       </Stack>
       <MostDiscussed />
     </Box>

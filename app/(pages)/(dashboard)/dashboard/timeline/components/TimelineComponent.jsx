@@ -47,7 +47,7 @@ const getAllPlatformList = async (token) => {
   return res;
 };
 
-const Timeline = ({ category }) => {
+const Timeline = ({ category, platform }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [parameter, setParameter] = useState("newest");
@@ -62,9 +62,12 @@ const Timeline = ({ category }) => {
   const [pageFilter, setPageFilter] = useState("");
 
   const { facebookPageList } = useSelector((state) => state.facebookReducer);
-  const { selectedPlatform, selectedPlatformId, timelineData } = useSelector(
+  const { selectedPlatform } = useSelector(
     (state) => state.timelineDataReducer
   );
+  const selectedPlatformId =
+    platform?.find((item) => item.name.toLowerCase() == selectedPlatform)?.id ??
+    "";
   const dispatch = useDispatch();
   const accessToken = getCookie("accessToken");
 
@@ -143,19 +146,7 @@ const Timeline = ({ category }) => {
         getTimelineData("");
       }
     })();
-  }, [selectedPlatformId]);
-
-  // useEffect(() => {
-  //   if (hashtagFilter.length > 0) {
-  //     const joinedHashtag = joinSelectedFilter(hashtagFilter);
-  //     setShowFilter(false);
-  //     if (selectedPlatform === "instagram" && joinedHashtag !== "") {
-  //       const pageIdFromSavedState =
-  //         checkConnectedInstagramFromFacebook(facebookPageList);
-  //       getTimelineData(pageIdFromSavedState);
-  //     }
-  //   }
-  // }, [hashtagFilter]);
+  }, [selectedPlatform]);
 
   const handleMentionsFilter = (event) => {
     const value = event.target.value;
@@ -198,14 +189,10 @@ const Timeline = ({ category }) => {
     setShowFilter(false);
   };
 
-  const handlePageFilter = (event) => {
-    const value = event.target.value;
-    setPageFilter(value);
-  };
-
   const handleSortFilter = (event) => {
     const value = event.target.value;
     setParameter(value);
+    setShowParameter(false);
   };
 
   const { data: platforms, error } = useSWR(
@@ -252,7 +239,9 @@ const Timeline = ({ category }) => {
         ))}
         <Box
           className={`relative flex flex-1 justify-end items-center ${
-            selectedPlatform != "instagram" ? "hidden" : ""
+            selectedPlatform != "instagram" || hashtagFilter[0] == ""
+              ? "hidden"
+              : ""
           }`}
         >
           <Stack
@@ -297,10 +286,10 @@ const Timeline = ({ category }) => {
                   label="Newest"
                 />
                 <FormControlLabel
-                  value="most_popular"
+                  value="most popular"
                   control={
                     <Radio
-                      checked={parameter == "most_popular"}
+                      checked={parameter == "most popular"}
                       onChange={handleSortFilter}
                     />
                   }
@@ -335,6 +324,7 @@ const Timeline = ({ category }) => {
               filter={mentionsFilter}
               handler={handleMentionsFilter}
               hashtagFilter={hashtagFilter}
+              selectedPlatform={selectedPlatform}
               data={hashtag.filter(
                 (item) =>
                   item.category_id ==
@@ -438,6 +428,7 @@ const Timeline = ({ category }) => {
                   : ""
               }
               pageSelected={pageFilter}
+              orderSelected={parameter.split(" ").join("")}
             />
           ) : selectedPlatform == "facebook" ? (
             <TimelineContainer

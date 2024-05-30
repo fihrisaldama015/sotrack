@@ -59,7 +59,7 @@ const MentionStatisticsCard = ({ title }) => {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl p-7 flex flex-col flex-1 gap-7">
+    <div className="relative bg-white rounded-2xl p-7 flex flex-col flex-1 gap-7">
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
@@ -122,7 +122,7 @@ const MentionStatisticsCard = ({ title }) => {
         </Box>
       </Stack>
       {isLoading && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8 flex items-center gap-2 w-48">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 w-fit">
           <LoadingSpinner />
           Loading Chart Data
         </div>

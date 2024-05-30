@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Card from "./TimelineCardComponent";
 import useSWR from "swr";
 import { getCookie } from "cookies-next";
@@ -14,15 +14,17 @@ const TimelineContainer = ({
   mentionSelected,
   keywordSelected,
   pageSelected,
+  orderSelected,
 }) => {
   const { selectedPlatform } = useSelector(
     (state) => state.timelineDataReducer
   );
   const dispatch = useDispatch();
+  const prevTimelineRef = useRef();
   const accessToken = getCookie("accessToken");
 
   const { data: timeline, errorTimeline } = useSWR(
-    `timeline?platform=${selectedPlatform}&pageId=${pageSelected}&mention=${mentionSelected}&hashtag=${hashtagSelected}&order=${"newest"}&keyword=${keywordSelected}`,
+    `timeline?platform=${selectedPlatform}&pageId=${pageSelected}&mention=${mentionSelected}&hashtag=${hashtagSelected}&order=${orderSelected}&keyword=${keywordSelected}`,
     () =>
       getTimelineByPlatform(
         accessToken,
@@ -30,7 +32,7 @@ const TimelineContainer = ({
         pageSelected,
         mentionSelected,
         hashtagSelected,
-        "newest",
+        orderSelected,
         keywordSelected
       ),
     {
@@ -40,6 +42,19 @@ const TimelineContainer = ({
     }
   );
   if (errorTimeline) return <div>Error loading timeline data...</div>;
+
+  useEffect(() => {
+    if (!timeline) return;
+    if (JSON.stringify(prevTimelineRef.current) !== JSON.stringify(timeline)) {
+      dispatch(
+        changeTimelineData({
+          timelineData: timeline,
+        })
+      );
+      prevTimelineRef.current = timeline;
+    }
+  }, [timeline, dispatch]);
+
   if (!timeline)
     return (
       <div className="w-full h-48 flex justify-center items-center">
@@ -47,13 +62,7 @@ const TimelineContainer = ({
         Loading
       </div>
     );
-  if (timeline.length > 0) {
-    dispatch(
-      changeTimelineData({
-        timelineData: timeline,
-      })
-    );
-  }
+
   return (
     <div>
       {timeline.map((post, id) => (
