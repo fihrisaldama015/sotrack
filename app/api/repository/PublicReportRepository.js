@@ -33,9 +33,9 @@ export const getAllReport = async (startDate, endDate, token) => {
   }
 };
 
-export const getReportDetail = async (id) => {
+export const getReportDetail = async (id, token) => {
   try {
-    const { data } = await PROVIDER_GET(`report/getReport/${id}`);
+    const { data } = await PROVIDER_GET(`report/getReport/${id}`, token);
     return data;
   } catch (error) {
     console.log("🚀 ~ getReportDetail ~ error:", error);
