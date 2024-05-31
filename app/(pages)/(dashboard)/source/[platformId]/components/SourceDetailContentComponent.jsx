@@ -18,7 +18,8 @@ import DatePicker from "./DatePickerComponent";
 import SearchBar from "./SearchBarComponent";
 import SourceTrackerTable from "./SourceTrackerTableComponent";
 import TopicSelect from "./TopicSelectComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { changeDashboardOptions } from "@/app/redux/slices/DashboardOptionsSlice";
 
 const checkConnectedInstagramFromFacebook = (pageList) => {
   const connectedPage = pageList.find(
@@ -38,8 +39,8 @@ const SourceDetailContent = ({ platformId }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
-  const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
-  const [chartEndDate, setChartEndDate] = useState(dayjs());
+  // const [chartStartDate, setChartStartDate] = useState(dayjs().date(0));
+  // const [chartEndDate, setChartEndDate] = useState(dayjs());
 
   const { platformSelected } = useSelector(
     (state) => state.dashboardOptionsReducer
@@ -47,6 +48,7 @@ const SourceDetailContent = ({ platformId }) => {
   const { sourceTrackerStartDate, sourceTrackerEndDate } = useSelector(
     (state) => state.dashboardOptionsReducer
   );
+  const dispatch = useDispatch();
 
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
@@ -99,9 +101,22 @@ const SourceDetailContent = ({ platformId }) => {
     topic = "All"
   ) => {
     if (startDate !== null || endDate !== null) {
-      setChartStartDate(startDate);
-      setChartEndDate(endDate);
+      // setChartStartDate(startDate);
+      // setChartEndDate(endDate);
+      dispatch(
+        changeDashboardOptions({
+          sourceTrackerStartDate: startDate,
+          sourceTrackerEndDate: endDate,
+        })
+      );
+    } else {
+      startDate = sourceTrackerStartDate;
+      endDate = sourceTrackerEndDate;
     }
+    console.log({
+      startDate,
+      endDate,
+    });
     try {
       let currentPlatform = platformSelected.toLowerCase();
       const source = platformSelected == "News" ? platformId : sourceType;

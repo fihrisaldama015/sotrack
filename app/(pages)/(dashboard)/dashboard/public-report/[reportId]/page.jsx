@@ -14,12 +14,7 @@ const ReportDetailPage = async ({ params }) => {
 
   const getInitialReportDetailData = async (id) => {
     const response = await getReportDetail(id, accessToken);
-    console.log("🚀 ~ getInitialReportDetailData ~ response:", response);
     const categoryList = await getCategory();
-    console.log(
-      "🚀 ~ getInitialReportDetailData ~ categoryList:",
-      categoryList
-    );
     const category = categoryList.find(
       (item) => item.id == response.category_id
     ).name;

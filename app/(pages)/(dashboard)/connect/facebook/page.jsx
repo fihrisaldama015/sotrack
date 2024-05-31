@@ -21,9 +21,9 @@ const ConnectFacebook = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [pageList, setPageList] = useState([]);
   const logout = () => {
-    deleteCookie("facebook_user_id");
-    setIsLoading(true);
-    router.refresh();
+    // deleteCookie("facebook_user_id");
+    // setIsLoading(true);
+    // router.refresh();
   };
 
   const getPageListData = async () => {
@@ -154,16 +154,18 @@ const ConnectFacebook = () => {
                         </Typography>
                       </Stack>
                       <Stack alignItems={"flex-end"}>
-                        <Stack
-                          direction={"row"}
-                          alignItems={"center"}
-                          borderRadius={2}
-                          onClick={logout}
-                          justifyContent={"center"}
-                          className="py-2.5 px-3 w-full bg-[#FFEDED] hover:bg-red-100 cursor-pointer transition-all"
-                        >
-                          <LogoutIcon color="error" sx={{ width: 18 }} />
-                        </Stack>
+                        <a href={`${BASE_URL}/auth/facebook/signout`}>
+                          <Stack
+                            direction={"row"}
+                            alignItems={"center"}
+                            borderRadius={2}
+                            // onClick={logout}
+                            justifyContent={"center"}
+                            className="py-2.5 px-3 w-full bg-[#FFEDED] hover:bg-red-100 cursor-pointer transition-all"
+                          >
+                            <LogoutIcon color="error" sx={{ width: 18 }} />
+                          </Stack>
+                        </a>
                       </Stack>
                     </Stack>
                   </Stack>
