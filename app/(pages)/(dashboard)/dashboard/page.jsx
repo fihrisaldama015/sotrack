@@ -1,21 +1,18 @@
-import {
-  getCrimeStatisticByDate,
-  getCriminalReportByType,
-} from "@/app/api/repository/DashboardAnalyticsRepository";
-import { Box, Divider, Stack, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import { cookies } from "next/headers";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { redirect } from "next/navigation";
 import CrimeStatistic from "./components/CrimeStatisticComponent";
 import CriminalReport from "./components/CriminalReportComponent";
+import DownloadReportComponent from "./components/DownloadReportComponent";
 import MentionAnalyticsCard from "./components/MentionAnalyticsCard";
 import MentionStatisticsCard from "./components/MentionStatisticsCard";
 import MostDiscusedLately from "./components/MostDiscusedLatelyComponent";
+import PlatformSelect from "./components/PlatformSelectComponent";
 import SentigraphCard from "./components/SentigraphCard";
 import SocialMentionTracker from "./components/SocialMentionTrackerComponent";
-import { DOWNLOAD } from "@/app/utils/assets";
-import Image from "next/image";
-import PlatformSelect from "./components/PlatformSelectComponent";
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 const DashboardPage = async () => {
   const token = cookies().get("accessToken")?.value;
@@ -39,15 +36,7 @@ const DashboardPage = async () => {
           <Typography className="text-2xl font-extrabold">Dashboard</Typography>
           <PlatformSelect />
         </Stack>
-        <Box
-          display={"flex"}
-          className="gap-2 hover:bg-slate-200 p-2 pr-3 rounded-lg cursor-pointer transition-all"
-        >
-          <Image src={DOWNLOAD} alt="Download Logo" width={22} height={23} />
-          <Typography className="text-sm text-[#4D4D4D] font-medium">
-            Download Report
-          </Typography>
-        </Box>
+        <DownloadReportComponent />
       </Box>
       <Divider className="mb-1 border-none h-[2px] bg-neutral-300" />
       <Stack className="lg:flex-row flex-col gap-3 w-full">
