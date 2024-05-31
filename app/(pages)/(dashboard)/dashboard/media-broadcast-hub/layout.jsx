@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
+import DownloadReport from "./components/DownloadReportComponent";
 
 export const metadata = {
   title: "Social Media Monitoring",
@@ -18,15 +19,7 @@ export default async function BroadcastLayout({ children }) {
         alignItems={"center"}
       >
         <Typography className="text-2xl font-extrabold">Dashboard</Typography>
-        <Box
-          display={"flex"}
-          className="gap-2 hover:bg-slate-200 p-2 pr-3 rounded-lg cursor-pointer transition-all"
-        >
-          <Image src={DOWNLOAD} alt="Download Logo" width={22} height={23} />
-          <Typography className="text-sm text-[#4D4D4D] font-medium">
-            Download Report
-          </Typography>
-        </Box>
+        <DownloadReport />
       </Box>
       <Divider className="border-none h-[2px] bg-neutral-300" />
       <Box className="">{children}</Box>

@@ -12,6 +12,7 @@ import {
   PopupSlice,
   TimelineDataSlice,
   PublicReportDataSlice,
+  MediaBroadcastDataSlice,
 } from "./slices";
 
 export const Store = configureStore({
@@ -28,5 +29,6 @@ export const Store = configureStore({
     dashboardDataReducer: DashboardDataSlice,
     timelineDataReducer: TimelineDataSlice,
     publicReportDataReducer: PublicReportDataSlice,
+    mediaBroadcastDataReducer: MediaBroadcastDataSlice,
   },
 });

@@ -19,6 +19,7 @@ import MediaBroadcastHubTable from "./MediaBroadcastTableComponent";
 import SearchBar from "./SearchBarComponent";
 import { useDispatch, useSelector } from "react-redux";
 import { changeIsAlertOpen } from "@/app/redux/slices/AlertSlice";
+import { changeMediaBroadcastData } from "@/app/redux/slices/MediaBroadcastDataSlice";
 
 const MediaBroadcastHubContent = () => {
   const [data, setData] = useState([]);
@@ -46,6 +47,11 @@ const MediaBroadcastHubContent = () => {
         10,
         chartStartDate.format("YYYY-MM-DD"),
         chartEndDate.add(1, "day").format("YYYY-MM-DD")
+      );
+      dispatch(
+        changeMediaBroadcastData({
+          mediaBroadcastData: res,
+        })
       );
       setData(res);
     } catch (e) {
