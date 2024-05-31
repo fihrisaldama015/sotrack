@@ -57,6 +57,13 @@ const SourceDetailContent = ({ platformId }) => {
   const instagram_id = searchParams.get("instagram_id");
   const accessToken = getCookie("accessToken");
 
+  console.log({
+    search,
+    pageId,
+    sourceType,
+    instagram_id,
+  });
+
   const getMentionDetailData = async () => {
     try {
       const source = platformSelected == "News" ? platformId : sourceType;

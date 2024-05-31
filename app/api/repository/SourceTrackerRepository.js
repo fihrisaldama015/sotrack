@@ -26,6 +26,7 @@ export const getMentionSource = async (
 const getFormattedMentionSource = (data, platform) => {
   let joinedData = {};
   let formattedData = [];
+  let instagram_id = "";
 
   if (platform == "news") {
     Object.keys(data).map((source) => {
@@ -40,6 +41,17 @@ const getFormattedMentionSource = (data, platform) => {
   } else if (platform == "facebook" || platform == "instagram") {
     Object.keys(data).map((sourceType) => {
       const result = data[sourceType];
+      console.log("🚀 ~ Object.keys ~ sourceType:", sourceType);
+      console.log("🚀 ~ Object.keys ~ result:", result);
+
+      if (sourceType == "mention" && Object.keys(result).length != 0) {
+        console.log("mention ada isinya");
+      }
+      if (sourceType == "hashtag" && instagram_id == "") {
+        const hashtag_value = result[Object.keys(result)[0]];
+        console.log("🚀 ~ Object.keys ~ hashtag_value:", hashtag_value);
+        instagram_id = hashtag_value?.instagram_id ?? "";
+      }
       const temp = Object.keys(result).map((username) => {
         return {
           source: username,
@@ -53,6 +65,12 @@ const getFormattedMentionSource = (data, platform) => {
       });
       formattedData = [...formattedData, ...temp];
     });
+    if (platform == "instagram") {
+      return {
+        data: formattedData,
+        instagram_id,
+      };
+    }
   }
   return formattedData;
 };
@@ -78,11 +96,11 @@ export const getMentionSourceDetail = async (
 ) => {
   const currentDate = dayjs().add(1, "day").format("YYYY-MM-DD");
   try {
-    let url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
+    let url = `mentionDetails?platform=${platform}&page_id=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
     if (platform == "news") {
       url = `mentionDetails?platform=${platform}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}`;
     } else if (platform == "instagram") {
-      url = `mentionDetails?platform=${platform}&pageId=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}&instagram_id=${instagram_id}`;
+      url = `mentionDetails?platform=${platform}&page_id=${pageId}&since=${startDate}&until=${endDate}&topic=${topic}&source=${source}&instagram_id=${instagram_id}`;
     }
 
     const { data } = await PROVIDER_GET(url, token);
@@ -94,6 +112,7 @@ export const getMentionSourceDetail = async (
 
     return mentionSourceDetailData;
   } catch (e) {
+    console.log("🚀 ~ e:", e);
     alert(`🚀 ~ getMentionSourceDetail ~ e:${e.response.data.message}`);
     return [];
   }

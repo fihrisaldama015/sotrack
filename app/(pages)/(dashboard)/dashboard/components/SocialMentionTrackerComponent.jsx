@@ -31,6 +31,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const SocialMentionTracker = () => {
   const [data, setData] = useState([]);
+  const [instagramId, setInstagramId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [startDate, setStartDate] = useState(dayjs().date(1));
@@ -51,11 +52,20 @@ const SocialMentionTracker = () => {
       setIsLoading(true);
       const mentionSourceResult = await getMentionSource(
         start.format("YYYY-MM-DD"),
-        end.format("YYYY-MM-DD"),
+        end.add(1, "day").format("YYYY-MM-DD"),
         accessToken,
         platformSelected.toLowerCase()
       );
-      setData(mentionSourceResult);
+      console.log(
+        "🚀 ~ getMentionSourceData ~ mentionSourceResult:",
+        mentionSourceResult
+      );
+      if (platformSelected == "Instagram") {
+        setInstagramId(mentionSourceResult.instagram_id);
+        setData(mentionSourceResult.data);
+      } else {
+        setData(mentionSourceResult);
+      }
       dispatch(
         changeDashboardMentionSource({
           mentionSourceData: mentionSourceResult,
@@ -226,7 +236,7 @@ const SocialMentionTracker = () => {
                         : ""
                     }${
                       platformSelected == "Instagram"
-                        ? "&instagram_id=" + data.id
+                        ? "&instagram_id=" + instagramId
                         : ""
                     }`}
                     className="no-underline text-xs"
