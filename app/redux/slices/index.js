@@ -8,6 +8,7 @@ import MediaBroadcastSlice from "./MediaBroadcastSlice";
 import ModalSlice from "./ModalSlice";
 import PlatformSlice from "./PlatformSlice";
 import PopupSlice from "./PopupSlice";
+import PublicReportDataSlice from "./PublicReportDataSlice";
 import TimelineDataSlice from "./TimelineDataSlice";
 
 export {
@@ -21,5 +22,6 @@ export {
   ModalSlice,
   PlatformSlice,
   PopupSlice,
+  PublicReportDataSlice,
   TimelineDataSlice,
 };

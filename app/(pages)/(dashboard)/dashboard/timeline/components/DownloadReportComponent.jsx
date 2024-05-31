@@ -11,8 +11,6 @@ const DownloadReport = () => {
     (state) => state.timelineDataReducer
   );
   const download = () => {
-    console.log("Download report => ", timelineData);
-    // console.log("Download report => ", user);
     const csvContent =
       "data:text/csv;charset=utf-8," +
       "Id,Caption,Permalink,Source,Timestamp\n" +

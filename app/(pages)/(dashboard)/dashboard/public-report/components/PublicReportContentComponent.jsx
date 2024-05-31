@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import PublicReportTable from "./PublicReportTableComponent";
 import SearchBar from "./SearchBarComponent";
+import { useDispatch } from "react-redux";
+import { changePublicReportData } from "@/app/redux/slices/PublicReportDataSlice";
 
 const PublicReportContent = ({ platformId }) => {
   const [data, setData] = useState([]);
@@ -33,6 +35,7 @@ const PublicReportContent = ({ platformId }) => {
   const [isSearching, setIsSearching] = useState(false);
 
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
   const search = searchParams.get("search");
   const accessToken = getCookie("accessToken");
 
@@ -60,6 +63,11 @@ const PublicReportContent = ({ platformId }) => {
       accessToken
     );
     setData(response);
+    dispatch(
+      changePublicReportData({
+        publicReportData: response,
+      })
+    );
     setIsLoading(false);
   };
 
