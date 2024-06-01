@@ -138,6 +138,8 @@ const MediaBroadcastHubContent = () => {
               changeIsAlertOpen({
                 isAlertOpen: true,
                 action: DeleteEmail,
+                title: "Delete Email",
+                message: `Are you sure you want to delete this broadcast?`,
               })
             );
           }}

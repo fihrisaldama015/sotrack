@@ -115,7 +115,9 @@ const Alert = ({ type, message }) => {
             className="text-sm text-center cursor-pointer hover:underline"
             onClick={() => closePopUp()}
           >
-            Continue without account
+            {type === "NEWS_FILTER_NOT_SET"
+              ? "Continue without filter"
+              : "Continue without account"}
           </Typography>
         )}
       </Stack>

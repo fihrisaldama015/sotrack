@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isAlertOpen: false,
   action: null,
+  title: "",
+  message: "",
 };
 
 export const AlertSlice = createSlice({
@@ -12,6 +14,8 @@ export const AlertSlice = createSlice({
     changeIsAlertOpen: (state, action) => {
       state.isAlertOpen = action.payload.isAlertOpen;
       state.action = action.payload.action;
+      state.title = action.payload.title;
+      state.message = action.payload.message;
     },
   },
 });

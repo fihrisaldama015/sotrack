@@ -154,6 +154,8 @@ const AddNewBroadcastForm = ({ recipient, resetRecipient }) => {
               changeIsAlertOpen({
                 isAlertOpen: true,
                 action: resetField,
+                title: "Cancel Broadcast",
+                message: `Are you sure you want to cancel your broadcast?`,
               })
             )
           }

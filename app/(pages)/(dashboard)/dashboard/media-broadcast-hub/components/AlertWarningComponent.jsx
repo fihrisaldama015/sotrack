@@ -7,8 +7,10 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 
-const AlertWarning = ({ title, message }) => {
-  const { isAlertOpen, action } = useSelector((state) => state.alertReducer);
+const AlertWarning = () => {
+  const { isAlertOpen, action, title, message } = useSelector(
+    (state) => state.alertReducer
+  );
   const dispatch = useDispatch();
   const close = () => {
     dispatch(

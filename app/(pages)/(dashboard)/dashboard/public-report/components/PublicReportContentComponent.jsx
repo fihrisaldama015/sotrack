@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "./DatePickerComponent";
 import PublicReportTable from "./PublicReportTableComponent";
 import SearchBar from "./SearchBarComponent";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changePublicReportData } from "@/app/redux/slices/PublicReportDataSlice";
 
 const PublicReportContent = ({ platformId }) => {
@@ -34,6 +34,9 @@ const PublicReportContent = ({ platformId }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
+  const { publicReportData } = useSelector(
+    (state) => state.publicReportDataReducer
+  );
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const search = searchParams.get("search");
@@ -49,8 +52,6 @@ const PublicReportContent = ({ platformId }) => {
 
   const getLinkFromProfile = async (token) => {
     const data = await getLinkForm(token);
-    const id = data.link.split("/")[4];
-    // setLink(`http://localhost:3000/form/${id}`);
     setLink(data.link);
     return data;
   };
@@ -62,7 +63,6 @@ const PublicReportContent = ({ platformId }) => {
       chartEndDate.add(1, "day").format("YYYY-MM-DD"),
       accessToken
     );
-    setData(response);
     dispatch(
       changePublicReportData({
         publicReportData: response,
@@ -79,7 +79,7 @@ const PublicReportContent = ({ platformId }) => {
   useEffect(() => {
     if (search) {
       setIsLoading(true);
-      const filteredData = data.filter((item) => {
+      const filteredData = publicReportData.filter((item) => {
         return item.message.toLowerCase().includes(search.toLowerCase());
       });
       setIsSearching(true);
@@ -100,7 +100,11 @@ const PublicReportContent = ({ platformId }) => {
       endDate.add(1, "day").format("YYYY-MM-DD"),
       accessToken
     );
-    setData(response);
+    dispatch(
+      changePublicReportData({
+        publicReportData: response,
+      })
+    );
     setIsLoading(false);
   };
   return (
@@ -201,7 +205,7 @@ const PublicReportContent = ({ platformId }) => {
           </div>
         ) : (
           <PublicReportTable
-            initialData={isSearching ? filteredData : data}
+            initialData={isSearching ? filteredData : publicReportData}
             refresh={getPublicReportData}
           />
         )}

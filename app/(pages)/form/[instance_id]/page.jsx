@@ -254,9 +254,9 @@ const PublicReportForm = ({ params }) => {
                 required: "Report is required",
               })}
             />
-            {errors && errors["report"]?.type === "required" && (
+            {errors && errors["message"]?.type === "required" && (
               <span className="text-red-500 text-sm">
-                {errors["report"]?.message}
+                {errors["message"]?.message}
               </span>
             )}
             {/* <input
