@@ -3,7 +3,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 
-const columns = [
+const initialColumns = [
   { field: "no", headerName: "No", width: 50 },
   { field: "id", headerName: "ID", width: 90 },
   {
@@ -58,11 +58,19 @@ const columns = [
   },
 ];
 
-const SourceTrackerTable = ({ initialData }) => {
+const SourceTrackerTable = ({ initialData, platform }) => {
   const customStyles = {
     border: "transparent", // Customize border color
     borderRadius: ".5rem", // Customize border radius
   };
+  const shouldHideMentionColumn = platform == "news";
+  const columns = initialColumns.filter((column) => {
+    if (column.field === "mention" && shouldHideMentionColumn) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <Box sx={{ height: initialData.length > 0 ? 500 : 150 }}>
       <DataGrid

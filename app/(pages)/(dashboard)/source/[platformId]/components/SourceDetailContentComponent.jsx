@@ -50,6 +50,7 @@ const SourceDetailContent = ({ platformId }) => {
         source,
         instagram_id
       );
+      console.log("🚀 ~ getMentionDetailData ~ res:", res);
       setData(res);
       setIsLoading(false);
     } catch (error) {
@@ -159,6 +160,7 @@ const SourceDetailContent = ({ platformId }) => {
         ) : (
           <SourceTrackerTable
             initialData={isLoading ? [] : isSearching ? filteredData : data}
+            platform={platform}
           />
         )}
       </Stack>
