@@ -5,7 +5,10 @@ const initialState = {
   mentionSourceData: [],
   criminalReportData: [],
   crimeStatisticData: [],
-  sentigraphData: {},
+  sentigraphData: {
+    Positive: 0,
+    Negative: 0,
+  },
   socialMentionData: [],
   mentionAnalyticsData: [],
 };

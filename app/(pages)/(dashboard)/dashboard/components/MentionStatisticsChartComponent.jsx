@@ -42,7 +42,7 @@ const MentionStatisticsChart = ({ data, trendUp }) => {
         gridYValues={5}
         lineWidth={3}
         pointSize={12}
-        pointColor="#2563EB"
+        pointColor={`${trendUp ? "#2563EB" : "#f00"}`}
         pointBorderWidth={5}
         pointBorderColor="#ffffff"
         colors={{ scheme: trendUp ? "category10" : "set1" }}

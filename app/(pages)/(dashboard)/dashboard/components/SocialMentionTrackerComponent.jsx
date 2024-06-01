@@ -188,7 +188,7 @@ const SocialMentionTracker = () => {
       )}
       <Box
         className="h-[300px] overflow-auto"
-        sx={{ display: isLoading ? "none" : "" }}
+        sx={{ display: isLoading || data.length == 0 ? "none" : "" }}
       >
         <Table>
           <TableHead>
@@ -211,8 +211,8 @@ const SocialMentionTracker = () => {
                   <Stack direction={"row"} gap={1}>
                     <Image
                       src={
-                        data.source in PLATFORM_ICON
-                          ? PLATFORM_ICON[data.source]
+                        platformSelected.toLowerCase() in PLATFORM_ICON
+                          ? PLATFORM_ICON[platformSelected.toLowerCase()]
                           : "/assets/icon/news.svg"
                       }
                       width={16}
@@ -227,9 +227,11 @@ const SocialMentionTracker = () => {
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/source/${data.source}${
+                    href={`/source/${
+                      data.source
+                    }?platform=${platformSelected.toLowerCase()}${
                       platformSelected != "News"
-                        ? "?pageId=" +
+                        ? "&pageId=" +
                           data.id +
                           "&sourceType=" +
                           data.sourceType

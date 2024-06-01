@@ -125,7 +125,7 @@ const getFormattedMentionSourceDetail = (data) => {
       mentionSourceDetail.push({
         no: i + 1,
         id: `#${item.id.substring(0, 6)}`,
-        date: dayjs(item.created_time).format("MMM DD, YYYY"),
+        date: dayjs(item.date).format("MMM DD, YYYY"),
         source: item?.url ? item.url : "",
         mention: item.mention,
         about: item.about,
